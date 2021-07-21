@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/21 23:05:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/21 23:16:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ typedef struct	s_core
 	int	dump;
 	int	split;
 	int	verbose;
+	int	champ_count;
 	int	player_number;
 }	t_core;
 
@@ -38,5 +39,9 @@ typedef struct	s_champs
 	struct s_champs	*next;
 }	t_champs;
 
-t_champs	*parse_args(const int argc, const char **argv, t_core *core);
-t_champs	*read_cor(const char *filepath, t_core core);
+void		print_usage(void);
+void		print_error(const char *message, const char *filepath);
+t_champs	*parse_args(const int argc, char **argv, t_core *core);
+t_champs	*read_cor(const char *filepath, t_core *core);
+
+#endif

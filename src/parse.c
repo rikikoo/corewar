@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/21 22:29:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/21 23:15:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,22 +40,21 @@ static int	get_flag_cycles(const char *arg, int is_playernum)
 ** @count: pointer to the index of the current argument in argv
 ** @core: pointer to a t_core struct
 */
-static void	store_flag(const char **argv, int *count, t_core *core)
+static void	store_flag(char **argv, int *count, t_core *core)
 {
 	if (ft_strequ(argv[*count], "-dump"))
-		core.dump = get_flag_cycles(argv[++(*count)], 0);
+		core->dump = get_flag_cycles(argv[++(*count)], 0);
 	else if (ft_strequ(argv[*count], "-s"))
-		core.split = get_flag_cycles(argv[++(*count)], 0);
+		core->split = get_flag_cycles(argv[++(*count)], 0);
 	else if (ft_strequ(argv[*count], "-v"))
-		core.verbose = get_flag_cycles(argv[++(*count)], 0);
+		core->verbose = get_flag_cycles(argv[++(*count)], 0);
 	else if (ft_strequ(argv[*count], "-n"))
-		core.player_number = get_flag_cycles(argv[++(*count)], 1);
+		core->player_number = get_flag_cycles(argv[++(*count)], 1);
 	else
 		print_usage();
-	return (count + 1);
 }
 
-t_champs	parse_args(const int argc, const char **argv, t_core *core)
+t_champs	*parse_args(const int argc, char **argv, t_core *core)
 {
 	t_champs	*champs;
 	int			count;
@@ -67,7 +66,7 @@ t_champs	parse_args(const int argc, const char **argv, t_core *core)
 		if (argv[count][0] == '-')
 		{
 			if (argv[count][1] == 'a')
-				core.aff = 1;
+				core->aff = 1;
 			else if (count + 1 < argc)
 				store_flag(argv, &count, core);
 			else
