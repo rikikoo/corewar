@@ -6,11 +6,10 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/21 23:15:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:30:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "op.h"
 #include "corewar.h"
 
 /*
@@ -21,7 +20,7 @@
 */
 static int	get_flag_cycles(const char *arg, int is_playernum)
 {
-	int cycles;
+	int	cycles;
 
 	cycles = ft_atoi(arg);
 	if (cycles <= 0 || (is_playernum && cycles > MAX_PLAYERS))

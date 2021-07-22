@@ -6,11 +6,10 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/21 23:39:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:30:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "op.h"
 #include "corewar.h"
 
 /*
@@ -25,8 +24,8 @@ void	print_usage(void)
 	\n%4s: use this to print the 'aff' instruction's contents during corewar\
 	\n%4s: nbr [1...%i] assigns the following champions player number\
 	\n%4s: TBD\
-	\n%4s: TBD\n",
-	"dump", "a", "n",  MAX_PLAYERS, "s", "v");
+	\n%4s: TBD\n\n", \
+	"dump", "a", "n", MAX_PLAYERS, "s", "v");
 	exit(1);
 }
 
