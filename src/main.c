@@ -3,10 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
+<<<<<<< HEAD
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
 /*   Updated: 2021/07/23 18:20:52 by rikikyttala      ###   ########.fr       */
+=======
+/*   By: lvasanoj <lvasanoj@student.hive.fi>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
+/*   Updated: 2021/07/23 12:11:28 by lvasanoj         ###   ########.fr       */
+>>>>>>> d7aa8bd51cb8a99f03be9c989dbbe350f108a2a0
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,3 +47,6 @@ int	main(int argc, char **argv)
 		return (-1);
 	return (0);
 }
+
+
+// test forking
