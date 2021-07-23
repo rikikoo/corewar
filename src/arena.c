@@ -1,28 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_file.c                                        :+:      :+:    :+:   */
+/*   arena.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/23 17:15:18 by rkyttala         ###   ########.fr       */
+/*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
+/*   Updated: 2021/07/22 17:03:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-t_champs	*read_cor(const char *filepath, t_core *core)
+char	init_arena(void)
 {
-	int	fd;
-	t_champs	*champ;
+	char	arena[MEM_SIZE];
 
-	fd = open(filepath, O_RDONLY);
-	if (fd == -1)
-		print_error("Unable to read file", filepath);
-	champ = (t_champs *)malloc(sizeof(t_champs));
-	parse_champ(fd, core);
-	core->champ_count++;
-	close(fd);
-	return (NULL);
+	ft_bzero(&arena, MEM_SIZE);
+	return (arena);
 }

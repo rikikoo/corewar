@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 16:30:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:49:23 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,13 @@ void	print_usage(void)
 	exit(1);
 }
 
+/*
+** prints passed error message when called and exits the program.
+** if @filepath is not NULL, it's contents will be appended to @message.
+**
+** @message: a string containing the desired error message
+** @filepath: the path to the file that could not be opened as a string
+*/
 void	print_error(const char *message, const char *filepath)
 {
 	if (filepath)
