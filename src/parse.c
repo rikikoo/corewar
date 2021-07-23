@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 16:30:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:45:20 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static int	get_flag_cycles(const char *arg, int is_playernum)
 ** checks if the passed argument is a valid flag and stores the number of
 ** cycles associated with it to the core struct, also passed to this function
 **
-** @argv: vector of program arguments
+** @argv: vector of program argument strings
 ** @count: pointer to the index of the current argument in argv
 ** @core: pointer to a t_core struct
 */
@@ -53,6 +53,18 @@ static void	store_flag(char **argv, int *count, t_core *core)
 		print_usage();
 }
 
+/*
+** loops through all args. if a '-' is encountered, the argument is sent to
+** store_flag(), otherwise to read_cor(). flags must be separate,
+** e.g.
+** 		-a -n 4 	-- allowed
+** 		-an 4		-- not allowed
+**		-n4			-- not allowed
+**
+** @argc: total number of program arguments + 1
+** @argv: vector of program argument strings
+** @core: pointer to a t_core struct
+*/
 t_champs	*parse_args(const int argc, char **argv, t_core *core)
 {
 	t_champs	*champs;
