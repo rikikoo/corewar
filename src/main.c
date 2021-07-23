@@ -3,32 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 16:31:08 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/23 18:20:52 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
-
-/*
-** only for debugging
-*/
-static void	dump_core(t_core core)
-{
-	ft_printf("%8s: %u\n%8s: %u\n%8s: %u\n%8s: %u\n%8s: %u\n%8s: %u\n%8s: %u\
-	\n%8s: %p\n", \
-	"aff", core.aff, \
-	"dump", core.dump, \
-	"split", core.split, \
-	"verbose", core.verbose, \
-	"champs", core.champ_count, \
-	"player #", core.player_number, \
-	"carry", core.carry, \
-	"PC", core.program_counter \
-	);
-}
 
 static t_core	init_core(void)
 {
@@ -54,7 +36,6 @@ int	main(int argc, char **argv)
 		print_usage();
 	core = init_core();
 	champs = parse_args(argc, argv, &core);
-	dump_core(core);
 	if (!champs)
 		return (-1);
 	return (0);

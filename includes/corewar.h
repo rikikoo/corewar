@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   corewar.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 18:11:10 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/23 19:36:53 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ typedef struct s_champs
 {
 	char			name[PROG_NAME_LENGTH];
 	char			comment[COMMENT_LENGTH];
-	unsigned int	size;
+	unsigned int	magic;
+	unsigned char	size;
 	char			bytes[CHAMP_MAX_SIZE];
 	struct s_champs	*next;
 }	t_champs;
