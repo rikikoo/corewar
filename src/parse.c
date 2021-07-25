@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 16:45:20 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/24 13:05:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** checks whether the number associated with a flag is valid and returns it
 **
-** @arg: the argument after the flag
+** @arg: the argument after the flag (i.e. a number as a string)
 ** @is_playernum: true if the flag in question was n, false otherwise
 */
 static int	get_flag_cycles(const char *arg, int is_playernum)
@@ -35,7 +35,7 @@ static int	get_flag_cycles(const char *arg, int is_playernum)
 ** checks if the passed argument is a valid flag and stores the number of
 ** cycles associated with it to the core struct, also passed to this function
 **
-** @argv: vector of program argument strings
+** @argv: vector of the program's arguments
 ** @count: pointer to the index of the current argument in argv
 ** @core: pointer to a t_core struct
 */
@@ -62,7 +62,7 @@ static void	store_flag(char **argv, int *count, t_core *core)
 **		-n4			-- not allowed
 **
 ** @argc: total number of program arguments + 1
-** @argv: vector of program argument strings
+** @argv: vector of the program's arguments
 ** @core: pointer to a t_core struct
 */
 t_champs	*parse_args(const int argc, char **argv, t_core *core)
@@ -87,7 +87,7 @@ t_champs	*parse_args(const int argc, char **argv, t_core *core)
 		{
 			champs = read_cor(argv[count], core);
 			if (!champs)
-				return (NULL);
+				print_error("Invalid champion", NULL);
 			champs = champs->next;
 		}
 	}

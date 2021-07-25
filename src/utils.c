@@ -6,11 +6,37 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/22 16:49:23 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/24 18:00:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+void	dump_memory(const unsigned char *buf, const int cycles)
+{
+	int	i;
+	int	j;
+	int	row_len;
+
+	i = 0;
+	row_len = 31;
+	j = row_len;
+	while (i < cycles)
+	{
+		if (buf[i] >= 0 && buf[i] < 10)
+			ft_printf("0");
+		ft_printf("%x", buf[i]);
+		if (i == j)
+		{
+			ft_printf("\n");
+			j = j + row_len + 1;
+		}
+		else if (i % 2 != 0 && i != 0)
+			ft_printf(" ");
+		i++;
+	}
+	ft_printf("\n%d\n", i);
+}
 
 /*
 ** prints usage in case an invalid flag was encountered
