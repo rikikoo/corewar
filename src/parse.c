@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/24 13:05:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/26 11:02:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,35 +61,35 @@ static void	store_flag(char **argv, int *count, t_core *core)
 ** 		-an 4		-- not allowed
 **		-n4			-- not allowed
 **
-** @argc: total number of program arguments + 1
-** @argv: vector of the program's arguments
+** @ac: total number of program arguments + 1
+** @av: vector of the program's arguments
 ** @core: pointer to a t_core struct
+** @champs: pointer to an array of t_champs
 */
-t_champs	*parse_args(const int argc, char **argv, t_core *core)
+void	parse_args(int ac, char **av, t_core *core, t_champs *champs)
 {
-	t_champs	*champs;
-	int			count;
+	int	count;
+	int	playernbr;
 
-	champs = NULL;
 	count = 0;
-	while (++count < argc)
+	playernbr = MAX_PLAYERS - 1;
+	while (++count < ac)
 	{
-		if (argv[count][0] == '-')
+		if (av[count][0] == '-')
 		{
-			if (argv[count][1] == 'a')
+			if (av[count][1] == 'a')
 				core->aff = 1;
-			else if (count + 1 < argc)
-				store_flag(argv, &count, core);
+			else if (count + 1 < ac)
+				store_flag(av, &count, core);
 			else
 				print_usage();
 		}
-		else
+		else if (playernbr < MAX_PLAYERS)
 		{
-			champs = read_cor(argv[count], core);
-			if (!champs)
-				print_error("Invalid champion", NULL);
-			champs = champs->next;
+			champs[playernbr] = read_cor(av[count], core);
+			playernbr--;
 		}
+		else
+			print_usage();
 	}
-	return (champs);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/24 14:25:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/26 13:21:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,24 +73,26 @@ typedef struct s_core
 	unsigned int	verbose;
 	unsigned int	champ_count;
 	unsigned int	player_number;
+	unsigned int	program_counter;
 	unsigned int	carry;
-	unsigned int	*program_counter;
 }	t_core;
 
 typedef struct s_champs
 {
 	char			name[PROG_NAME_LENGTH];
 	char			comment[COMMENT_LENGTH];
+	unsigned char	exec[CHAMP_MAX_SIZE];
+	unsigned int	magic;
 	int				playernbr;
 	int				size;
-	unsigned char	*bytes;
-	struct s_champs	*next;
+	unsigned char	invalid_opcode;
 }	t_champs;
 
-void		print_usage(void);
-void		print_error(const char *message, const char *filepath);
-void		dump_memory(const unsigned char *buf, const int cycles);
-t_champs	*parse_args(const int argc, char **argv, t_core *core);
-t_champs	*read_cor(const char *filepath, t_core *core);
+void			print_usage(void);
+void			print_error(const int errno, const char *path, t_champs *champ);
+void			dump_memory(const unsigned char *buf, const int cycles);
+void			parse_args(int ac, char **av, t_core *core, t_champs *champs);
+t_champs		read_cor(const char *filepath, t_core *core);
+unsigned int	four_bytes_toint(const unsigned char *bytes);
 
 #endif

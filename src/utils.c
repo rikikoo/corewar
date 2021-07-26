@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/24 18:00:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/26 13:21:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,23 +19,20 @@ void	dump_memory(const unsigned char *buf, const int cycles)
 	int	row_len;
 
 	i = 0;
-	row_len = 31;
-	j = row_len;
+	row_len = 32;
+	j = row_len - 1;
 	while (i < cycles)
 	{
-		if (buf[i] >= 0 && buf[i] < 10)
-			ft_printf("0");
-		ft_printf("%x", buf[i]);
+		ft_printf("%02x", buf[i]);
 		if (i == j)
 		{
 			ft_printf("\n");
-			j = j + row_len + 1;
+			j = j + row_len;
 		}
 		else if (i % 2 != 0 && i != 0)
 			ft_printf(" ");
 		i++;
 	}
-	ft_printf("\n%d\n", i);
 }
 
 /*
@@ -56,17 +53,39 @@ void	print_usage(void)
 }
 
 /*
-** prints passed error message when called and exits the program.
+** prints an error message based on @errno and exits the program.
 ** if @filepath is not NULL, it's contents will be appended to @message.
 **
-** @message: a string containing the desired error message
-** @filepath: the path to the file that could not be opened as a string
+** @errno: a negative int
+**	 0: "Error opening file"
+**	-1: "Error reading file"
+**	-2: "Unknown filetype header"
+**	-3: "Champion name too long"
+**	-4: "Champion weighs too much"
+**	-5: "Champion comment too long"
+**	-6: "Unknown opcode: {opcode}"
+**
+** @path: the path to the file that could not be opened as a string
 */
-void	print_error(const char *message, const char *filepath)
+void	print_error(const int errno, const char *path, t_champs *champ)
 {
-	if (filepath)
-		ft_printf("%s: %s\n", message, filepath);
+	if (errno == 0)
+		ft_printf("Error opening file: %s\n", path);
+	else if (errno == -1)
+		ft_printf("Error reading file: s\n", path);
+	else if (errno == -2)
+		ft_printf("Unknown filetype header: %p\n", champ->magic);
+	else if (errno == -3)
+		ft_printf("Champion name '%s' too long: %d > %d\n", champ->name, \
+		ft_strlen(champ->name), PROG_NAME_LENGTH);
+	else if (errno == -4)
+		ft_printf("Champion '%s' weighs too much: %d > %d\n", champ->name, \
+		champ->size, CHAMP_MAX_SIZE);
+	else if (errno == -5)
+		ft_printf("Champion comment '%s' too long: %d > %d\n", \
+		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
 	else
-		ft_printf("%s\n", message);
+		ft_printf("Unknown opcode by %s: %o\n", champ->name, \
+		champ->invalid_opcode);
 	exit(-1);
 }

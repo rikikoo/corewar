@@ -2,7 +2,7 @@
 
 int	main(void)
 {
-	unsigned char str[9] = "0xef4b1a";
+	unsigned char str[11] = "0x0000";
 
 	ft_printf("%lu\n", ft_hextol(str));
 }
