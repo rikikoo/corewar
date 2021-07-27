@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/26 13:21:35 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/27 19:58:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,15 @@ void	dump_memory(const unsigned char *buf, const int cycles)
 		ft_printf("%02x", buf[i]);
 		if (i == j)
 		{
-			ft_printf("\n");
-			j = j + row_len;
+			ft_putchar('\n');
+			j += row_len;
 		}
-		else if (i % 2 != 0 && i != 0)
-			ft_printf(" ");
+		else
+			ft_putchar(' ');
 		i++;
 	}
 }
 
-/*
-** prints usage in case an invalid flag was encountered
-*/
 void	print_usage(void)
 {
 	ft_printf("Usage: \
@@ -69,23 +66,23 @@ void	print_usage(void)
 */
 void	print_error(const int errno, const char *path, t_champs *champ)
 {
-	if (errno == 0)
-		ft_printf("Error opening file: %s\n", path);
-	else if (errno == -1)
-		ft_printf("Error reading file: s\n", path);
+	if (errno == -1)
+		ft_printf("ERROR: failed to open file: %s\n", path);
 	else if (errno == -2)
-		ft_printf("Unknown filetype header: %p\n", champ->magic);
+		ft_printf("ERROR: failed to read file: s\n", path);
 	else if (errno == -3)
-		ft_printf("Champion name '%s' too long: %d > %d\n", champ->name, \
-		ft_strlen(champ->name), PROG_NAME_LENGTH);
+		ft_printf("ERROR: Unknown filetype header: %p\n", champ->magic);
 	else if (errno == -4)
-		ft_printf("Champion '%s' weighs too much: %d > %d\n", champ->name, \
-		champ->size, CHAMP_MAX_SIZE);
+		ft_printf("ERROR: Champion name '%s' too long: %d > %d\n", \
+		champ->name, ft_strlen(champ->name), PROG_NAME_LENGTH);
 	else if (errno == -5)
-		ft_printf("Champion comment '%s' too long: %d > %d\n", \
+		ft_printf("ERROR: Champion '%s' weighs too much: %d > %d\n", \
+		champ->name, champ->size, CHAMP_MAX_SIZE);
+	else if (errno == -6)
+		ft_printf("ERROR: Champion comment '%s' too long: %d > %d\n", \
 		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
 	else
-		ft_printf("Unknown opcode by %s: %o\n", champ->name, \
+		ft_printf("ERROR: Unknown opcode by %s: %o\n", champ->name, \
 		champ->invalid_opcode);
-	exit(-1);
+	exit(errno);
 }
