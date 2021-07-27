@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/27 22:55:59 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/27 23:05:03 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,17 @@ int	main(int argc, char **argv)
 	core = init_core();
 	parse_args(argc, argv, &core, champs);
 
+	// debug print start
 	ft_printf("\n\nname: %s\ncomment: %s\nsize: %d\nmagic: %p\
 	\nplayer number: %d\
 	\ncode:\n", \
-	champs[3].name, \
-	champs[3].comment, \
-	champs[3].size, \
-	champs[3].magic, \
-	champs[3].playernbr);
-	dump_memory(champs[3].exec, champs[3].size);
+	champs[0].name, \
+	champs[0].comment, \
+	champs[0].size, \
+	champs[0].magic, \
+	champs[0].playernbr);
+	dump_memory(champs[0].exec, champs[0].size);
+	// debug print end
 
 	if (core.champ_count == 0)
 		print_usage();

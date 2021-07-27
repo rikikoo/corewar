@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/27 19:40:00 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/27 23:01:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	parse_args(int ac, char **av, t_core *core, t_champs *champs)
 	int	playernbr;
 
 	count = 0;
-	playernbr = MAX_PLAYERS - 1;
+	playernbr = 0;
 	while (++count < ac)
 	{
 		if (av[count][0] == '-')
@@ -86,6 +86,7 @@ void	parse_args(int ac, char **av, t_core *core, t_champs *champs)
 		}
 		else if (playernbr < MAX_PLAYERS)
 		{
+			core->player_number = playernbr;
 			champs[playernbr] = read_cor(av[count], core);
 			playernbr--;
 		}
