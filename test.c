@@ -11,10 +11,10 @@ int	main(void)
 	int i;
 	unsigned char buff[12];
 
-	i = 0;
+	i = 2192;
 	fd = open("vm_champs/42.cor", O_RDONLY);
-	read(fd, &buff, 12);
-	while (i < 12)
+	read(fd, &buff, 2300);
+	while (i < 2300)
 	{
 		printf("%x\n", buff[i]);
 		i++;

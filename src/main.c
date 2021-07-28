@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/27 23:05:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 23:17:48 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_core	init_core(void)
 	core.split = 0;
 	core.verbose = 0;
 	core.champ_count = 0;
-	core.player_number = 0;
+	core.playernbr = 0;
 	core.program_counter = 0x0;
 	core.carry = 0;
 	return (core);
@@ -36,20 +36,23 @@ int	main(int argc, char **argv)
 		print_usage();
 	core = init_core();
 	parse_args(argc, argv, &core, champs);
-
-	// debug print start
-	ft_printf("\n\nname: %s\ncomment: %s\nsize: %d\nmagic: %p\
-	\nplayer number: %d\
-	\ncode:\n", \
-	champs[0].name, \
-	champs[0].comment, \
-	champs[0].size, \
-	champs[0].magic, \
-	champs[0].playernbr);
-	dump_memory(champs[0].exec, champs[0].size);
-	// debug print end
-
 	if (core.champ_count == 0)
 		print_usage();
+	sort_champs(champs, core);
+
+	// debug print start
+	for (int i = 0; i < core.champ_count; i++) {
+		ft_printf("\n\nname: %s\ncomment: %s\nsize: %d\nmagic: %p\
+		\nplayer number: %d\
+		\ncode:\n", \
+		champs[i].name, \
+		champs[i].comment, \
+		champs[i].size, \
+		champs[i].magic, \
+		champs[i].playernbr);
+		dump_memory(champs[i].exec, champs[i].size);
+	}
+	// debug print end
+
 	return (0);
 }

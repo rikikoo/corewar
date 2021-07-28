@@ -6,11 +6,39 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/27 23:02:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 23:22:25 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+/*
+** sorts champions according to -n flags given in program arguments.
+** NOTE: champs' actual player number is in reverse order: champion provided
+** last will be P1.
+**
+** @champs: array of champions
+** @core: t_core struct containing general runtime info
+*/
+void	sort_champs(t_champs *champs, t_core core)
+{
+	int			p;
+	t_champs	tmp;
+
+	p = core.champ_count;
+	while (--p >= 0)
+	{
+		if (champs[p].playernbr > core.champ_count)
+			print_error(-7, NULL, &champs[p]);
+		if (champs[p].playernbr != 0 && champs[p].playernbr - 1 != p)
+		{
+			tmp = champs[champs[p].playernbr - 1];
+			champs[champs[p].playernbr - 1] = champs[p];
+			champs[p] = tmp;
+			champs[p].playernbr = p + 1;
+		}
+	}
+}
 
 void	dump_memory(const unsigned char *buf, const int cycles)
 {
@@ -33,6 +61,7 @@ void	dump_memory(const unsigned char *buf, const int cycles)
 			ft_putchar(' ');
 		i++;
 	}
+	ft_putchar('\n');
 }
 
 void	print_usage(void)
@@ -54,13 +83,14 @@ void	print_usage(void)
 ** if @filepath is not NULL, it's contents will be appended to @message.
 **
 ** @errno: a negative int
-**	 0: "Error opening file"
-**	-1: "Error reading file"
-**	-2: "Unknown filetype header"
-**	-3: "Champion name too long"
-**	-4: "Champion weighs too much"
-**	-5: "Champion comment too long"
-**	-6: "Unknown opcode: {opcode}"
+**	-1: "Error opening file"
+**	-2: "Error reading file"
+**	-3: "Unknown filetype header"
+**	-4: "Champion name too long"
+**	-5: "Champion weighs too much"
+**	-6: "Champion comment too long"
+**	-7: "Invalid player number"
+**	-8: "Unknown opcode: {opcode}"
 **
 ** @path: the path to the file that could not be opened as a string
 */
@@ -81,6 +111,10 @@ void	print_error(const int errno, const char *path, t_champs *champ)
 	else if (errno == -6)
 		ft_printf("ERROR: Champion comment '%s' too long: %d > %d\n", \
 		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
+	else if (errno == -7)
+		ft_printf("ERROR: Invalid player number assigned for '%s'\
+		\nNumber can't be higher than the total number of champions\n", \
+		champ->name);
 	else
 		ft_printf("ERROR: Unknown opcode by %s: %o\n", champ->name, \
 		champ->invalid_opcode);

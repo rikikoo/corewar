@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/26 13:21:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/28 23:10:32 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,14 +67,14 @@
 
 typedef struct s_core
 {
-	unsigned int	aff;
-	unsigned int	dump;
-	unsigned int	split;
-	unsigned int	verbose;
-	unsigned int	champ_count;
-	unsigned int	player_number;
-	unsigned int	program_counter;
-	unsigned int	carry;
+	int	aff;
+	int	dump;
+	int	split;
+	int	verbose;
+	int	champ_count;
+	int	playernbr;
+	int	program_counter;
+	int	carry;
 }	t_core;
 
 typedef struct s_champs
@@ -93,6 +93,5 @@ void			print_error(const int errno, const char *path, t_champs *champ);
 void			dump_memory(const unsigned char *buf, const int cycles);
 void			parse_args(int ac, char **av, t_core *core, t_champs *champs);
 t_champs		read_cor(const char *filepath, t_core *core);
-unsigned int	four_bytes_toint(const unsigned char *bytes);
-
+void			sort_champs(t_champs *champs, t_core core);
 #endif

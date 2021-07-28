@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/07/25 20:59:00 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/07/28 23:11:27 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,8 @@ L = libft/
 
 SRC =	$(S)main.c \
 		$(S)utils.c \
-		$(S)parse.c \
-		$(S)read_file.c \
-		$(S)validate_champ.c
+		$(S)parse_args.c \
+		$(S)read_file.c
 
 OBJ = $(SRC:$S%=$O%.o)
 INC = $(I)
