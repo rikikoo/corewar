@@ -6,16 +6,24 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/28 22:23:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/29 20:37:59 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-char	init_arena(void)
+void	init_arena(t_champs *champs, int champ_count, unsigned char *arena)
 {
-	unsigned char	arena[MEM_SIZE];
+	int				i;
+	int				pos;
 
+	i = 0;
+	pos = 0;
 	ft_bzero(arena, MEM_SIZE);
-	return (arena);
+	while (i < champ_count)
+	{
+		ft_memcpy(&arena[pos], champs[i].exec, champs[i].size);
+		pos += MEM_SIZE / champ_count;
+		i++;
+	}
 }

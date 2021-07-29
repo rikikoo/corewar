@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/29 19:47:09 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/29 20:38:59 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,9 @@ static t_core	init_core(void)
 
 int	main(int argc, char **argv)
 {
-	t_core		core;
-	t_champs	champs[MAX_PLAYERS];
+	t_core			core;
+	t_champs		champs[MAX_PLAYERS];
+	unsigned char	arena[MEM_SIZE];
 
 	if (argc == 1)
 		print_usage();
@@ -46,8 +47,10 @@ int	main(int argc, char **argv)
 	if (core.champ_count == 0)
 		print_usage();
 	sort_champs(champs, core.champ_count);
+	init_arena(champs, core.champ_count, arena);
 
 	// debug print start
+	dump_memory(arena, MEM_SIZE);
 	for (int i = 0; i < core.champ_count; i++) {
 		ft_printf("\n\nname: %s\ncomment: %s\nsize: %d\nmagic: %p\
 		\nplayer number: %d\ncode:\n", \

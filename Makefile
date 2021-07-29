@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/07/28 23:11:27 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/07/29 20:28:37 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ L = libft/
 SRC =	$(S)main.c \
 		$(S)utils.c \
 		$(S)parse_args.c \
-		$(S)read_file.c
+		$(S)read_file.c \
+		$(S)arena.c
 
 OBJ = $(SRC:$S%=$O%.o)
 INC = $(I)
