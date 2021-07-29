@@ -6,27 +6,33 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/28 23:10:39 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/29 19:11:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-/*
-** checks whether the number associated with a flag is valid and returns it
-**
-** @arg: the argument after the flag (i.e. a number as a string)
-** @is_playernum: true if the flag in question was n
-*/
-static int	get_flag_cycles(const char *arg, int is_playernum)
+static int	get_player_number(const char *arg, t_core *core)
 {
-	int	cycles;
+	int	nbr;
 
-	cycles = ft_atoi(arg);
-	if (cycles <= 0 || (is_playernum && cycles > MAX_PLAYERS))
+	nbr = ft_atoi(arg);
+	if (nbr < 1 || nbr > MAX_PLAYERS || core->used_nbrs[nbr - 1])
 	{
 		print_usage();
-		exit(-1);
+	}
+	core->used_nbrs[nbr - 1] = 1;
+	return (nbr);
+}
+
+static int	get_flag_cycles(const char *arg)
+{
+	int			cycles;
+
+	cycles = ft_atoi(arg);
+	if (cycles < 1)
+	{
+		print_usage();
 	}
 	return (cycles);
 }
@@ -42,13 +48,13 @@ static int	get_flag_cycles(const char *arg, int is_playernum)
 static void	store_flag(char **argv, int *count, t_core *core)
 {
 	if (ft_strequ(argv[*count], "-dump"))
-		core->dump = get_flag_cycles(argv[++(*count)], 0);
+		core->dump = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-s"))
-		core->split = get_flag_cycles(argv[++(*count)], 0);
+		core->split = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-v"))
-		core->verbose = get_flag_cycles(argv[++(*count)], 0);
+		core->verbose = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-n"))
-		core->playernbr = get_flag_cycles(argv[++(*count)], 1);
+		core->playernbr = get_player_number(argv[++(*count)], core);
 	else
 		print_usage();
 }
@@ -88,6 +94,7 @@ void	parse_args(int ac, char **av, t_core *core, t_champs *champs)
 		{
 			champs[playernbr] = read_cor(av[count], core);
 			playernbr++;
+			core->playernbr = -1;
 		}
 		else
 			print_usage();

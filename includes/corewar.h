@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/28 23:10:32 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/29 19:01:23 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct s_core
 	int	split;
 	int	verbose;
 	int	champ_count;
+	int	used_nbrs[MAX_PLAYERS];
 	int	playernbr;
 	int	program_counter;
 	int	carry;
@@ -85,13 +86,13 @@ typedef struct s_champs
 	unsigned int	magic;
 	int				playernbr;
 	int				size;
-	unsigned char	invalid_opcode;
+	unsigned char	err;
 }	t_champs;
 
 void			print_usage(void);
 void			print_error(const int errno, const char *path, t_champs *champ);
-void			dump_memory(const unsigned char *buf, const int cycles);
+void			dump_memory(const unsigned char *buf, const int size);
 void			parse_args(int ac, char **av, t_core *core, t_champs *champs);
 t_champs		read_cor(const char *filepath, t_core *core);
-void			sort_champs(t_champs *champs, t_core core);
+void			sort_champs(t_champs *champs, int champ_count);
 #endif
