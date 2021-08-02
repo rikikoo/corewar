@@ -1,33 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   read_file.c                                        :+:      :+:    :+:   */
+/*   read_champ.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/29 19:47:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/02 16:36:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
 /*
-** treats the byte pointed to by @bytes as the most significant byte of a
-** series of four bytes forward.
+** sorts champions according to -n flags given in the program arguments
+**
+** @champs: array of champions
+** @champ_count: the total number of champions
 */
-static unsigned int	four_bytes_toint(const unsigned char *bytes)
+void	sort_champs(t_champ *champs, int champ_count)
 {
-	unsigned int	nb;
+	int		p;
+	t_champ	tmp;
 
-	nb = (unsigned int)bytes[0] << 24;
-	nb += (unsigned int)bytes[1] << 16;
-	nb += (unsigned int)bytes[2] << 8;
-	nb += (unsigned int)bytes[3];
-	return (nb);
+	p = champ_count;
+	while (--p >= 0)
+	{
+		if (champs[p].playernbr != -1)
+		{
+			if (champs[p].playernbr > champ_count)
+				print_error(-7, NULL, &champs[p]);
+			if (champs[p].playernbr - 1 != p)
+			{
+				tmp = champs[champs[p].playernbr - 1];
+				champs[champs[p].playernbr - 1] = champs[p];
+				champs[p] = tmp;
+			}
+		}
+		champs[p].playernbr = p + 1;
+	}
 }
 
-static int	validate_champ(t_champs champ)
+static int	validate_champ(t_champ champ)
 {
 	if (champ.magic != COREWAR_EXEC_MAGIC)
 		return (-3);
@@ -47,12 +61,12 @@ static int	validate_champ(t_champs champ)
 ** calls print_error() if data isn't valid.
 **
 ** @filepath: path to the .cor file
-** @core: pointer to a t_core struct
+** @flags: pointer to a t_flags struct
 */
-t_champs	read_cor(const char *filepath, t_core *core)
+t_champ	read_cor(const char *filepath, t_flags *flags)
 {
 	int				fd;
-	t_champs		champ;
+	t_champ			champ;
 	unsigned char	buf[MEM_SIZE];
 	int				ret;
 
@@ -63,14 +77,14 @@ t_champs	read_cor(const char *filepath, t_core *core)
 	close(fd);
 	if (ret == -1)
 		print_error(-2, filepath, NULL);
-	champ.magic = four_bytes_toint(buf);
+	champ.magic = ft_bytes_toint(buf, 4);
 	ft_memcpy(champ.name, &buf[4], PROG_NAME_LENGTH);
-	champ.size = four_bytes_toint(&buf[PROG_NAME_LENGTH + 8]);
+	champ.size = ft_bytes_toint(&buf[PROG_NAME_LENGTH + 8], 4);
 	ft_memcpy(champ.comment, &buf[PROG_NAME_LENGTH + 12], COMMENT_LENGTH);
 	ft_memcpy(champ.exec, &buf[PROG_NAME_LENGTH + COMMENT_LENGTH + 16], \
 	champ.size);
-	champ.playernbr = core->playernbr;
-	core->champ_count++;
+	champ.playernbr = flags->playernbr;
+	flags->champ_count++;
 	ret = validate_champ(champ);
 	if (ret < 0)
 		print_error(ret, filepath, &champ);

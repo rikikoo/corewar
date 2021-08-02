@@ -6,70 +6,53 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/29 19:57:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/08/02 10:52:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
 /*
-** sorts champions according to -n flags given in the program arguments
+** initializes a new carriage, i.e. appends a new t_car element to the end of
+** the carriage list, whose head pointer is stored in t_game
 **
-** @champs: array of champions
-** @count: the total number of champions
+** @prev_id: id of previous carriage
+** @pos: carriage position on the arena
+** @playernbr: champion's playernbr; determined by parent carriage's registry[0]
 */
-void	sort_champs(t_champs *champs, int count)
+t_car	*new_car(int prev_id, int pos, int playernbr)
 {
-	int			p;
-	t_champs	tmp;
+	t_car	*car;
+	int		i;
 
-	p = count;
-	while (--p >= 0)
-	{
-		if (champs[p].playernbr != -1)
-		{
-			if (champs[p].playernbr > count)
-				print_error(-7, NULL, &champs[p]);
-			if (champs[p].playernbr - 1 != p)
-			{
-				tmp = champs[champs[p].playernbr - 1];
-				champs[champs[p].playernbr - 1] = champs[p];
-				champs[p] = tmp;
-			}
-		}
-		champs[p].playernbr = p + 1;
-	}
+	car = (t_car *)malloc(sizeof(t_car));
+	if (!car)
+		return (NULL);
+	car->id = prev_id + 1;
+	car->pos = pos;
+	car->carry = 0;
+	car->cycles_since_live = 0;
+	car->cycles_to_exec = 0;
+	car->next_instruction = 0;
+	i = 0;
+	car->registry[i] = playernbr * -1;
+	while (++i < REG_NUMBER)
+		car->registry[i] = 0;
+	car->current_opcode = 0;
+	car->next = NULL;
+	return (car);
 }
 
-/*
-** prints the arena to STDOUT after a specific amount of execution cycles if the
-** program was launched with the -dump flag
-**
-** @buf: pointer to the start of the arena
-** @size: amount of bytes to print out
-*/
-void	dump_memory(const unsigned char *buf, const int size)
+int	get_arg_type(unsigned char byte, int arg)
 {
-	int	i;
-	int	j;
-	int	row_len;
-
-	i = 0;
-	row_len = 32;
-	j = row_len - 1;
-	while (i < size)
-	{
-		ft_printf("%02x", buf[i]);
-		if (i == j)
-		{
-			ft_putchar('\n');
-			j += row_len;
-		}
-		else
-			ft_putchar(' ');
-		i++;
-	}
-	ft_putchar('\n');
+	if (arg < 1 || arg > 3)
+		return (0);
+	if (arg == 1)
+		return (byte & 192);
+	else if (arg == 2)
+		return (byte & 48);
+	else
+		return (byte & 12);
 }
 
 void	print_usage(void)
@@ -83,7 +66,7 @@ void	print_usage(void)
 	\n%4s: TBD\
 	\n%4s: TBD\n\n", \
 	"dump", "a", "n", MAX_PLAYERS, "s", "v");
-	exit(1);
+	exit(-9);
 }
 
 /*
@@ -97,13 +80,13 @@ void	print_usage(void)
 **	-4: "Champion name too long"
 **	-5: "Champion weighs too much"
 **	-6: "Champion comment too long"
-**	-7: "Unknown opcode: {opcode}"
-**	-8: "Player number higher than champ_count"
+**	-7: "Player number higher than champ_count"
+**	-8: "Out of heap memory"
 **
 ** @path: the path to the file that could not be opened
 ** @champ: pointer to the champ that caused the error
 */
-void	print_error(const int errno, const char *path, t_champs *champ)
+void	print_error(int errno, const char *path, t_champ *champ)
 {
 	if (errno == -1)
 		ft_printf("ERROR: failed to open file: %s\n", path);
@@ -121,9 +104,9 @@ void	print_error(const int errno, const char *path, t_champs *champ)
 		ft_printf("ERROR: Champion comment '%s' too long: %d > %d\n", \
 		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
 	else if (errno == -7)
-		ft_printf("ERROR: Unknown opcode by %s: %o\n", champ->name, champ->err);
-	else
 		ft_printf("ERROR: Invalid player number given for '%s'\
 		\nNumber can't be greater than the number of champions\n", champ->name);
+	else
+		ft_printf("ERROR: Something went wrong with a malloc\n");
 	exit(errno);
 }

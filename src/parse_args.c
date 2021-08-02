@@ -6,22 +6,22 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/29 19:11:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/07/30 09:49:49 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-static int	get_player_number(const char *arg, t_core *core)
+static int	get_player_number(const char *arg, t_flags *flags)
 {
 	int	nbr;
 
 	nbr = ft_atoi(arg);
-	if (nbr < 1 || nbr > MAX_PLAYERS || core->used_nbrs[nbr - 1])
+	if (nbr < 1 || nbr > MAX_PLAYERS || flags->used_nbrs[nbr - 1])
 	{
 		print_usage();
 	}
-	core->used_nbrs[nbr - 1] = 1;
+	flags->used_nbrs[nbr - 1] = 1;
 	return (nbr);
 }
 
@@ -39,22 +39,22 @@ static int	get_flag_cycles(const char *arg)
 
 /*
 ** checks if the passed argument is a valid flag and stores the number of
-** cycles associated with it to the core struct, also passed to this function
+** cycles associated with it to the flags struct, also passed to this function
 **
 ** @argv: vector of the program's arguments
 ** @count: pointer to the index of the current argument in argv
-** @core: pointer to a t_core struct
+** @flags: pointer to a t_flags struct
 */
-static void	store_flag(char **argv, int *count, t_core *core)
+static void	store_flag(char **argv, int *count, t_flags *flags)
 {
 	if (ft_strequ(argv[*count], "-dump"))
-		core->dump = get_flag_cycles(argv[++(*count)]);
+		flags->dump = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-s"))
-		core->split = get_flag_cycles(argv[++(*count)]);
+		flags->split = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-v"))
-		core->verbose = get_flag_cycles(argv[++(*count)]);
+		flags->verbose = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-n"))
-		core->playernbr = get_player_number(argv[++(*count)], core);
+		flags->playernbr = get_player_number(argv[++(*count)], flags);
 	else
 		print_usage();
 }
@@ -69,10 +69,10 @@ static void	store_flag(char **argv, int *count, t_core *core)
 **
 ** @ac: total number of program arguments + 1
 ** @av: vector of the program's arguments
-** @core: pointer to a t_core struct
+** @flags: pointer to a t_flags struct
 ** @champs: pointer to an array of t_champs
 */
-void	parse_args(int ac, char **av, t_core *core, t_champs *champs)
+void	parse_args(int ac, char **av, t_flags *flags, t_champ *champs)
 {
 	int	count;
 	int	playernbr;
@@ -84,17 +84,17 @@ void	parse_args(int ac, char **av, t_core *core, t_champs *champs)
 		if (av[count][0] == '-')
 		{
 			if (av[count][1] == 'a')
-				core->aff = 1;
+				flags->aff = 1;
 			else if (count + 1 < ac)
-				store_flag(av, &count, core);
+				store_flag(av, &count, flags);
 			else
 				print_usage();
 		}
 		else if (playernbr < MAX_PLAYERS)
 		{
-			champs[playernbr] = read_cor(av[count], core);
+			champs[playernbr] = read_cor(av[count], flags);
 			playernbr++;
-			core->playernbr = -1;
+			flags->playernbr = -1;
 		}
 		else
 			print_usage();
