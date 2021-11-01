@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/30 09:49:49 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/01 16:47:57 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static int	get_player_number(const char *arg, t_flags *flags)
 
 static int	get_flag_cycles(const char *arg)
 {
-	int			cycles;
+	int	cycles;
 
 	cycles = ft_atoi(arg);
 	if (cycles < 1)
@@ -63,8 +63,8 @@ static void	store_flag(char **argv, int *count, t_flags *flags)
 ** loops through all args. if a '-' is encountered, the argument is sent to
 ** store_flag(), otherwise to read_cor(). flags must be separate,
 ** e.g.
-** 		-a -n 4 	-- allowed
-** 		-an 4		-- not allowed
+** 		-v -n 4 	-- allowed
+** 		-vn 4		-- not allowed
 **		-n4			-- not allowed
 **
 ** @ac: total number of program arguments + 1
@@ -83,9 +83,7 @@ void	parse_args(int ac, char **av, t_flags *flags, t_champ *champs)
 	{
 		if (av[count][0] == '-')
 		{
-			if (av[count][1] == 'a')
-				flags->aff = 1;
-			else if (count + 1 < ac)
+			if (count + 1 < ac)
 				store_flag(av, &count, flags);
 			else
 				print_usage();

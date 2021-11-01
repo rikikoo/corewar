@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/02 10:52:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/01 16:45:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ t_car	*new_car(int prev_id, int pos, int playernbr)
 	car->pos = pos;
 	car->carry = 0;
 	car->cycles_since_live = 0;
-	car->cycles_to_exec = 0;
+	car->dead = 0;
+	car->cycles_to_exec = 1;
 	car->next_instruction = 0;
 	i = 0;
 	car->registry[i] = playernbr * -1;
@@ -55,17 +56,22 @@ int	get_arg_type(unsigned char byte, int arg)
 		return (byte & 12);
 }
 
+int	print_aff(t_car *car, unsigned char *arena)
+{
+	ft_putchar((char)arena[car->pos + 1]);
+	return (1);
+}
+
 void	print_usage(void)
 {
 	ft_printf("Usage: \
-	./corewar [-dump N] [-a] [[-n nbr] <champion1.cor> <...>]\
+	\n./corewar [-dump N] [[-n nbr] <champion1.cor> <...>]\
 	\n\n************************************************************\
 	\n\n%4s: executes up to N cycles after which memory is dumped to STDOUT\
-	\n%4s: use this to print the 'aff' instruction's contents during corewar\
-	\n%4s: nbr [1...%i] assigns the following champions player number\
-	\n%4s: TBD\
-	\n%4s: TBD\n\n", \
-	"dump", "a", "n", MAX_PLAYERS, "s", "v");
+	\n%4s: nbr [1...%i] assigns the following champion's player number\
+	\n%4s: WIP\
+	\n%4s: WIP\n\n", \
+	"dump", "n", MAX_PLAYERS, "s", "v");
 	exit(-9);
 }
 

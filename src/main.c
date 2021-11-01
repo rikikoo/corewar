@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/07/31 14:18:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/01 16:46:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ static void	dump_memory(const unsigned char *arena, int size)
 	j = row_len - 1;
 	while (i < size)
 	{
-		ft_printf("%02x", arena[i]);
+		if (arena[i] != 0)
+			ft_printf("\033[92m%02x\033[0m", arena[i]);
+		else
+			ft_printf("%02x", arena[i]);
 		if (i == j)
 		{
 			ft_putchar('\n');
@@ -54,7 +57,6 @@ static t_flags	init_flags(void)
 		flags.used_nbrs[i] = 0;
 		i++;
 	}
-	flags.aff = 0;
 	flags.dump = 0;
 	flags.split = 0;
 	flags.verbose = 0;
