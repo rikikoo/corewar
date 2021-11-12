@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/08/02 16:36:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/02 12:08:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ static int	validate_champ(t_champ champ)
 **
 ** @filepath: path to the .cor file
 ** @flags: pointer to a t_flags struct
+**
+** TODO: safety for every memcpy
 */
 t_champ	read_cor(const char *filepath, t_flags *flags)
 {

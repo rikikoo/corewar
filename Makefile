@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/10/29 11:07:23 by rkyttala         ###   ########.fr        #
+#    Updated: 2021/11/11 19:39:36 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,12 @@ L = libft/
 
 SRC =	$(S)main.c \
 		$(S)utils.c \
-		$(S)parse_args.c \
+		$(S)prints.c \
+		$(S)parse_main_args.c \
 		$(S)read_champ.c \
 		$(S)init_game.c \
 		$(S)play_game.c \
+		$(S)validate_instruction.c \
 		$(S)instructions1.c
 #		$(S)instructions2.c
 

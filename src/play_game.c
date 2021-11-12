@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/01 13:51:27 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/12 23:56:22 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,38 @@ static void	collect_the_dead(t_game *game)
 
 }
 
-static int	execute_instruction(t_game *game, t_car *car, unsigned char *arena)
+static int	execute_instruction(\
+	t_game *game, \
+	t_car *car, \
+	unsigned char *arena, \
+	t_champ *champs \
+	)
 {
 	int	inst;
 
 	inst = car->current_opcode;
 	if (inst == 1)
-		return (stay_alive(game, car));
-	else if (inst == 2 || inst == 3 || inst == 10 || inst == 11)
-		return (loadstore_inst(inst, car, arena));
+		return (stay_alive(game, car, arena, champs));
+	else if (inst == 2)
+		return (load_inst(car, arena));
+	else if (inst == 3)
+		return (store_inst(car, arena));
 	else if (inst == 4 || inst == 5)
 		return (arithmetic_inst(inst, car, arena));
-	else if (inst >= 6 && inst <= 8)
+	else if (inst == 6 || inst == 7 || inst == 8)
 		return (bitwise_inst(inst, car, arena));
 	// else if (inst == 9)
 	// 	return (jump_inst(car, arena));
+	// else if (inst == 10 || inst == 11)
+	//	return (ind_loadstore_inst(inst, car, arena));
 	// else if (inst == 12 || inst == 15)
 	// 	return (fork_inst(inst, car, arena));
 	// else if (inst == 13 || inst == 14)
 	// 	return (longload_inst(inst, car, arena));
-	// else if (inst == 16)
-	// 	ft_putchar((char)arena[car->pos + 1]);
-	return (1);
+	else if (inst == 16)
+		return (print_aff(car, arena));
+	else
+		return (1);
 }
 
 /*
@@ -93,7 +103,7 @@ static int	get_wait_cycles(int opcode)
 **	3. decrease wait cycle timer (cycles_to_exec)
 **	4. if wait cycle has ended, execute instruction and move carriage forward
 */
-static void	exec_cars(t_game *game, unsigned char *arena)
+static void	exec_cars(t_game *game, unsigned char *arena, t_champs *champs)
 {
 	t_car	*car;
 
@@ -110,19 +120,25 @@ static void	exec_cars(t_game *game, unsigned char *arena)
 			}
 			car->cycles_to_exec -= (car->cycles_to_exec != 0);
 			if (!car->cycles_to_exec)
-				car->pos += execute_instruction(game, car, arena) % MEM_SIZE;
+				car->pos += execute_instruction(game, car, arena, champs) \
+				% MEM_SIZE;
 		}
 		car = car->next;
 	}
 }
 
-int	start_cycles(t_flags flags, unsigned char *arena, t_game *game)
+int	start_cycles(\
+	t_flags flags, \
+	unsigned char *arena, \
+	t_game *game, \
+	t_champ *champs \
+	)
 {
 	while (1)
 	{
 		if (game->cycles_to_die <= 0)
 			collect_the_dead(game);
-		exec_cars(game, arena);
+		exec_cars(game, arena, champs);
 		if (flags.dump && game->cycle >= flags.dump)
 			return (0);
 		if (game->winner)

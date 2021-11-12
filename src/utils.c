@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/01 16:45:47 by rkyttala         ###   ########.fr       */
+/*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
+/*   Updated: 2021/11/12 23:01:16 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,75 +44,88 @@ t_car	*new_car(int prev_id, int pos, int playernbr)
 	return (car);
 }
 
+/*
+** returns the number of arguments an instruction has, based on @inst_code
+*/
+int	get_arg_count(int inst_code)
+{
+	if (inst_code == 1 || inst_code == 9 || inst_code == 12 || inst_code == 15)
+		return (1);
+	else if (inst_code == 2 || inst_code == 3 || inst_code == 13)
+		return (2);
+	else
+		return (3);
+}
+
+/*
+** returns either the first, second or third pair of bits of the 8-bit @byte.
+** @byte is the argument type code, while @arg is the argument's ordinal number.
+** in other words, returns always either 0, 1, 2 or 3, which represent
+** (respectively) NULL, T_REG, T_DIR or T_IND.
+**
+** example:
+** @arg == 3, @byte == 0b01011000
+**
+** byte >> 2
+**	=> 0b00010110	-- now the third bit-pair is shifted all the way to right
+** byte & 3 == 0b00010110 & 0b00000011
+**	=> 0b00000010 == 2 == T_DIR		-- ANDing the shifted byte with 3 (i.e. the
+**									-- two right-most bits of a byte) yields the
+**									-- value we were after
+*/
 int	get_arg_type(unsigned char byte, int arg)
 {
 	if (arg < 1 || arg > 3)
 		return (0);
 	if (arg == 1)
-		return (byte & 192);
+		return ((byte >> 6) & 3);
 	else if (arg == 2)
-		return (byte & 48);
+		return ((byte >> 4) & 3);
 	else
-		return (byte & 12);
-}
-
-int	print_aff(t_car *car, unsigned char *arena)
-{
-	ft_putchar((char)arena[car->pos + 1]);
-	return (1);
-}
-
-void	print_usage(void)
-{
-	ft_printf("Usage: \
-	\n./corewar [-dump N] [[-n nbr] <champion1.cor> <...>]\
-	\n\n************************************************************\
-	\n\n%4s: executes up to N cycles after which memory is dumped to STDOUT\
-	\n%4s: nbr [1...%i] assigns the following champion's player number\
-	\n%4s: WIP\
-	\n%4s: WIP\n\n", \
-	"dump", "n", MAX_PLAYERS, "s", "v");
-	exit(-9);
+		return ((byte >> 2) & 3);
 }
 
 /*
-** prints an error message based on @errno and exits the program.
-** if @filepath is not NULL, it's contents will be appended to @message.
-**
-** @errno: a negative int
-**	-1: "Error opening file"
-**	-2: "Error reading file"
-**	-3: "Unknown filetype header"
-**	-4: "Champion name too long"
-**	-5: "Champion weighs too much"
-**	-6: "Champion comment too long"
-**	-7: "Player number higher than champ_count"
-**	-8: "Out of heap memory"
-**
-** @path: the path to the file that could not be opened
-** @champ: pointer to the champ that caused the error
+** returns the size of an argument in bytes. T_DIR size depends on @inst_code.
 */
-void	print_error(int errno, const char *path, t_champ *champ)
+int	get_arg_size(int inst_code, int arg)
 {
-	if (errno == -1)
-		ft_printf("ERROR: failed to open file: %s\n", path);
-	else if (errno == -2)
-		ft_printf("ERROR: failed to read file: s\n", path);
-	else if (errno == -3)
-		ft_printf("ERROR: Unknown filetype header: %p\n", champ->magic);
-	else if (errno == -4)
-		ft_printf("ERROR: Champion name '%s' too long: %d > %d\n", \
-		champ->name, ft_strlen(champ->name), PROG_NAME_LENGTH);
-	else if (errno == -5)
-		ft_printf("ERROR: Champion '%s' weighs too much: %d > %d\n", \
-		champ->name, champ->size, CHAMP_MAX_SIZE);
-	else if (errno == -6)
-		ft_printf("ERROR: Champion comment '%s' too long: %d > %d\n", \
-		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
-	else if (errno == -7)
-		ft_printf("ERROR: Invalid player number given for '%s'\
-		\nNumber can't be greater than the number of champions\n", champ->name);
+	if (arg == REG_CODE)
+		return (T_REG);
+	else if (arg == IND_CODE)
+		return (IND_SIZE);
+	else if (arg == DIR_CODE)
+	{
+		if ((inst >= 10 && inst <= 12) || inst >= 14)
+			return (IND_SIZE);
+		else
+			return (DIR_SIZE);
+	}
 	else
-		ft_printf("ERROR: Something went wrong with a malloc\n");
-	exit(errno);
+		return (0);
+}
+
+/*
+** TODO: ft_bytes_toint() might go over MEM_SIZE and thus SEGFAULT --> need to
+** ensure correct reading of memory. program-specific n_bytes_reader function?
+*/
+int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int val)
+{
+	int	pos;
+	int	ind_pos;
+
+	if (val == 1)
+		pos = (car->pos + 2) % MEM_SIZE;
+	else
+		pos = (car->pos + 2 + instruct.sizes[0]) % MEM_SIZE;
+	if (instruct.types[val - 1] == T_REG)
+		return (car->registry[arena[pos] - 1]);
+	if (instruct.types[val - 1] == T_DIR)
+		return ((int)ft_bytes_toint(arena[pos], instruct.sizes[val - 1]));
+	if (instruct.types[val - 1] == T_IND)
+	{
+		ind_pos = (int)ft_bytes_toint(arena[pos], instruct.sizes[val - 1]) \
+		% IDX_MOD;
+		return ((int)ft_bytes_toint(arena[ind_pos % MEM_SIZE], DIR_SIZE));
+	}
 }

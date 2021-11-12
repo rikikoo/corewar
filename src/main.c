@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/01 16:46:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/12 23:52:35 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ int	main(int argc, char **argv)
 		print_usage();
 	sort_champs(champs, flags.champ_count);
 	init_arena(champs, flags.champ_count, arena);
-	winner = start_game(flags, champs, arena);
+	winner = start_game(flags, arena, &champs);
 	if (winner > 0)
 		ft_printf("Player %d (%s) has won!\n", \
 		winner, champs[winner - 1].name);

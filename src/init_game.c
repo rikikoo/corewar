@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/10/29 10:53:51 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/12 23:52:59 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_game	init_game(int champ, t_car *car)
 ** @champs: an array of champions
 ** @arena: the initialized arena
 */
-int	start_game(t_flags flags, t_champ *champs, unsigned char *arena)
+int	start_game(t_flags flags, unsigned char *arena, t_champ *champs)
 {
 	t_car	*head;
 	t_car	*car;
@@ -85,7 +85,7 @@ int	start_game(t_flags flags, t_champ *champs, unsigned char *arena)
 		car = car->next;
 	}
 	game = init_game(flags.champ_count - 1, head);
-	i = start_cycles(flags, champs, arena, &game);
+	i = start_cycles(flags, arena, &game, champs);
 	while (head != NULL)
 	{
 		car = head;
