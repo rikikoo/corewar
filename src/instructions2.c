@@ -6,14 +6,16 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 11:01:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 11:35:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
 /*
-** moves @car to a new position on @arena if car->carry == true.
+** moves @car to a new position on @arena if car->carry == true
+**
+** TODO: should the instruction be skipped if carry == 0, or not?
 */
 int	jump_inst(t_car *car, unsigned char *arena)
 {
@@ -25,7 +27,7 @@ int	jump_inst(t_car *car, unsigned char *arena)
 		return (new_pos % IDX_MOD);
 	}
 	else
-		return (0); // should the instruction be skipped if carry == 0, or not?
+		return (0);
 }
 
 int	ind_load_inst(int inst_code, t_car *car, unsigned char *arena)
@@ -75,17 +77,17 @@ int	fork_inst(int inst_code, t_car *car, unsigned char *arena, t_game *game)
 {
 	int		new_pos;
 	t_car	*car_new;
-	t_car	*last_old_car;
+	t_car	*last_car;
 	int		reg_i;
 
 	new_pos = n_bytes_to_int(&arena[(car->pos + 1) % MEM_SIZE], IND_SIZE);
 	if (inst_code == 12)
 		new_pos = new_pos % IDX_MOD;
-	last_old_car = game->cars;
-	while (last_old_car->next != NULL)
-		last_old_car = last_old_car->next;
-	car_new = new_car(last_old_car->id, new_pos % MEM_SIZE, car->registry[0] * -1);
-	last_old_car->next = car_new;
+	last_car = game->cars;
+	while (last_car->next != NULL)
+		last_car = last_car->next;
+	car_new = new_car(last_car->id, new_pos % MEM_SIZE, car->registry[0] * -1);
+	last_car->next = car_new;
 	reg_i = 1;
 	while (reg_i < REG_NUMBER)
 	{

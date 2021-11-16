@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:58:13 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 11:32:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	arithmetic_inst(int inst_code, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		value1;
-	int 	value2;
+	int		value2;
 	int		reg;
 	t_inst	instruct;
 
@@ -116,7 +116,7 @@ int	bitwise_inst(int inst_code, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		value1;
-	int 	value2;
+	int		value2;
 	int		reg;
 	t_inst	instruct;
 

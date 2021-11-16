@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:44:20 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 11:33:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	n_bytes_to_int(const unsigned char *bytes, int n)
 	int	nbr;
 	int	bits;
 
-	if (!bytes || n <= 0 || n > (int)sizeof(int))
+	if (!bytes || n <= 0 || n > (int) sizeof(int))
 		return (0);
 	nbr = 0;
 	bits = 0;

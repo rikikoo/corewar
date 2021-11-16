@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:47:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 11:32:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,20 +19,27 @@ static void	collect_the_dead(t_game *game)
 {
 	t_car	*car;
 	t_car	*prev;
+	int		alive;
 
 	car = game->cars;
 	prev = NULL;
+	alive = 0;
 	while (car)
 	{
+		car->dead = car->cycles_since_live >= game->cycles_to_die || car->dead;
 		if (!car->dead)
-			car->dead = (car->cycles_since_live >= game->cycles_to_die);
+			alive++;
 		car = car->next;
+	}
+	if (!alive)
+	{
+		game->winner = game->last_live_report;
+		return ;
 	}
 	if (game->checks >= NBR_LIVE)
 		game->cycles_to_die = CYCLE_TO_DIE - CYCLE_DELTA;
 	else
 		game->cycles_to_die = CYCLE_TO_DIE - 1;
-
 }
 
 static int	execute_instruction(\
@@ -120,8 +127,10 @@ static void	exec_cars(t_game *game, unsigned char *arena, t_champ *champs)
 			}
 			car->cycles_to_exec -= (car->cycles_to_exec != 0);
 			if (!car->cycles_to_exec)
+			{
 				car->pos += execute_instruction(game, car, arena, champs) \
 				% MEM_SIZE;
+			}
 		}
 		car = car->next;
 	}
