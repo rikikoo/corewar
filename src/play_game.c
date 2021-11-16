@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/12 23:56:22 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:47:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,22 @@ static int	execute_instruction(\
 	inst = car->current_opcode;
 	if (inst == 1)
 		return (stay_alive(game, car, arena, champs));
-	else if (inst == 2)
-		return (load_inst(car, arena));
+	else if (inst == 2 || inst == 13)
+		return (load_inst(inst, car, arena));
 	else if (inst == 3)
 		return (store_inst(car, arena));
 	else if (inst == 4 || inst == 5)
 		return (arithmetic_inst(inst, car, arena));
 	else if (inst == 6 || inst == 7 || inst == 8)
 		return (bitwise_inst(inst, car, arena));
-	// else if (inst == 9)
-	// 	return (jump_inst(car, arena));
-	// else if (inst == 10 || inst == 11)
-	//	return (ind_loadstore_inst(inst, car, arena));
-	// else if (inst == 12 || inst == 15)
-	// 	return (fork_inst(inst, car, arena));
-	// else if (inst == 13 || inst == 14)
-	// 	return (longload_inst(inst, car, arena));
+	else if (inst == 9)
+		return (jump_inst(car, arena));
+	else if (inst == 10 || inst == 14)
+		return (ind_load_inst(inst, car, arena));
+	else if (inst == 11)
+		return (ind_store_inst(car, arena));
+	else if (inst == 12 || inst == 15)
+		return (fork_inst(inst, car, arena, game));
 	else if (inst == 16)
 		return (print_aff(car, arena));
 	else
@@ -103,7 +103,7 @@ static int	get_wait_cycles(int opcode)
 **	3. decrease wait cycle timer (cycles_to_exec)
 **	4. if wait cycle has ended, execute instruction and move carriage forward
 */
-static void	exec_cars(t_game *game, unsigned char *arena, t_champs *champs)
+static void	exec_cars(t_game *game, unsigned char *arena, t_champ *champs)
 {
 	t_car	*car;
 

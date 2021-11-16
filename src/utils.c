@@ -6,42 +6,30 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/12 23:01:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:44:20 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
 /*
-** initializes a new carriage, i.e. appends a new t_car element to the end of
-** the carriage list, whose head pointer is stored in t_game
-**
-** @prev_id: id of previous carriage
-** @pos: carriage position on the arena
-** @playernbr: champion's playernbr; determined by parent carriage's registry[0]
+** returns @n contiguous bytes converted to an int, if 0 < n <= 4.
 */
-t_car	*new_car(int prev_id, int pos, int playernbr)
+int	n_bytes_to_int(const unsigned char *bytes, int n)
 {
-	t_car	*car;
-	int		i;
+	int	nbr;
+	int	bits;
 
-	car = (t_car *)malloc(sizeof(t_car));
-	if (!car)
-		return (NULL);
-	car->id = prev_id + 1;
-	car->pos = pos;
-	car->carry = 0;
-	car->cycles_since_live = 0;
-	car->dead = 0;
-	car->cycles_to_exec = 1;
-	car->next_instruction = 0;
-	i = 0;
-	car->registry[i] = playernbr * -1;
-	while (++i < REG_NUMBER)
-		car->registry[i] = 0;
-	car->current_opcode = 0;
-	car->next = NULL;
-	return (car);
+	if (!bytes || n <= 0 || n > (int)sizeof(int))
+		return (0);
+	nbr = 0;
+	bits = 0;
+	while (--n >= 0)
+	{
+		nbr += bytes[n % MEM_SIZE] << bits;
+		bits += 8;
+	}
+	return (nbr);
 }
 
 /*
@@ -96,7 +84,7 @@ int	get_arg_size(int inst_code, int arg)
 		return (IND_SIZE);
 	else if (arg == DIR_CODE)
 	{
-		if ((inst >= 10 && inst <= 12) || inst >= 14)
+		if ((inst_code >= 10 && inst_code <= 12) || inst_code >= 14)
 			return (IND_SIZE);
 		else
 			return (DIR_SIZE);
@@ -105,27 +93,24 @@ int	get_arg_size(int inst_code, int arg)
 		return (0);
 }
 
-/*
-** TODO: ft_bytes_toint() might go over MEM_SIZE and thus SEGFAULT --> need to
-** ensure correct reading of memory. program-specific n_bytes_reader function?
-*/
 int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int val)
 {
 	int	pos;
-	int	ind_pos;
+	int	indirect_pos;
 
 	if (val == 1)
 		pos = (car->pos + 2) % MEM_SIZE;
-	else
+	else if (val == 2)
 		pos = (car->pos + 2 + instruct.sizes[0]) % MEM_SIZE;
+	else
+		pos = (car->pos + 2 + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE;
 	if (instruct.types[val - 1] == T_REG)
 		return (car->registry[arena[pos] - 1]);
-	if (instruct.types[val - 1] == T_DIR)
-		return ((int)ft_bytes_toint(arena[pos], instruct.sizes[val - 1]));
-	if (instruct.types[val - 1] == T_IND)
+	else if (instruct.types[val - 1] == T_DIR)
+		return ((int)n_bytes_to_int(&arena[pos], instruct.sizes[val - 1]));
+	else
 	{
-		ind_pos = (int)ft_bytes_toint(arena[pos], instruct.sizes[val - 1]) \
-		% IDX_MOD;
-		return ((int)ft_bytes_toint(arena[ind_pos % MEM_SIZE], DIR_SIZE));
+		indirect_pos = n_bytes_to_int(&arena[pos], instruct.sizes[val - 1]);
+		return (n_bytes_to_int(&arena[indirect_pos % MEM_SIZE], DIR_SIZE));
 	}
 }

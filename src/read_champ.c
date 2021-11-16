@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/02 12:08:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/15 18:45:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ t_champ	read_cor(const char *filepath, t_flags *flags)
 	close(fd);
 	if (ret == -1)
 		print_error(-2, filepath, NULL);
-	champ.magic = ft_bytes_toint(buf, 4);
+	champ.magic = n_bytes_to_int(buf, 4);
 	ft_memcpy(champ.name, &buf[4], PROG_NAME_LENGTH);
-	champ.size = ft_bytes_toint(&buf[PROG_NAME_LENGTH + 8], 4);
+	champ.size = n_bytes_to_int(&buf[PROG_NAME_LENGTH + 8], 4);
 	ft_memcpy(champ.comment, &buf[PROG_NAME_LENGTH + 12], COMMENT_LENGTH);
 	ft_memcpy(champ.exec, &buf[PROG_NAME_LENGTH + COMMENT_LENGTH + 16], \
 	champ.size);

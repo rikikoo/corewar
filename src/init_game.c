@@ -6,11 +6,42 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/12 23:52:59 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:56:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+/*
+** initializes a new carriage, i.e. appends a new t_car element to the end of
+** the carriage list, whose head pointer is stored in t_game
+**
+** @prev_id: id of previous carriage
+** @pos: carriage position on the arena
+** @playernbr: champion's playernbr; determined by parent carriage's registry[0]
+*/
+t_car	*new_car(int prev_id, int pos, int playernbr)
+{
+	t_car	*car;
+	int		i;
+
+	car = (t_car *)malloc(sizeof(t_car));
+	if (!car)
+		return (NULL);
+	car->id = prev_id + 1;
+	car->pos = pos;
+	car->carry = 0;
+	car->cycles_since_live = 0;
+	car->dead = 0;
+	car->cycles_to_exec = 1;
+	i = 0;
+	car->registry[i] = playernbr * -1;
+	while (++i < REG_NUMBER)
+		car->registry[i] = 0;
+	car->current_opcode = 0;
+	car->next = NULL;
+	return (car);
+}
 
 static void	introduce_champs(t_champ *champs, int champ_count)
 {
@@ -43,7 +74,7 @@ void	init_arena(t_champ *champs, int champ_count, unsigned char *arena)
 	introduce_champs(champs, champ_count);
 }
 
-t_game	init_game(int champ, t_car *car)
+t_game	init_game(int champ_count, t_car *car)
 {
 	t_game	game;
 
@@ -52,7 +83,8 @@ t_game	init_game(int champ, t_car *car)
 	game.cycles_to_die = CYCLE_TO_DIE;
 	game.checks = 0;
 	game.winner = 0;
-	game.last_live_report = champ;
+	game.last_live_report = champ_count - 1;
+	game.champ_count = champ_count;
 	game.cars = car;
 	return (game);
 }
@@ -84,7 +116,7 @@ int	start_game(t_flags flags, unsigned char *arena, t_champ *champs)
 		car->next = new_car(car->id, ((MEM_SIZE / flags.champ_count) * i), i);
 		car = car->next;
 	}
-	game = init_game(flags.champ_count - 1, head);
+	game = init_game(flags.champ_count, head);
 	i = start_cycles(flags, arena, &game, champs);
 	while (head != NULL)
 	{

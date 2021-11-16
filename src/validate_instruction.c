@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/12 22:54:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:49:06 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos)
 		instruct.sizes[arg] = get_arg_size(inst_code, instruct.types[arg]);
 		arg++;
 	}
-	instruct.is_valid = validate_args(instruct.inst_code, &(instruct.types));
+	instruct.is_valid = validate_args(instruct.inst_code, instruct.types);
 	if (instruct.is_valid)
 		instruct.is_valid = validate_regs(instruct, arena, pos + 1);
 	return (instruct);

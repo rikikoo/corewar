@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/13 00:00:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:58:13 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,21 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 {
 	int	player;
 
-	player = ft_bytes_toint(arena[(car->pos + 1) % MEM_SIZE], T_DIR) * -1;
-	if (champs[player - 1] != NULL)
+	player = n_bytes_to_int(&arena[(car->pos + 1) % MEM_SIZE], DIR_SIZE) * -1;
+	if (player > 0 && player <= game->champ_count)
 	{
 		print_live(champs[player - 1]);
 		game->last_live_report = player;
 		car->cycles_since_live = 0;
 	}
-	return (T_DIR + 1);
+	return (DIR_SIZE + 1);
 }
 
 /*
-** performs a load operation (@inst_code == 2). if the value loaded is 0,
-** changes carry to true.
+** performs a load or long load operation (@inst_code == 2 or 13, respectively).
+** if the value loaded is 0, changes carry to true.
 */
-int	load_inst(t_car *car, unsigned char *arena)
+int	load_inst(int inst_code, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		value;
@@ -42,9 +42,11 @@ int	load_inst(t_car *car, unsigned char *arena)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
 	pos = car->pos + 2;
 	value = get_arg_value(instruct, arena, car, 1);
+	if (inst_code == 2)
+		value = value % IDX_MOD;
 	reg = arena[(pos + instruct.sizes[0]) % MEM_SIZE] - 1;
 	car->registry[reg] = value;
-	car->carry == (value == 0);
+	car->carry = (value == 0);
 	return (instruct.sizes[0] + instruct.sizes[1] + 2);
 }
 
@@ -60,7 +62,7 @@ int	store_inst(t_car *car, unsigned char *arena)
 	int		reg_value;
 	t_inst	instruct;
 
-	instruct = validate_instruction(inst_code, arena, car->pos);
+	instruct = validate_instruction(3, arena, car->pos);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
 	pos = car->pos + instruct.sizes[0] + 2;
@@ -70,7 +72,7 @@ int	store_inst(t_car *car, unsigned char *arena)
 	else
 	{
 		ind_value = get_arg_value(instruct, arena, car, 2);
-		arena[((pos + ind_value) % IDX_MOD) % MEM_SIZE] = reg_value;
+		arena[((car->pos + ind_value) % IDX_MOD) % MEM_SIZE] = reg_value;
 	}
 	return (instruct.sizes[0] + instruct.sizes[1] + 2);
 }

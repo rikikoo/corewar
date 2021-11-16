@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/13 00:04:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:57:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ typedef struct s_game
 	int				checks;
 	int				winner;
 	int				last_live_report;
+	int				champ_count;
 	struct s_car	*cars;
 }	t_game;
 
@@ -120,6 +121,7 @@ void	sort_champs(t_champ *champs, int champ_count);
 ** INITS & MAIN LOOP
 */
 void	init_arena(t_champ *champs, int champ_count, unsigned char *arena);
+t_car	*new_car(int prev_id, int pos, int playernbr);
 t_game	init_game(int champ, t_car *car);
 int		start_game(t_flags flags, unsigned char *arena, t_champ *champs);
 int		start_cycles(t_flags flags, unsigned char *arena, t_game *game, \
@@ -128,15 +130,17 @@ int		start_cycles(t_flags flags, unsigned char *arena, t_game *game, \
 /*
 ** INSTRUCTIONS
 */
-int		stay_alive(t_game *game, t_car *car, t_champ *champs);
-int		load_inst(t_car *car, unsigned char *arena);
+int		stay_alive(t_game *game, t_car *car, unsigned char *arena, \
+		t_champ *champs);
+int		load_inst(int inst_code, t_car *car, unsigned char *arena);
 int		store_inst(t_car *car, unsigned char *arena);
 int		arithmetic_inst(int inst_code, t_car *car, unsigned char *arena);
 int		bitwise_inst(int inst_code, t_car *car, unsigned char *arena);
 int		jump_inst(t_car *car, unsigned char *arena);
-int		ind_load_inst(t_car *car, unsigned char *arena);
+int		ind_load_inst(int inst_code, t_car *car, unsigned char *arena);
 int		ind_store_inst(t_car *car, unsigned char *arena);
-int		fork_inst(int inst_code, t_car *car, unsigned char *arena);
+int		fork_inst(int inst_code, t_car *car, unsigned char *arena, \
+		t_game *game);
 int		longload_inst(int inst_code, t_car *car, unsigned char *arena);
 int		print_aff(t_car *car, unsigned char *arena);
 
@@ -147,13 +151,15 @@ t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos);
 int		get_arg_count(int inst_code);
 int		get_arg_type(unsigned char byte, int arg);
 int		get_arg_size(int inst_code, int arg);
-int		get_arg_value(t_inst instruct, unsigned char *arena, int pos, int val);
+int		get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, \
+		int val);
 
 /*
 ** UTILS
 */
-t_car	*new_car(int prev_id, int pos, int playernbr);
+int		n_bytes_to_int(const unsigned char *bytes, int n);
 void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
+void	print_live(t_champ champ);
 
 #endif

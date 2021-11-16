@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 17:41:26 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/12 23:57:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2021/11/16 10:44:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ void	print_live(t_champ champ)
 /*
 ** checks arg type, validates registry number. if these are valid, prints the
 ** value stored in the registry indicated by two bytes after car->pos.
-** returns the amount of bytes to move forward (2 (= instruction + arg_code) +
-** arg_size).
+** returns the amount of bytes for the carriage to move forward, which is
+** two (= instruction + arg_code) + arg_size.
 */
 int	print_aff(t_car *car, unsigned char *arena)
 {
@@ -37,7 +37,7 @@ int	print_aff(t_car *car, unsigned char *arena)
 	else if (type == DIR_CODE)
 		return (2 + DIR_SIZE);
 	else if (type == IND_CODE)
-		return (2 + IND_SIZE)
+		return (2 + IND_SIZE);
 	else
 	{
 		reg = arena[(car->pos + 1) % MEM_SIZE];
