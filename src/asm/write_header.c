@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   write_header.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/26 18:39:33 by vhallama         ###   ########.fr       */
+/*   Created: 2022/04/26 18:52:38 by vhallama          #+#    #+#             */
+/*   Updated: 2022/04/26 19:45:14 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <fcntl.h>
+#include "op.h"
 
-t_data	*init_data(char *filename)
+void	write_header(t_data *data)
 {
-	t_data	*data;
-	char	*tmp;
+	int32_t	magic;
 
-	data = (t_data *)malloc_safe(sizeof(t_data));
-	data->source_fd = open(filename, O_RDONLY);
-	if (data->source_fd == -1)
-		error_exit("Error: cannot open file");
-	tmp = ft_strsub(filename, 0, ft_strlen(filename) - 2);
-	data->filename = ft_strjoin(tmp, ".cor");
-	free(tmp);
-	data->row++;
-	return (data);
+	magic = COREWAR_EXEC_MAGIC;
+	write(data->target_fd, &magic, 4);
+	// magic = COREWAR_EXEC_MAGIC >> 16;
+	// write(data->target_fd, &magic, 2);
+	// magic = COREWAR_EXEC_MAGIC;
+	// write(data->target_fd, &magic, 2);
 }

@@ -1,21 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   cleanup.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:40:08 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/25 16:42:00 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/26 18:14:11 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-void	free_commands(t_commands *commands)
+void	free_data(t_data *data)
 {
-	free(commands->name);
-	free(commands->comment);
-	free(commands->statements);
-	free(commands);
+	free(data->name);
+	free(data->comment);
+	free(data->filename);
+	free(data);
 }
