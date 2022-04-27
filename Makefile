@@ -6,7 +6,7 @@
 #    By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/04/26 18:58:07 by vhallama         ###   ########.fr        #
+#    Updated: 2022/04/27 11:23:22 by vhallama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,8 @@ ASM_SRC =	asm.c \
 			cleanup.c \
 			read_file.c \
 			write_file.c \
-			write_header.c
+			write_header.c \
+			write_utils.c
 
 ASM_OBJ = $(ASM_SRC:.c=.o)
 

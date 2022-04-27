@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/26 18:57:51 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/27 12:51:38 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,14 @@ typedef struct s_statement {
 }	t_statement;
 
 typedef struct s_data{
-	int		source_fd;
-	int		target_fd;
-	char	*filename;
-	char	*name;
-	char	*comment;
-	int		row;
-	int		col;
+	int			source_fd;
+	int			target_fd;
+	char		*filename;
+	char		*name;
+	char		*comment;
+	u_int32_t	champ_size;
+	int			row;
+	int			col;
 }	t_data;
 
 // utils
@@ -43,4 +44,7 @@ void		free_data(t_data *data);
 // write functions
 void		write_file(t_data *data);
 void		write_header(t_data *data);
+
+// write utils
+u_int32_t	u_int_32_to_big_endian(u_int32_t n);
 #endif

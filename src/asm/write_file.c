@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 16:35:13 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/26 19:34:53 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/27 12:16:37 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,4 +19,6 @@ void	write_file(t_data *data)
 	if (data->target_fd == -1)
 		error_exit("Error: cannot open output file");
 	write_header(data);
+	if (close(data->target_fd) == -1)
+		error_exit("Error: cannot close output file");
 }

@@ -6,7 +6,14 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:35:33 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/26 19:35:34 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/27 13:49:15 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "asm.h"
+
+u_int32_t	u_int_32_to_big_endian(u_int32_t n)
+{
+	return ((n & 0xFF000000) >> 24 | (n & 0x00FF0000) >> 8 | \
+	(n & 0x0000FF00) << 8 | (n & 0x000000FF) << 24);
+}
