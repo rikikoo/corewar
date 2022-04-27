@@ -6,12 +6,22 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 16:35:13 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/27 12:16:37 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/27 14:56:53 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include <fcntl.h>
+
+void	write_header(t_data *data)
+{
+	write_magic_header(data->target_fd);
+	write_champion_name(data);
+	write_null(data->target_fd);
+	write_exec_size(data);
+	write_champion_comment(data);
+	write_null(data->target_fd);
+}
 
 void	write_file(t_data *data)
 {

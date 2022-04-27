@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/26 18:36:55 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/27 18:32:41 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,60 +16,98 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 
-static void	get_comment(t_data *data, char *s, char *comment)
+static void	get_comment(t_data *data, char *s, char *comment, int *type)
 {
 	size_t	i;
 	size_t	j;
 
-	if (ft_strncmp(s, comment, ft_strlen(comment)))
-		parser_error_exit("invalid .comment formatting", data->row, 0);
 	i = 0;
-	while (s[i] != '"' && s[i] != '\0')
-		i++;
+	if (*type == 0)
+	{
+		skip_whitespace(s, &i);
+		if (ft_strncmp(s + i, comment, ft_strlen(comment)))
+			parser_error_exit("invalid .comment formatting", data->row, i + 1);
+		if (ft_strlen(data->comment))
+			parser_error_exit("multiple .comment commands", data->row, i + 1);
+		i += ft_strlen(comment);
+		skip_whitespace(s, &i);
+		if (s[i++] != '"')
+			parser_error_exit("invalid .comment, expected \"", data->row, i + 1);
+	}
+	j = ft_strlen(data->comment);
+	while (s[i] && s[i] != '"')
+	{
+		if (j == COMMENT_LENGTH)
+			parser_error_exit(".comment too long", data->row, i);
+		data->comment[j++] = s[i++];
+	}
 	if (s[i] != '"')
-		parser_error_exit("invalid .comment", data->row, i + 1);
-	j = i + 1;
-	while (s[j] != '"' && s[j] != '\0')
-		j++;
-	if (s[j] != '"' || s[j + 1] != '\0')
-		parser_error_exit("invalid .comment", data->row, j + 1);
-	data->comment = ft_strsub(s, i + 1, ft_strlen(s + i + 2));
-	if (ft_strlen(data->name) > COMMENT_LENGTH)
-		parser_error_exit(".comment too long", data->row, 0);
+	{
+		data->comment[j] = '\n'; // CHECK HOW BINARY HANDLES THIS!
+		*type = 2;
+	}
+	else
+		*type = 0;
+	if (s[i] == '"' && s[i + 1] != '\0')
+		parser_error_exit("invalid character, expected EOL", data->row, i + 1);
 }
 
-static void	get_name(t_data *data, char *s, char *name)
+static void	get_name(t_data *data, char *s, char *name, int *type)
 {
 	size_t	i;
 	size_t	j;
 
-	if (ft_strncmp(s, name, ft_strlen(name)))
-		parser_error_exit("invalid .name formatting", data->row, 0);
 	i = 0;
-	while (s[i] != '"' && s[i] != '\0')
-		i++;
+	if (*type == 0)
+	{
+		skip_whitespace(s, &i);
+		if (ft_strncmp(s + i, name, ft_strlen(name)))
+			parser_error_exit("invalid .name formatting", data->row, i + 1);
+		if (ft_strlen(data->comment))
+			parser_error_exit("multiple .name commands", data->row, i + 1);
+		i += ft_strlen(name);
+		skip_whitespace(s, &i);
+		if (s[i++] != '"')
+			parser_error_exit("invalid .name, expected \"", data->row, i + 1);
+	}
+	j = ft_strlen(data->name);
+	while (s[i] && s[i] != '"')
+	{
+		if (j == PROG_NAME_LENGTH)
+			parser_error_exit(".name too long", data->row, i);
+		data->name[j++] = s[i++];
+	}
 	if (s[i] != '"')
-		parser_error_exit("invalid .name", data->row, i + 1);
-	j = i + 1;
-	while (s[j] != '"' && s[j] != '\0')
-		j++;
-	if (s[j] != '"' || s[j + 1] != '\0')
-		parser_error_exit("invalid .name", data->row, j + 1);
-	data->name = ft_strsub(s, i + 1, ft_strlen(s + i + 2));
-	if (ft_strlen(data->name) > PROG_NAME_LENGTH)
-		parser_error_exit(".name too long", data->row, 0);
+	{
+		data->name[j] = '\n'; // CHECK HOW BINARY HANDLES THIS!
+		*type = 1;
+	}
+	else
+		*type = 0;
+	if (s[i] == '"' && s[i + 1] != '\0')
+		parser_error_exit("invalid character, expected EOL", data->row, i + 1);
 }
 
+// since .name and .comment strings can be over multiple lines,
+// variable type tracks what command is ongoing
+// type == 0 is undefined
+// type == 1 is for .name
+// type == 2 is for .comment
+// type == 3 is for other statements
 void	read_file(t_data *data)
 {
 	char	*line;
+	int		type;
 
+	type = 0;
 	while (get_next_line(data->source_fd, &line))
 	{
-		if (ft_strstr(line, NAME_CMD_STRING))
-			get_name(data, line, NAME_CMD_STRING);
-		else if (ft_strstr(line, COMMENT_CMD_STRING))
-			get_comment(data, line, COMMENT_CMD_STRING);
+		if (ft_strstr(line, NAME_CMD_STRING) || type == 1)
+			get_name(data, line, NAME_CMD_STRING, &type);
+		else if (ft_strstr(line, COMMENT_CMD_STRING) || type == 2)
+			get_comment(data, line, COMMENT_CMD_STRING, &type);
+		// else
+		// 	tokenize_line(data, line);
 		free(line);
 		data->row++;
 		data->col = 0;

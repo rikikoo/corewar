@@ -1,21 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cleanup.c                                          :+:      :+:    :+:   */
+/*   read_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/25 16:40:08 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/27 17:16:20 by vhallama         ###   ########.fr       */
+/*   Created: 2022/04/27 16:04:41 by vhallama          #+#    #+#             */
+/*   Updated: 2022/04/27 17:24:37 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "asm.h"
+#include "libft.h"
 
-void	free_data(t_data *data)
+void	skip_whitespace(char *s, size_t *i)
 {
-	// free(data->name);
-	// free(data->comment);
-	free(data->filename);
-	free(data);
+	while (!ft_isprint(s[*i]))
+		(*i)++;
 }
