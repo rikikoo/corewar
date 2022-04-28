@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/28 13:59:33 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:44:33 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ void	read_file(t_data *data)
 	type = 0;
 	while (get_next_line(data->source_fd, &line))
 	{
+		data->row++;
+		data->col = 0;
 		if (ft_strstr(line, NAME_CMD_STRING) || type == 1)
 			get_name(data, line, NAME_CMD_STRING, &type);
 		else if (ft_strstr(line, COMMENT_CMD_STRING) || type == 2)
@@ -122,9 +124,14 @@ void	read_file(t_data *data)
 		// else
 		// 	tokenize_line(data, line);
 		free(line);
-		data->row++;
-		data->col = 0;
 	}
+	check_for_newline_at_the_end_of_file(data);
+	char	buf[1];
+	
+	lseek(data->source_fd, -1, SEEK_END);
+	read(data->source_fd, &buf, 1);
+	if (buf[0] != '\n')
+		parser_error_exit("no newline at the end of file", data->row, data->col);
 	if (close(data->source_fd) == -1)
 		error_exit("Error: cannot close source file");
 }

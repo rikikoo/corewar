@@ -6,7 +6,7 @@
 #    By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/04/27 16:07:02 by vhallama         ###   ########.fr        #
+#    Updated: 2022/04/28 14:46:53 by vhallama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ ASM_SRC =	asm.c \
 			cleanup.c \
 			read_file.c \
 			read_utils.c \
+			read_validation.c \
 			write_file.c \
 			write_header.c \
 			write_utils.c

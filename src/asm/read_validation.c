@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   read_validation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/28 14:40:19 by vhallama         ###   ########.fr       */
+/*   Created: 2022/04/28 14:45:27 by vhallama          #+#    #+#             */
+/*   Updated: 2022/04/28 14:46:40 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-#include <fcntl.h>
 
-t_data	*init_data(char *filename)
+void	check_for_newline_at_the_end_of_file(t_data *data)
 {
-	t_data	*data;
-	char	*tmp;
+	char	buf[1];
 
-	data = (t_data *)malloc_safe(sizeof(t_data));
-	data->source_fd = open(filename, O_RDONLY);
-	if (data->source_fd == -1)
-		error_exit("Error: cannot open file");
-	tmp = ft_strsub(filename, 0, ft_strlen(filename) - 2);
-	data->filename = ft_strjoin(tmp, ".cor");
-	free(tmp);
-	return (data);
+	lseek(data->source_fd, -1, SEEK_END);
+	read(data->source_fd, &buf, 1);
+	if (buf[0] != '\n')
+	{
+		parser_error_exit("no newline at the end of file",
+			data->row, data->col);
+	}
 }

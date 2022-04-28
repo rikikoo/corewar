@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/28 12:55:20 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/28 14:47:08 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include "op.h"
 
 typedef struct s_statement {
-	char	*label;
-	int		statement_code;
-	char	*argv[3];
-
+	char				*label;
+	int					statement_code;
+	char				*argv[3];
+	struct s_statemet	*next;
 }	t_statement;
 
 typedef struct s_data{
@@ -46,6 +46,9 @@ void		free_data(t_data *data);
 
 // read functions
 void		read_file(t_data *data);
+void		check_for_newline_at_the_end_of_file(t_data *data);
+
+// read utils
 void		skip_whitespace(char *s, size_t *i);
 
 // write functions
