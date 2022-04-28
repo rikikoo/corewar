@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/27 18:23:44 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/28 12:55:20 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,8 @@ typedef struct s_data{
 	char		name[PROG_NAME_LENGTH];
 	char		comment[COMMENT_LENGTH];
 	u_int32_t	champ_size;
-	int			row;
-	int			col;
+	size_t		row;
+	size_t		col;
 }	t_data;
 
 // core

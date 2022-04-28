@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/27 18:32:41 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/28 13:59:33 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,76 +16,89 @@
 #include "get_next_line.h"
 #include <fcntl.h>
 
+static char	*validate_command_end(t_data *data, char *s, char *cmd, int *type)
+{
+	if (s[data->col] != '"')
+	{
+		if (ft_strequ(cmd, ".name"))
+			*type = 1;
+		else if (ft_strequ(cmd, ".command"))
+			*type = 2;
+		return (NULL);
+	}
+	if (s[data->col] == '"')
+	{
+		data->col++;
+		skip_whitespace(s, &data->col);
+		if (s[data->col] != '\0')
+			return (ft_strjoin("epected EOL, invalid ", cmd));
+	}
+	*type = 0;
+	return (NULL);
+}
+
+static char	*validate_command_start(t_data *data, char *s, char *cmd)
+{
+	skip_whitespace(s, &data->col);
+	if (ft_strncmp(s + data->col, cmd, ft_strlen(cmd)))
+		return (ft_strjoin("invalid formatting of ", cmd));
+	if (ft_strlen(data->comment))
+		return (ft_strjoin("multiple commands of type ", cmd));
+	data->col += ft_strlen(cmd);
+	skip_whitespace(s, &data->col);
+	if (s[data->col++] != '"')
+		return (ft_strjoin("expected '\"', invalid formatting of ", cmd));
+	return (NULL);
+}
+
 static void	get_comment(t_data *data, char *s, char *comment, int *type)
 {
-	size_t	i;
 	size_t	j;
+	char	*error;
 
-	i = 0;
 	if (*type == 0)
 	{
-		skip_whitespace(s, &i);
-		if (ft_strncmp(s + i, comment, ft_strlen(comment)))
-			parser_error_exit("invalid .comment formatting", data->row, i + 1);
-		if (ft_strlen(data->comment))
-			parser_error_exit("multiple .comment commands", data->row, i + 1);
-		i += ft_strlen(comment);
-		skip_whitespace(s, &i);
-		if (s[i++] != '"')
-			parser_error_exit("invalid .comment, expected \"", data->row, i + 1);
+		error = validate_command_start(data, s, comment);
+		if (error != NULL)
+			parser_error_exit(error, data->row, data->col + 1);
 	}
 	j = ft_strlen(data->comment);
-	while (s[i] && s[i] != '"')
+	while (s[data->col] && s[data->col] != '"')
 	{
 		if (j == COMMENT_LENGTH)
-			parser_error_exit(".comment too long", data->row, i);
-		data->comment[j++] = s[i++];
+			parser_error_exit(".comment too long", data->row, data->col);
+		data->comment[j++] = s[data->col++];
 	}
-	if (s[i] != '"')
-	{
+	if (s[data->col] != '"')
 		data->comment[j] = '\n'; // CHECK HOW BINARY HANDLES THIS!
-		*type = 2;
-	}
-	else
-		*type = 0;
-	if (s[i] == '"' && s[i + 1] != '\0')
-		parser_error_exit("invalid character, expected EOL", data->row, i + 1);
+	error = validate_command_end(data, s, comment, type);
+	if (error != NULL)
+		parser_error_exit(error, data->row, data->col + 1);
 }
 
 static void	get_name(t_data *data, char *s, char *name, int *type)
 {
-	size_t	i;
 	size_t	j;
+	char	*error;
 
-	i = 0;
 	if (*type == 0)
 	{
-		skip_whitespace(s, &i);
-		if (ft_strncmp(s + i, name, ft_strlen(name)))
-			parser_error_exit("invalid .name formatting", data->row, i + 1);
-		if (ft_strlen(data->comment))
-			parser_error_exit("multiple .name commands", data->row, i + 1);
-		i += ft_strlen(name);
-		skip_whitespace(s, &i);
-		if (s[i++] != '"')
-			parser_error_exit("invalid .name, expected \"", data->row, i + 1);
+		error = validate_command_start(data, s, name);
+		if (error != NULL)
+			parser_error_exit(error, data->row, data->col + 1);
 	}
 	j = ft_strlen(data->name);
-	while (s[i] && s[i] != '"')
+	while (s[data->col] && s[data->col] != '"')
 	{
 		if (j == PROG_NAME_LENGTH)
-			parser_error_exit(".name too long", data->row, i);
-		data->name[j++] = s[i++];
+			parser_error_exit(".name too long", data->row, data->col);
+		data->name[j++] = s[data->col++];
 	}
-	if (s[i] != '"')
-	{
+	if (s[data->col] != '"')
 		data->name[j] = '\n'; // CHECK HOW BINARY HANDLES THIS!
-		*type = 1;
-	}
-	else
-		*type = 0;
-	if (s[i] == '"' && s[i + 1] != '\0')
-		parser_error_exit("invalid character, expected EOL", data->row, i + 1);
+	error = validate_command_end(data, s, name, type);
+	if (error != NULL)
+		parser_error_exit(error, data->row, data->col + 1);
 }
 
 // since .name and .comment strings can be over multiple lines,
