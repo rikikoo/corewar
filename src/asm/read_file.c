@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: vhallama <vhallama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/28 14:44:33 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/29 13:44:46 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,6 @@ void	read_file(t_data *data)
 		free(line);
 	}
 	check_for_newline_at_the_end_of_file(data);
-	char	buf[1];
-	
-	lseek(data->source_fd, -1, SEEK_END);
-	read(data->source_fd, &buf, 1);
-	if (buf[0] != '\n')
-		parser_error_exit("no newline at the end of file", data->row, data->col);
 	if (close(data->source_fd) == -1)
 		error_exit("Error: cannot close source file");
 }
