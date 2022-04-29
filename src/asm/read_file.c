@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/29 13:44:46 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/04/29 13:48:24 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static void	get_comment(t_data *data, char *s, char *comment, int *type)
 		data->comment[j++] = s[data->col++];
 	}
 	if (s[data->col] != '"')
-		data->comment[j] = '\n'; // CHECK HOW BINARY HANDLES THIS!
+		data->comment[j] = '\n';
 	error = validate_command_end(data, s, comment, type);
 	if (error != NULL)
 		parser_error_exit(error, data->row, data->col + 1);
@@ -95,7 +95,7 @@ static void	get_name(t_data *data, char *s, char *name, int *type)
 		data->name[j++] = s[data->col++];
 	}
 	if (s[data->col] != '"')
-		data->name[j] = '\n'; // CHECK HOW BINARY HANDLES THIS!
+		data->name[j] = '\n';
 	error = validate_command_end(data, s, name, type);
 	if (error != NULL)
 		parser_error_exit(error, data->row, data->col + 1);
