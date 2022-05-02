@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/28 14:47:08 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/02 19:14:15 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,23 @@
 # include "libft.h"
 # include "op.h"
 
+typedef struct s_label {
+	char			*label;
+	struct s_label	*next;
+}	t_label;
+
 typedef struct s_statement {
-	char				*label;
-	int					statement_code;
-	char				*argv[3];
-	struct s_statemet	*next;
+	int					label_amount;
+	struct s_label		*label;
+	char				*op_name;
+	int					op_code;
+	char				*arg[3];
+	int					argtypes[3];
+	int					t_dir_size;
+	int					arg_type_code;
+	int					pos;
+	int					label_pos[3];
+	struct s_statement	*next;
 }	t_statement;
 
 typedef struct s_data{
@@ -36,20 +48,31 @@ typedef struct s_data{
 // core
 void		assemble(char *filename);
 t_data		*init_data(char *filename);
+t_statement	*init_list(void);
 
 // utils
 void		usage(void);
 void		error_exit(char *s);
 void		parser_error_exit(char *s, int row, int col);
 void		*malloc_safe(size_t size);
+void		append_labels(t_label **head);
+
+// cleanup
 void		free_data(t_data *data);
+void		free_list(t_statement **head);
 
 // read functions
-void		read_file(t_data *data);
+void		read_file(t_data *data, t_statement **list);
 void		check_for_newline_at_the_end_of_file(t_data *data);
 
 // read utils
 void		skip_whitespace(char *s, size_t *i);
+
+// tokenization
+void		tokenize_line(t_data *data, t_statement *cur, char *s, int *type);
+
+// tokenization utils
+int			char_in_label_chars(char s);
 
 // write functions
 void		write_file(t_data *data);

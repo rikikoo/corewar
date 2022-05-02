@@ -6,12 +6,35 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/28 14:40:19 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/02 19:14:37 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include <fcntl.h>
+
+void	append_labels(t_label **head)
+{
+	t_label	*cur;
+
+	if (*head == NULL)
+		*head = (t_label *)malloc_safe(sizeof(t_label));
+	else
+	{
+		cur = *head;
+		while (cur->next != NULL)
+			cur = cur->next;
+		cur->next = (t_label *)malloc_safe(sizeof(t_label));
+	}
+}
+
+t_statement	*init_list(void)
+{
+	t_statement	*node;
+
+	node = (t_statement *)malloc_safe(sizeof(t_statement));
+	return (node);
+}
 
 t_data	*init_data(char *filename)
 {

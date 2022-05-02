@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vhallama <vhallama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/29 13:48:24 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/02 18:03:33 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,14 @@ static void	get_name(t_data *data, char *s, char *name, int *type)
 // type == 1 is for .name
 // type == 2 is for .comment
 // type == 3 is for other statements
-void	read_file(t_data *data)
+void	read_file(t_data *data, t_statement **list)
 {
-	char	*line;
-	int		type;
+	char		*line;
+	int			type;
+	t_statement	*cur;
 
 	type = 0;
+	cur = *list;
 	while (get_next_line(data->source_fd, &line))
 	{
 		data->row++;
@@ -121,8 +123,8 @@ void	read_file(t_data *data)
 			get_name(data, line, NAME_CMD_STRING, &type);
 		else if (ft_strstr(line, COMMENT_CMD_STRING) || type == 2)
 			get_comment(data, line, COMMENT_CMD_STRING, &type);
-		// else
-		// 	tokenize_line(data, line);
+		else
+			tokenize_line(data, cur, line, &type);
 		free(line);
 	}
 	check_for_newline_at_the_end_of_file(data);
