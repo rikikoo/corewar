@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 12:03:33 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 15:08:51 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static char	*validate_command_end(t_data *data, char *s, char *cmd, int *type)
 			*type = 2;
 		return (NULL);
 	}
-	// if (s[data->col] == '"')
 	else
 	{
 		data->col++;
@@ -36,13 +35,10 @@ static char	*validate_command_end(t_data *data, char *s, char *cmd, int *type)
 		*type = 0;
 		return (NULL);
 	}
-	// *type = 0;
-	// return (NULL);
 }
 
 static char	*validate_command_start(t_data *data, char *s, char *cmd)
 {
-	skip_whitespace(s, &data->col);
 	if (ft_strncmp(s + data->col, cmd, ft_strlen(cmd)))
 		return (ft_strjoin("invalid formatting of ", cmd));
 	if (ft_strlen(data->comment))
@@ -109,29 +105,29 @@ static void	get_name(t_data *data, char *s, char *name, int *type)
 // type == 0 is undefined
 // type == 1 is for .name
 // type == 2 is for .comment
-// type == 3 is for other statements
-void	read_file(t_data *data, t_statement **list)
+void	read_file(t_data *data, t_statement *cur, char *line, int type)
 {
-	char		*line;
-	int			type;
-	t_statement	*cur;
-
-	type = 0;
-	cur = *list;
 	while (get_next_line(data->source_fd, &line))
 	{
 		data->row++;
 		data->col = 0;
 		null_comment(line);
-		if (ft_strstr(line, NAME_CMD_STRING) || type == 1)
+		skip_whitespace(line, &data->col);
+		if (line[data->col] && (ft_strstr(line, NAME_CMD_STRING) || type == 1))
 			get_name(data, line, NAME_CMD_STRING, &type);
-		else if (ft_strstr(line, COMMENT_CMD_STRING) || type == 2)
+		else if (line[data->col] && \
+			(ft_strstr(line, COMMENT_CMD_STRING) || type == 2))
 			get_comment(data, line, COMMENT_CMD_STRING, &type);
-		else
-			tokenize_line(data, cur, line, &type);
+		else if (line[data->col])
+		{
+			if (cur->op_name)
+			{
+				append_list(&cur);
+				cur = cur->next;
+			}
+			tokenize_line(data, cur, line);
+		}
 		free(line);
-		if (cur->next != NULL)
-			cur = cur->next;
 	}
 	check_for_newline_at_the_end_of_file(data);
 	if (close(data->source_fd) == -1)
