@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 11:04:15 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 12:03:33 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void	read_file(t_data *data, t_statement **list)
 	{
 		data->row++;
 		data->col = 0;
+		null_comment(line);
 		if (ft_strstr(line, NAME_CMD_STRING) || type == 1)
 			get_name(data, line, NAME_CMD_STRING, &type);
 		else if (ft_strstr(line, COMMENT_CMD_STRING) || type == 2)

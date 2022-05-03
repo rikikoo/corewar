@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 11:21:55 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:56:30 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,5 +64,7 @@ void	tokenize_line(t_data *data, t_statement *cur, char *s, int *type)
 	if (label)
 		save_label(label, cur);
 	skip_whitespace(s, &data->col);
+	if (!s[data->col] || s[data->col] == COMMENT_CHAR)
+		return ;
 	append_list(&cur);
 }

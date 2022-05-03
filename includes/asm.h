@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 11:21:35 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 12:03:23 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_statement {
 	int					argtypes[3];
 	int					t_dir_size;
 	int					arg_type_code;
-	int					pos;
 	int					label_pos[3];
 	struct s_statement	*next;
 }	t_statement;
@@ -68,6 +67,7 @@ void		check_for_newline_at_the_end_of_file(t_data *data);
 
 // read utils
 void		skip_whitespace(char *s, size_t *i);
+void		null_comment(char *s);
 
 // tokenization
 void		tokenize_line(t_data *data, t_statement *cur, char *s, int *type);
