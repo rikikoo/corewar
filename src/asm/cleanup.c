@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:40:08 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/02 19:17:23 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:15:20 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	free_list(t_statement **head)
 	cur = *head;
 	while (cur != NULL)
 	{
-		if (cur->label_amount)
+		if (cur->label)
 			free_labels(&cur->label);
 		free(cur->op_name);
 		tmp = cur;

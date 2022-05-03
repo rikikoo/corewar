@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/02 19:14:15 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:21:35 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@
 
 typedef struct s_label {
 	char			*label;
+	u_int32_t		label_start;
 	struct s_label	*next;
 }	t_label;
 
 typedef struct s_statement {
-	int					label_amount;
 	struct s_label		*label;
 	char				*op_name;
 	int					op_code;
@@ -56,6 +56,7 @@ void		error_exit(char *s);
 void		parser_error_exit(char *s, int row, int col);
 void		*malloc_safe(size_t size);
 void		append_labels(t_label **head);
+void		append_list(t_statement **head);
 
 // cleanup
 void		free_data(t_data *data);
@@ -72,7 +73,7 @@ void		skip_whitespace(char *s, size_t *i);
 void		tokenize_line(t_data *data, t_statement *cur, char *s, int *type);
 
 // tokenization utils
-int			char_in_label_chars(char s);
+int			is_label_char(char s);
 
 // write functions
 void		write_file(t_data *data);

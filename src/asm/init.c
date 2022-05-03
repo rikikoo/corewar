@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/02 19:14:37 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:14:57 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,16 @@ void	append_labels(t_label **head)
 			cur = cur->next;
 		cur->next = (t_label *)malloc_safe(sizeof(t_label));
 	}
+}
+
+void	append_list(t_statement **head)
+{
+	t_statement	*cur;
+
+	cur = *head;
+	while (cur->next != NULL)
+		cur = cur->next;
+	cur->next = (t_statement *)malloc_safe(sizeof(t_statement));
 }
 
 t_statement	*init_list(void)

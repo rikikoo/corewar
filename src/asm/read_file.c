@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/02 18:03:33 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 11:04:15 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,18 @@ static char	*validate_command_end(t_data *data, char *s, char *cmd, int *type)
 			*type = 2;
 		return (NULL);
 	}
-	if (s[data->col] == '"')
+	// if (s[data->col] == '"')
+	else
 	{
 		data->col++;
 		skip_whitespace(s, &data->col);
 		if (s[data->col] != '\0')
 			return (ft_strjoin("epected EOL, invalid ", cmd));
+		*type = 0;
+		return (NULL);
 	}
-	*type = 0;
-	return (NULL);
+	// *type = 0;
+	// return (NULL);
 }
 
 static char	*validate_command_start(t_data *data, char *s, char *cmd)
@@ -126,6 +129,8 @@ void	read_file(t_data *data, t_statement **list)
 		else
 			tokenize_line(data, cur, line, &type);
 		free(line);
+		if (cur->next != NULL)
+			cur = cur->next;
 	}
 	check_for_newline_at_the_end_of_file(data);
 	if (close(data->source_fd) == -1)
