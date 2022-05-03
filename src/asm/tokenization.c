@@ -6,15 +6,41 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 15:11:14 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 18:10:13 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
+// checks that operation gets valid argument type
+// saves valid arguments into statement struct
 static void	get_args(t_data *data, t_statement *cur, char *s)
 {
-	
+	int	i;
+
+	i = 0;
+	while (s[data->col])
+	{
+		if (s[data->col] == 'r')
+		{
+			validate_arg_type(data, cur, i, T_REG);
+			get_t_reg_arg(data, cur, i, s);
+		}
+		else if (s[data->col] == DIRECT_CHAR)
+		{
+			validate_arg_type(data, cur, i, T_DIR);
+			get_t_dir_arg(data, cur, i, s);
+		}
+		if (s[data->col] == SEPARATOR_CHAR)
+		{
+			data->col++;
+			if (i == 2)
+				parser_error_exit("too many arguments",
+					data->row, data->col + 1);
+			i++;
+			skip_whitespace(s, &data->col);
+		}
+	}
 }
 
 // data->col isn't updated before return for better error messages
@@ -35,18 +61,6 @@ static void	get_op(t_data *data, t_statement *cur, char *s)
 	cur->op_code = assign_op_code(data, cur->op_name);
 	data->col = i;
 	skip_whitespace(s, &data->col);
-}
-
-static void	save_label(char *label, t_statement *cur)
-{
-	size_t	i;
-	t_label	*tmp;
-
-	append_labels(&cur->label);
-	tmp = cur->label;
-	while (tmp->next != NULL)
-		tmp = tmp->next;
-	tmp->label = label;
 }
 
 // finds label char if present in line

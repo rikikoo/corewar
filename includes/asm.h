@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 15:09:13 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/03 17:57:21 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_statement {
 	char				*op_name;
 	u_int8_t			op_code;
 	char				*arg[3];
-	int					argtypes[3];
+	u_int8_t			argtypes[3];
 	int					t_dir_size;
 	int					arg_type_code;
 	int					label_pos[3];
@@ -71,9 +71,15 @@ void		null_comment(char *s);
 
 // tokenization
 void		tokenize_line(t_data *data, t_statement *cur, char *s);
+void		validate_arg_type(t_data *data, t_statement *cur, int arg_num,
+				int arg_type);
+void		get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s);
+void		get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s);
+
 
 // tokenization utils
 int			is_label_char(char s);
+void		save_label(char *label, t_statement *cur);
 u_int8_t	assign_op_code(t_data *data, char *s);
 
 // write functions
