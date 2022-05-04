@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:53:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 18:22:14 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:22:01 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,13 @@
 #include "op.h"
 #include "oplist.h"
 
+// validates that the statement's operation accepts certain type of
+// argument at certain argument number
 void	validate_arg_type(t_data *data, t_statement *cur, int arg_num,
 int arg_type)
 {
-	int	i;
-
-	i = 0;
-	while (i < 16)
-	{
-		if (cur->op_code == g_oplist[i].op_code)
-			break ;
-		i++;
-	}
-	// ft_printf("op:%s, arg_num:%d, arg_type:%d\n", cur->op_name, arg_num, arg_type);
-	// ft_printf("%d\n", g_oplist[i].arg_type[arg_num]);
-	if ((int)g_oplist[i].arg_type[arg_num] != \
-	(int)(g_oplist[i].arg_type[arg_num] | arg_type))
+	if ((int)g_oplist[cur->op_code - 1].arg_type[arg_num] != \
+	(int)(g_oplist[cur->op_code - 1].arg_type[arg_num] | arg_type))
 		parser_error_exit("invalid argument type", data->row, data->col + 1);
 }
 

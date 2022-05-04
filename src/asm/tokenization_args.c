@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:18:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 14:24:44 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:00:15 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	validate_arg_end(t_data *data, char *s)
 {
 	skip_whitespace(s, &data->col);
 	if (s[data->col] != '\0' && s[data->col] != SEPARATOR_CHAR)
-		parser_error_exit("invalid label", data->row, data->col + 1);
+		parser_error_exit("invalid argument", data->row, data->col + 1);
 }
 
 static char	*get_label(t_data *data, t_statement *cur, char *s, int t_dir)
@@ -43,6 +43,9 @@ static char	*get_label(t_data *data, t_statement *cur, char *s, int t_dir)
 	return (ret);
 }
 
+// returns T_IND arg
+// moves data->col to beginning of next argument or EOL
+// if it doesn't find next argument or EOL, outputs error
 void	get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {
 	size_t	start;
@@ -63,6 +66,9 @@ void	get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 	cur->argtypes[arg_num] = T_IND;
 }
 
+// returns T_DIR arg
+// moves data->col to beginning of next argument or EOL
+// if it doesn't find next argument or EOL, outputs error
 void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {
 	size_t	start;
@@ -88,7 +94,7 @@ void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 }
 
 // returns T_REG arg
-// moves data->row to beginning of next argument or EOL
+// moves data->col to beginning of next argument or EOL
 // if it doesn't find next argument or EOL, outputs error
 void	get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {

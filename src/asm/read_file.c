@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 15:08:51 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:49:16 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,10 @@ static char	*validate_command_end(t_data *data, char *s, char *cmd, int *type)
 		if (s[data->col] != '\0')
 			return (ft_strjoin("epected EOL, invalid ", cmd));
 		*type = 0;
+		if (ft_strequ(cmd, ".name"))
+			data->has_name = 1;
+		else if (ft_strequ(cmd, ".comment"))
+			data->has_comment = 1;
 		return (NULL);
 	}
 }

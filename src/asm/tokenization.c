@@ -6,15 +6,16 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 14:39:59 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:54:19 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include "oplist.h"
 
-// checks that operation gets valid argument type
-// saves valid arguments into statement struct
+// switch for checking that operation gets valid argument type,
+// checking valid amount of arguments, and
+// saving the arguments into statement struct
 static void	get_args(t_data *data, t_statement *cur, char *s, int i)
 {
 	while (s[data->col])
@@ -42,23 +43,23 @@ static void	get_args(t_data *data, t_statement *cur, char *s, int i)
 	}
 }
 
-// data->col isn't updated before return for better error messages
-// before return data->col skips possible whitespaces to the
+// data->col skips possible whitespaces to the
 // beginning of first argument
 static void	get_op(t_data *data, t_statement *cur, char *s)
 {
-	size_t	i;
+	size_t	start;
 	char	*op;
 
-	i = data->col;
-	while (s[i] && s[i] != ' ' && s[i] != DIRECT_CHAR)
-		i++;
-	if (s[i] != ' ' && s[i] != DIRECT_CHAR)
+	start = data->col;
+	while (s[data->col] && ft_isalpha(s[data->col]))
+		data->col++;
+	if (s[data->col] != ' ' && s[data->col] != '\t' && \
+		s[data->col] != DIRECT_CHAR)
 		parser_error_exit("invalid character after operation name",
-			data->row, i + 1);
-	cur->op_name = ft_strsub(s, data->col, i - data->col);
+			data->row, data->col + 1);
+	cur->op_name = ft_strsub(s, start, data->col - start);
+	ft_putendl(cur->op_name);
 	cur->op_code = assign_op_code(data, cur->op_name);
-	data->col = i;
 	skip_whitespace(s, &data->col);
 }
 
@@ -100,10 +101,12 @@ void	tokenize_line(t_data *data, t_statement *cur, char *s)
 {
 	char		*label;
 
-	if (data->comment[0] == '\0' || data->name[0] == '\0')
-		parser_error_exit("expected .name or .comment", data->row, 1);
+	if (data->has_name == 0)
+		parser_error_exit("missing .name command", data->row, 1);
+	if (data->has_comment == 0)
+		parser_error_exit("missing .comment command", data->row, 1);
 	if (s[data->col] == '.')
-		parser_error_exit("unexpected comment", data->row, data->col + 1);
+		parser_error_exit("unknown command", data->row, data->col + 1);
 	label = get_label(data, s);
 	if (label)
 		save_label(label, cur);

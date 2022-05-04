@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 13:05:24 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 15:47:37 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ typedef struct s_data{
 	char		*filename;
 	char		name[PROG_NAME_LENGTH];
 	char		comment[COMMENT_LENGTH];
+	int			has_name;
+	int			has_comment;
 	u_int32_t	champ_size;
 	size_t		row;
 	size_t		col;
