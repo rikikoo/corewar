@@ -6,49 +6,73 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:18:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 18:17:15 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 13:18:04 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 
-static char	*get_label(t_data *data, t_statement *cur, char *s)
+static void	validate_arg_end(t_data *data, char *s)
 {
-	size_t	start;
-	size_t	end;
-	char	*ret;
-
-	start = data->col;
-	while (is_label_char(s[data->col]))
-		data->col++;
-	end = data->col;
 	skip_whitespace(s, &data->col);
 	if (s[data->col] != '\0' && s[data->col] != SEPARATOR_CHAR)
 		parser_error_exit("invalid label", data->row, data->col + 1);
-	ret = ft_strsub(s, start - 2, end - start + 2);
-	ret[0] = DIRECT_CHAR;
-	ret[1] = LABEL_CHAR;
+}
+
+static char	*get_label(t_data *data, t_statement *cur, char *s, int t_dir)
+{
+	size_t	start;
+	char	*ret;
+
+	data->col++;
+	skip_whitespace(s, &data->col);
+	start = data->col;
+	while (is_label_char(s[data->col]))
+		data->col++;
+	if (t_dir)
+	{
+		ret = ft_strsub(s, start - 2, data->col - start + 2);
+		ret[0] = DIRECT_CHAR;
+		ret[1] = LABEL_CHAR;
+	}
+	else
+	{
+		ret = ft_strsub(s, start - 1, data->col - start + 1);
+		ret[0] = LABEL_CHAR;
+	}
 	return (ret);
+}
+
+void	get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s)
+{
+	size_t	start;
+
+	if (s[data->col] == LABEL_CHAR)
+		cur->arg[arg_num] = get_label(data, cur, s, 0);
+	else
+	{
+		start = data->col;
+		if (s[data->col] == '-')
+			data->col++;
+		while (ft_isdigit(s[data->col]))
+			data->col++;
+		cur->arg[arg_num] = ft_strsub(s, start, data->col - start);
+	}
+	validate_arg_end(data, s);
+	cur->argtypes[arg_num] = T_IND;
 }
 
 void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {
-	size_t	len;
 	size_t	start;
 
-	len = 1;
 	data->col++;
 	skip_whitespace(s, &data->col);
 	if (s[data->col] == LABEL_CHAR)
-	{
-		len++;
-		data->col++;
-	}
-	skip_whitespace(s, &data->col);
-	if (len == 2)
-		cur->arg[arg_num] = get_label(data, cur, s);
+		cur->arg[arg_num] = get_label(data, cur, s, 1);
 	else
 	{
+		skip_whitespace(s, &data->col);
 		start = data->col;
 		if (s[data->col] == '-')
 			data->col++;
@@ -57,11 +81,8 @@ void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 		cur->arg[arg_num] = ft_strsub(s, start - 1, data->col - start + 1);
 		cur->arg[arg_num][0] = DIRECT_CHAR;
 	}
+	validate_arg_end(data, s);
 	cur->argtypes[arg_num] = T_DIR;
-	skip_whitespace(s, &data->col);
-	if (s[data->col] != '\0' && s[data->col] != SEPARATOR_CHAR)
-		parser_error_exit("expected SEPARATOR or EOL",
-			data->row, data->col + 1);
 }
 
 // returns T_REG arg
@@ -70,7 +91,6 @@ void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 void	get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {
 	size_t	start;
-	size_t	end;
 	int		reg;
 
 	start = data->col;
@@ -82,11 +102,7 @@ void	get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 		parser_error_exit("REG_NUMBER 0", data->row, data->col + 1);
 	while (ft_isdigit(s[data->col]))
 		data->col++;
-	end = data->col;
-	skip_whitespace(s, &data->col);
-	if (s[data->col] != '\0' && s[data->col] != SEPARATOR_CHAR)
-		parser_error_exit("expected SEPARATOR or EOL",
-			data->row, data->col + 1);
-	cur->arg[arg_num] = ft_strsub(s, start, end - start);
+	cur->arg[arg_num] = ft_strsub(s, start, data->col - start);
+	validate_arg_end(data, s);
 	cur->argtypes[arg_num] = T_REG;
 }

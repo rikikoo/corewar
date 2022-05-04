@@ -6,7 +6,7 @@
 #    By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/05/02 15:55:54 by vhallama         ###   ########.fr        #
+#    Updated: 2022/05/03 17:19:01 by vhallama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,6 +47,7 @@ ASM_SRC =	asm.c \
 			read_validation.c \
 			tokenization.c \
 			tokenization_utils.c \
+			tokenization_args.c \
 			write_file.c \
 			write_header.c \
 			write_utils.c

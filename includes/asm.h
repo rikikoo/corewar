@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 17:57:21 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 13:05:24 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void		validate_arg_type(t_data *data, t_statement *cur, int arg_num,
 				int arg_type);
 void		get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 void		get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s);
-
+void		get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 
 // tokenization utils
 int			is_label_char(char s);

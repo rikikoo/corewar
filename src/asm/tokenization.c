@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 18:10:13 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 13:14:58 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,19 @@ static void	get_args(t_data *data, t_statement *cur, char *s)
 			validate_arg_type(data, cur, i, T_DIR);
 			get_t_dir_arg(data, cur, i, s);
 		}
+		else if (s[data->col] == '-' || ft_isdigit(s[data->col]) || \
+			s[data->col] == LABEL_CHAR)
+		{
+			validate_arg_type(data, cur, i, T_IND);
+			get_t_ind_arg(data, cur, i, s);
+		}
 		if (s[data->col] == SEPARATOR_CHAR)
 		{
-			data->col++;
 			if (i == 2)
 				parser_error_exit("too many arguments",
 					data->row, data->col + 1);
 			i++;
+			data->col++;
 			skip_whitespace(s, &data->col);
 		}
 	}
