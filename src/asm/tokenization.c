@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 15:54:19 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 16:48:22 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ static void	get_op(t_data *data, t_statement *cur, char *s)
 	size_t	start;
 	char	*op;
 
+	if (!ft_isalpha(s[data->col]))
+		parser_error_exit("invalid operation name", data->row, data->col + 1);
 	start = data->col;
 	while (s[data->col] && ft_isalpha(s[data->col]))
 		data->col++;
