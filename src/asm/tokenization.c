@@ -6,45 +6,38 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 13:14:58 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 14:39:59 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
+#include "oplist.h"
 
 // checks that operation gets valid argument type
 // saves valid arguments into statement struct
-static void	get_args(t_data *data, t_statement *cur, char *s)
+static void	get_args(t_data *data, t_statement *cur, char *s, int i)
 {
-	int	i;
-
-	i = 0;
 	while (s[data->col])
 	{
 		if (s[data->col] == 'r')
-		{
-			validate_arg_type(data, cur, i, T_REG);
 			get_t_reg_arg(data, cur, i, s);
-		}
 		else if (s[data->col] == DIRECT_CHAR)
-		{
-			validate_arg_type(data, cur, i, T_DIR);
 			get_t_dir_arg(data, cur, i, s);
-		}
 		else if (s[data->col] == '-' || ft_isdigit(s[data->col]) || \
 			s[data->col] == LABEL_CHAR)
-		{
-			validate_arg_type(data, cur, i, T_IND);
 			get_t_ind_arg(data, cur, i, s);
-		}
-		if (s[data->col] == SEPARATOR_CHAR)
+		else if (s[data->col] != SEPARATOR_CHAR)
+			parser_error_exit("invalid argument", data->row, data->col + 1);
+		else if (s[data->col] == SEPARATOR_CHAR)
 		{
-			if (i == 2)
+			if (i == 2 || i == g_oplist[cur->op_code - 1].arg_cnt - 1)
 				parser_error_exit("too many arguments",
 					data->row, data->col + 1);
 			i++;
 			data->col++;
 			skip_whitespace(s, &data->col);
+			if (s[data->col] == SEPARATOR_CHAR)
+				parser_error_exit("empty argument", data->row, data->col);
 		}
 	}
 }
@@ -118,5 +111,5 @@ void	tokenize_line(t_data *data, t_statement *cur, char *s)
 	if (!s[data->col])
 		return ;
 	get_op(data, cur, s);
-	get_args(data, cur, s);
+	get_args(data, cur, s, 0);
 }

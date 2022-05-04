@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:18:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 13:18:04 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/04 14:24:44 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ void	get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {
 	size_t	start;
 
+	validate_arg_type(data, cur, arg_num, T_IND);
 	if (s[data->col] == LABEL_CHAR)
 		cur->arg[arg_num] = get_label(data, cur, s, 0);
 	else
@@ -66,6 +67,7 @@ void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 {
 	size_t	start;
 
+	validate_arg_type(data, cur, arg_num, T_DIR);
 	data->col++;
 	skip_whitespace(s, &data->col);
 	if (s[data->col] == LABEL_CHAR)
@@ -93,6 +95,7 @@ void	get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 	size_t	start;
 	int		reg;
 
+	validate_arg_type(data, cur, arg_num, T_REG);
 	start = data->col;
 	data->col++;
 	if (!ft_isdigit(s[data->col]))
