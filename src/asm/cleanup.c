@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 16:40:08 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/03 18:21:48 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:37:47 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,12 @@ static void	free_labels(t_label **list)
 	t_label	*tmp;
 
 	cur = *list;
-	while (cur->next != NULL)
+	while (cur != NULL)
 	{
 		tmp = cur;
 		cur = cur->next;
 		free(tmp->label);
 		free(tmp);
-	}
-	if (cur->label)
-	{
-		free(cur->label);
-		free(cur);
 	}
 }
 
