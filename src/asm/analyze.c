@@ -6,12 +6,13 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 17:11:40 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:10:48 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:14:19 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include "oplist.h"
+
 // If statement has no code, i.e. only label, label points to
 // byte after champ exec code and thus this function returns 0
 static u_int32_t	get_operation_bytesize(t_statement *st)
@@ -54,7 +55,7 @@ void	save_label_positions(t_statement *st, u_int32_t cur_size)
 
 // calculates statement sizes and saves where labels point to
 // and the total champ exec code size
-void	analyze_sizes_and_labels(t_data *data, t_statement *st)
+void	analyze_size_and_labels(t_data *data, t_statement *st)
 {
 	while (st != NULL)
 	{
