@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 13:20:35 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:11:29 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 
 typedef struct s_label {
 	char			*label;
+	u_int32_t		pos;
 	struct s_label	*next;
 }	t_label;
 
@@ -28,7 +29,6 @@ typedef struct s_statement {
 	u_int8_t			argtypes[3];
 	int					t_dir_size;
 	int					arg_type_code;
-	u_int32_t			pos;
 	int					label_pos[3];
 	struct s_statement	*next;
 }	t_statement;
@@ -85,7 +85,7 @@ void		save_label(char *label, t_statement *cur);
 void		assign_op_specs(t_data *data, t_statement *st);
 
 // analyze
-void		analyze(t_data *data, t_statement *st);
+void		analyze_size_and_labels(t_data *data, t_statement *st);
 
 // write functions
 void		write_file(t_data *data);

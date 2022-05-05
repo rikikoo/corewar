@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:17:29 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 13:27:40 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 13:58:54 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	print_debug(t_statement **head, t_data *data) // DELETE
 		l = c->label;
 		while (l != NULL)
 		{
-			ft_putendl(l->label);
+			ft_printf("%s, pos:%d\n", l->label, l->pos);
 			l = l->next;
 		}
 		ft_printf("	%s, 0x%02x", c->op_name, c->op_code);
@@ -36,7 +36,7 @@ static void	print_debug(t_statement **head, t_data *data) // DELETE
 				ft_printf(", %s", c->arg[i]);
 			i++;
 		}
-		ft_printf(" - pos: %d", c->pos);
+		// ft_printf(" - pos: %d", c->label->pos);
 		ft_printf("\n");
 		c = c->next;
 	}
