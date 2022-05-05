@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:17:29 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:32:21 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:27:35 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	print_debug(t_statement **head, t_data *data) // DELETE
 				ft_printf(", %s", c->arg[i]);
 			i++;
 		}
-		// ft_printf(" - pos: %d", c->label->pos);
+		ft_printf(" - pos: %d", c->pos);
 		ft_printf("\n");
 		c = c->next;
 	}
@@ -52,7 +52,7 @@ void	assemble(char *filename)
 	list = init_list();
 	read_file(data, list, NULL, 0);
 	print_debug(&list, data); // DELETE
-	write_file(data);
+	write_file(data, list);
 	free_data(data);
 	free_list(&list);
 }

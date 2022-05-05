@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:33:06 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:39:24 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ typedef struct s_statement {
 	u_int8_t			argtypes[3];
 	int					t_dir_size;
 	int					arg_type_code;
-	int					label_pos[3];
+	u_int32_t			pos;
 	struct s_statement	*next;
 }	t_statement;
 
@@ -81,17 +81,23 @@ void		get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 
 // tokenization utils
 int			is_label_char(char s);
-void		save_label(char *label, t_statement *cur, int champ_size);
+void		save_label(char *label, t_statement *cur, int cur_size);
 void		assign_op_specs(t_data *data, t_statement *st);
 
 // write functions
-void		write_file(t_data *data);
-void		write_header(t_data *data);
+void		write_file(t_data *data, t_statement *st);
+
+// write header
 void		write_magic_header(int fd);
 void		write_champion_name(t_data *data);
 void		write_champion_comment(t_data *data);
 void		write_null(int fd);
 void		write_exec_size(t_data *data);
+
+// write exec code
+void		write_statement_code(t_statement *st, int fd);
+void		write_argument_type_code(t_statement *st, int fd);
+void		write_arguments(t_statement *st, int fd);
 
 // write utils
 u_int32_t	u_int_32_to_big_endian(u_int32_t n);

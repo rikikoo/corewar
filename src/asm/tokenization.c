@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:33:11 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:27:02 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,5 +142,6 @@ void	tokenize_line(t_data *data, t_statement *cur, char *s)
 		return ;
 	get_op(data, cur, s);
 	get_args(data, cur, s, 0);
+	cur->pos = data->champ_size;
 	data->champ_size += get_operation_bytesize(cur);
 }

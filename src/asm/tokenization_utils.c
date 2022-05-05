@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:53:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:30:19 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 16:26:13 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int arg_type)
 		parser_error_exit("invalid argument type", data->row, data->col + 1);
 }
 
-void	save_label(char *label, t_statement *cur, int champ_size)
+void	save_label(char *label, t_statement *cur, int cur_size)
 {
 	size_t	i;
 	t_label	*tmp;
@@ -34,7 +34,7 @@ void	save_label(char *label, t_statement *cur, int champ_size)
 	while (tmp->next != NULL)
 		tmp = tmp->next;
 	tmp->label = label;
-	tmp->pos = champ_size;
+	tmp->pos = cur_size;
 }
 
 // saves to struct the operation's code, whether argument type code
