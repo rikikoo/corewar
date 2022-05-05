@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:53:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 15:22:01 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 13:07:45 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,22 @@ void	save_label(char *label, t_statement *cur)
 	tmp->label = label;
 }
 
-u_int8_t	assign_op_code(t_data *data, char *s)
+// saves to struct the operation's code, whether argument type code
+// is needed, and T_DIR size
+void	assign_op_specs(t_data *data, t_statement *st)
 {
 	int	i;
 
 	i = 0;
 	while (i < 16)
 	{
-		if (ft_strequ(s, g_oplist[i].op_name))
-			return (g_oplist[i].op_code);
+		if (ft_strequ(st->op_name, g_oplist[i].op_name))
+		{
+			st->op_code = g_oplist[i].op_code;
+			st->arg_type_code = g_oplist[i].arg_type_code;
+			st->t_dir_size = g_oplist[i].t_dir_size;
+			return ;
+		}
 		i++;
 	}
 	parser_error_exit("invalid operation name", data->row, data->col + 1);

@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 16:48:22 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 12:54:22 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,8 +60,7 @@ static void	get_op(t_data *data, t_statement *cur, char *s)
 		parser_error_exit("invalid character after operation name",
 			data->row, data->col + 1);
 	cur->op_name = ft_strsub(s, start, data->col - start);
-	ft_putendl(cur->op_name);
-	cur->op_code = assign_op_code(data, cur->op_name);
+	assign_op_specs(data, cur);
 	skip_whitespace(s, &data->col);
 }
 
