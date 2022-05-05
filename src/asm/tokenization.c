@@ -6,12 +6,38 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 12:54:22 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:33:11 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include "oplist.h"
+
+// If statement has no code, i.e. only label, label points to
+// byte after champ exec code and thus this function returns 0
+static u_int32_t	get_operation_bytesize(t_statement *st)
+{
+	u_int32_t	ret;
+	int			i;
+
+	if (!st->op_code)
+		return (0);
+	ret = 1;
+	if (st->arg_type_code)
+		ret++;
+	i = 0;
+	while (st->argtypes[i])
+	{
+		if (st->argtypes[i] == T_REG)
+			ret++;
+		else if (st->argtypes[i] == T_DIR)
+			ret += st->t_dir_size;
+		else
+			ret += 2;
+		i++;
+	}
+	return (ret);
+}
 
 // switch for checking that operation gets valid argument type,
 // checking valid amount of arguments, and
@@ -110,10 +136,11 @@ void	tokenize_line(t_data *data, t_statement *cur, char *s)
 		parser_error_exit("unknown command", data->row, data->col + 1);
 	label = get_label(data, s);
 	if (label)
-		save_label(label, cur);
+		save_label(label, cur, data->champ_size);
 	skip_whitespace(s, &data->col);
 	if (!s[data->col])
 		return ;
 	get_op(data, cur, s);
 	get_args(data, cur, s, 0);
+	data->champ_size += get_operation_bytesize(cur);
 }

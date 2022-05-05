@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:17:29 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:20:33 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/05 14:32:21 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	assemble(char *filename)
 	data = init_data(filename);
 	list = init_list();
 	read_file(data, list, NULL, 0);
-	analyze_size_and_labels(data, list);
 	print_debug(&list, data); // DELETE
 	write_file(data);
 	free_data(data);
