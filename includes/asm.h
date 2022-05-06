@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 16:39:24 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/06 13:21:57 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,11 @@ void		write_exec_size(t_data *data);
 // write exec code
 void		write_statement_code(t_statement *st, int fd);
 void		write_argument_type_code(t_statement *st, int fd);
-void		write_arguments(t_statement *st, int fd);
+void		write_arguments(t_statement **head, t_statement *st, int fd);
 
 // write utils
-u_int32_t	u_int_32_to_big_endian(u_int32_t n);
+u_int16_t	u_int16_to_big_endian(u_int16_t n);
+u_int32_t	u_int32_to_big_endian(u_int32_t n);
+u_int32_t	find_label_pos(t_statement **head, char *match);
+
 #endif

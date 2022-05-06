@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 18:52:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/04/27 18:16:34 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/05/06 12:21:03 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	write_exec_size(t_data *data)
 {
 	u_int32_t	val;
 
-	val = u_int_32_to_big_endian(data->champ_size);
+	val = u_int32_to_big_endian(data->champ_size);
 	write(data->target_fd, &val, 4);
 }
 
@@ -57,6 +57,6 @@ void	write_magic_header(int fd)
 {
 	u_int32_t	magic;
 
-	magic = u_int_32_to_big_endian(COREWAR_EXEC_MAGIC);
+	magic = u_int32_to_big_endian(COREWAR_EXEC_MAGIC);
 	write(fd, &magic, 4);
 }
