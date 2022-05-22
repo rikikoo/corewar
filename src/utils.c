@@ -6,27 +6,41 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 11:33:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/02/13 10:56:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
+void	print_n_bytes(unsigned char *arena, int pos, int n)
+{
+	int	i;
+
+	i = 0;
+	while (i < n)
+	{
+		ft_printf("%02x ", arena[pos % MEM_SIZE]);
+		pos++;
+		i++;
+	}
+	ft_putchar('\n');
+}
+
 /*
-** returns @n contiguous bytes converted to an int, if 0 < n <= 4.
+** returns @n contiguous bytes converted to an int, if 0 < n <= sizeof(int)
 */
-int	n_bytes_to_int(const unsigned char *bytes, int n)
+int	n_bytes_to_int(const unsigned char *arena, int pos, int n)
 {
 	int	nbr;
 	int	bits;
 
-	if (!bytes || n <= 0 || n > (int) sizeof(int))
+	if (!arena || n <= 0 || n > (int) sizeof(int))
 		return (0);
 	nbr = 0;
 	bits = 0;
 	while (--n >= 0)
 	{
-		nbr += bytes[n % MEM_SIZE] << bits;
+		nbr += arena[(pos + n) % MEM_SIZE] << bits;
 		bits += 8;
 	}
 	return (nbr);
@@ -107,10 +121,10 @@ int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int val)
 	if (instruct.types[val - 1] == T_REG)
 		return (car->registry[arena[pos] - 1]);
 	else if (instruct.types[val - 1] == T_DIR)
-		return ((int)n_bytes_to_int(&arena[pos], instruct.sizes[val - 1]));
+		return ((int)n_bytes_to_int(arena, pos, instruct.sizes[val - 1]));
 	else
 	{
-		indirect_pos = n_bytes_to_int(&arena[pos], instruct.sizes[val - 1]);
-		return (n_bytes_to_int(&arena[indirect_pos % MEM_SIZE], DIR_SIZE));
+		indirect_pos = n_bytes_to_int(arena, pos, instruct.sizes[val - 1]);
+		return (n_bytes_to_int(arena, indirect_pos % MEM_SIZE, DIR_SIZE));
 	}
 }
