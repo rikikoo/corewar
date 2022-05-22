@@ -6,15 +6,16 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 17:41:26 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:44:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/05/10 20:01:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-void	print_live(t_champ champ)
+void	print_live(int car_id, t_champ champ)
 {
-	ft_printf("A process shows that player %d (%s) is alive\n", \
+	ft_printf("Program Counter %d shows that player %d (%s) is alive\n", \
+	car_id, \
 	champ.playernbr, \
 	champ.name \
 	);
@@ -28,8 +29,9 @@ void	print_live(t_champ champ)
 */
 int	print_aff(t_car *car, unsigned char *arena)
 {
-	int	type;
-	int	reg;
+	int				type;
+	int				reg;
+	unsigned int	value;
 
 	type = get_arg_type(arena[(car->pos + 1) % MEM_SIZE], 1);
 	if (!type)
@@ -38,14 +40,15 @@ int	print_aff(t_car *car, unsigned char *arena)
 		return (2 + DIR_SIZE);
 	else if (type == IND_CODE)
 		return (2 + IND_SIZE);
-	else
-	{
-		reg = arena[(car->pos + 1) % MEM_SIZE];
-		if (reg < 1 || reg > REG_NUMBER)
-			return (1);
-		ft_putchar((char)car->registry[reg - 1]);
-		return (2 + REG_SIZE);
-	}
+	reg = arena[(car->pos + 2) % MEM_SIZE];
+	if (reg < 1 || reg > REG_NUMBER)
+		return (2 + T_REG);
+	value = car->registry[reg - 1];
+	ft_putchar((char)((value & 0xff000000) >> 24));
+	ft_putchar((char)((value & 0xff0000) >> 16));
+	ft_putchar((char)((value & 0xff00) >> 8));
+	ft_putchar((char)(value & 0xff));
+	return (2 + T_REG);
 }
 
 void	print_usage(void)
@@ -67,7 +70,7 @@ void	print_usage(void)
 **
 ** @errno: a negative int
 **	-1: "Error opening file"
-**	-2: "Error reading file"
+**	-2: "Error reading file" (either read() failed or too few bytes was read)
 **	-3: "Unknown filetype header"
 **	-4: "Champion name too long"
 **	-5: "Champion weighs too much"
@@ -83,9 +86,10 @@ void	print_error(int errno, const char *path, t_champ *champ)
 	if (errno == -1)
 		ft_printf("ERROR: failed to open file: %s\n", path);
 	else if (errno == -2)
-		ft_printf("ERROR: failed to read file: s\n", path);
+		ft_printf("ERROR: failed to read file: %s\n", path);
 	else if (errno == -3)
-		ft_printf("ERROR: Unknown filetype header: %p\n", champ->magic);
+		ft_printf("ERROR: Unknown filetype header in file \"%s\": %p\n", \
+		path, champ->magic);
 	else if (errno == -4)
 		ft_printf("ERROR: Champion name '%s' too long: %d > %d\n", \
 		champ->name, ft_strlen(champ->name), PROG_NAME_LENGTH);
@@ -96,9 +100,9 @@ void	print_error(int errno, const char *path, t_champ *champ)
 		ft_printf("ERROR: Champion comment '%s' too long: %d > %d\n", \
 		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
 	else if (errno == -7)
-		ft_printf("ERROR: Invalid player number given for '%s'\
-		\nNumber can't be greater than the number of champions\n", champ->name);
+		ft_printf("ERROR: Invalid player number given for '%s':\n%s\n", \
+		champ->name, "Number can't be greater than champion count");
 	else
-		ft_printf("ERROR: Something went wrong with a malloc\n");
+		ft_printf("ERROR: OOM\n");
 	exit(errno);
 }

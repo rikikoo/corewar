@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_args.c                                       :+:      :+:    :+:   */
+/*   parse_main_args.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/01 16:47:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/14 23:14:24 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,8 @@ static void	store_flag(char **argv, int *count, t_flags *flags)
 ** 		-vn 4		-- not allowed
 **		-n4			-- not allowed
 **
-** @ac: total number of program arguments + 1
-** @av: vector of the program's arguments
+** @ac: program argument count
+** @av: program argument vector
 ** @flags: pointer to a t_flags struct
 ** @champs: pointer to an array of t_champs
 */

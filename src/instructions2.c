@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 11:35:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/30 20:55:36 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,24 @@
 **
 ** TODO: should the instruction be skipped if carry == 0, or not?
 */
-int	jump_inst(t_car *car, unsigned char *arena)
+int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 {
 	int	new_pos;
 
 	if (car->carry)
 	{
-		new_pos = n_bytes_to_int(&arena[(car->pos + 1) % MEM_SIZE], IND_SIZE);
+		if (game->flags.verbose)
+			ft_printf("Process %d (of player number %d): %s %d\n", \
+			car->id, car->registry[0] * -1, "zjmp", \
+			n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
+		new_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
 		return (new_pos % IDX_MOD);
 	}
 	else
 		return (0);
 }
 
-int	ind_load_inst(int inst_code, t_car *car, unsigned char *arena)
+int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		value1;
@@ -39,6 +43,8 @@ int	ind_load_inst(int inst_code, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
+	if (game->flags.verbose)
+		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	pos = car->pos + 2;
@@ -54,7 +60,7 @@ int	ind_load_inst(int inst_code, t_car *car, unsigned char *arena)
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
 
-int	ind_store_inst(t_car *car, unsigned char *arena)
+int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		reg_value;
@@ -63,6 +69,8 @@ int	ind_store_inst(t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(11, arena, car->pos);
+	if (game->flags.verbose)
+		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	reg_value = get_arg_value(instruct, arena, car, 1);
@@ -73,21 +81,26 @@ int	ind_store_inst(t_car *car, unsigned char *arena)
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
 
-int	fork_inst(int inst_code, t_car *car, unsigned char *arena, t_game *game)
+int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
 	int		new_pos;
 	t_car	*car_new;
-	t_car	*last_car;
+	t_car	*first_car;
 	int		reg_i;
 
-	new_pos = n_bytes_to_int(&arena[(car->pos + 1) % MEM_SIZE], IND_SIZE);
+	new_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
 	if (inst_code == 12)
 		new_pos = new_pos % IDX_MOD;
-	last_car = game->cars;
-	while (last_car->next != NULL)
-		last_car = last_car->next;
-	car_new = new_car(last_car->id, new_pos % MEM_SIZE, car->registry[0] * -1);
-	last_car->next = car_new;
+	if (game->flags.verbose)
+		ft_printf("Process %d (of player number %d): %s %d\n", \
+		car->id, car->registry[0] * -1, "lfork"[(inst_code == 12)], \
+		n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
+	first_car = game->cars;
+	car_new = new_car(first_car->id, new_pos % MEM_SIZE, car->registry[0] * -1);
+	if (!car_new)
+		return (-1);
+	car_new->next = first_car;
+	game->cars = car_new;
 	reg_i = 1;
 	while (reg_i < REG_NUMBER)
 	{

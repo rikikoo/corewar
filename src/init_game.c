@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:56:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/05/22 15:38:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	init_arena(t_champ *champs, int champ_count, unsigned char *arena)
 	introduce_champs(champs, champ_count);
 }
 
-t_game	init_game(int champ_count, t_car *car)
+t_game	init_game(t_flags flags, t_car *car)
 {
 	t_game	game;
 
@@ -83,9 +83,9 @@ t_game	init_game(int champ_count, t_car *car)
 	game.cycles_to_die = CYCLE_TO_DIE;
 	game.checks = 0;
 	game.winner = 0;
-	game.last_live_report = champ_count - 1;
-	game.champ_count = champ_count;
+	game.last_live_report = flags.champ_count - 1;
 	game.cars = car;
+	game.flags = flags;
 	return (game);
 }
 
@@ -104,25 +104,26 @@ int	start_game(t_flags flags, unsigned char *arena, t_champ *champs)
 	t_car	*head;
 	t_car	*car;
 	t_game	game;
-	int		i;
+	int		player;
 
-	i = flags.champ_count - 1;
-	head = new_car(0, ((MEM_SIZE / flags.champ_count) * i), i);
+	player = flags.champ_count;
+	head = new_car(0, ((MEM_SIZE / flags.champ_count) * (player - 1)), player);
 	car = head;
-	while (--i >= 0)
+	while (--player > 0)
 	{
 		if (!car)
 			return (-8);
-		car->next = new_car(car->id, ((MEM_SIZE / flags.champ_count) * i), i);
+		car->next = new_car(car->id, \
+		((MEM_SIZE / flags.champ_count) * (player - 1)), player);
 		car = car->next;
 	}
-	game = init_game(flags.champ_count, head);
-	i = start_cycles(flags, arena, &game, champs);
-	while (head != NULL)
+	game = init_game(flags, head);
+	player = start_cycles(arena, &game, champs);
+	while (game.cars != NULL)
 	{
-		car = head;
-		head = head->next;
+		car = game.cars;
+		game.cars = game.cars->next;
 		free(car);
 	}
-	return (i);
+	return (player);
 }

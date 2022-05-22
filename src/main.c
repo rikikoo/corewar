@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:38:04 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/05/22 16:39:57 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,28 +19,30 @@
 ** @arena: pointer to the start of the arena
 ** @size: amount of bytes to print out
 */
-static void	dump_memory(const unsigned char *arena, int size)
+void	dump_memory(const unsigned char *arena, int size)
 {
 	int	i;
 	int	j;
 	int	row_len;
+	int address;
 
 	i = 0;
 	row_len = 32;
 	j = row_len - 1;
+	address = 0;
+	ft_printf("0x0000 :");
 	while (i < size)
 	{
 		if (arena[i] != 0)
-			ft_printf("\033[92m%02x\033[0m", arena[i]);
+			ft_printf(" \033[92m%02x\033[0m", arena[i]);
 		else
-			ft_printf("%02x", arena[i]);
-		if (i == j)
+			ft_printf(" %02x", arena[i]);
+		if (i == j && i != (size - 1))
 		{
-			ft_putchar('\n');
+			address += row_len;
+			ft_printf("\n%#06x :", address);
 			j += row_len;
 		}
-		else
-			ft_putchar(' ');
 		i++;
 	}
 	ft_putchar('\n');
@@ -82,8 +84,7 @@ int	main(int argc, char **argv)
 	init_arena(champs, flags.champ_count, arena);
 	winner = start_game(flags, arena, champs);
 	if (winner > 0)
-		ft_printf("Player %d (%s) has won!\n", \
-		winner, champs[winner - 1].name);
+		ft_printf("Player %d (%s) has won!\n", winner, champs[winner - 1].name);
 	else if (winner < 0)
 		print_error(winner, NULL, NULL);
 	else

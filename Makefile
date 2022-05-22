@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2021/11/16 10:56:26 by rkyttala         ###   ########.fr        #
+#    Updated: 2022/05/10 19:15:59 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,9 +22,12 @@ SRC =	$(S)main.c \
 		$(S)read_champ.c \
 		$(S)init_game.c \
 		$(S)play_game.c \
+		$(S)cycle_to_die.c \
 		$(S)validate_instruction.c \
 		$(S)instructions1.c \
-		$(S)instructions2.c
+		$(S)instructions2.c \
+		$(S)verbose.c \
+		$(S)debug.c
 
 OBJ = $(SRC:$S%=$O%.o)
 INC = $(I)

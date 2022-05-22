@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 10:49:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/02/13 11:37:51 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,9 @@ static int	validate_args(int inst_code, int *t)
 }
 
 /*
-**
+** Every instruction has a different amount of bytes that follow the instruction
+** which determine how many bytes forward are regarded as the instruction's
+** arguments.
 */
 t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos)
 {
@@ -87,17 +89,14 @@ t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos)
 	instruct.inst_code = inst_code;
 	n_args = get_arg_count(inst_code);
 	pos = (pos + 1) % MEM_SIZE;
-	ft_memset(instruct.types, 0, MAX_ARGS_NUMBER);
+	ft_memset(instruct.types, 0, MAX_ARGS_NUMBER * sizeof(int));
 	arg = 0;
 	while (++arg <= n_args)
 		instruct.types[arg - 1] = get_arg_type(arena[pos], arg);
-	ft_memset(instruct.sizes, 0, MAX_ARGS_NUMBER);
-	arg = 0;
-	while (arg < n_args)
-	{
+	ft_memset(instruct.sizes, 0, MAX_ARGS_NUMBER * sizeof(int));
+	arg = -1;
+	while (++arg < n_args)
 		instruct.sizes[arg] = get_arg_size(inst_code, instruct.types[arg]);
-		arg++;
-	}
 	instruct.is_valid = validate_args(instruct.inst_code, instruct.types);
 	if (instruct.is_valid)
 		instruct.is_valid = validate_regs(instruct, arena, pos + 1);

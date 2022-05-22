@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 11:32:44 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/02/13 10:23:33 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,13 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 {
 	int	player;
 
-	player = n_bytes_to_int(&arena[(car->pos + 1) % MEM_SIZE], DIR_SIZE) * -1;
+	player = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, DIR_SIZE);
+
+	ft_printf("live instruction value: %X\n", player);	// debug
+
 	if (player > 0 && player <= game->champ_count)
 	{
-		print_live(champs[player - 1]);
+		print_live(car->id, champs[player - 1]);
 		game->last_live_report = player;
 		car->cycles_since_live = 0;
 	}
@@ -28,9 +31,9 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 
 /*
 ** performs a load or long load operation (@inst_code == 2 or 13, respectively).
-** if the value loaded is 0, changes carry to true.
+** if the loaded value is 0, changes carry to true.
 */
-int	load_inst(int inst_code, t_car *car, unsigned char *arena)
+int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		value;
@@ -38,6 +41,8 @@ int	load_inst(int inst_code, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
+	if (game->flags.verbose)
+		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
 	pos = car->pos + 2;
@@ -55,7 +60,7 @@ int	load_inst(int inst_code, t_car *car, unsigned char *arena)
 **
 ** TODO: is the T_IND value ok when it comes out of get_arg_value()?
 */
-int	store_inst(t_car *car, unsigned char *arena)
+int	store_inst(t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		ind_value;
@@ -63,6 +68,8 @@ int	store_inst(t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(3, arena, car->pos);
+	if (game->flags.verbose)
+		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
 	pos = car->pos + instruct.sizes[0] + 2;
@@ -82,7 +89,11 @@ int	store_inst(t_car *car, unsigned char *arena)
 ** the values in the first two registers and stores the result into third reg.
 ** if the result of the operation is 0, changes carry to true.
 */
-int	arithmetic_inst(int inst_code, t_car *car, unsigned char *arena)
+int	arithmetic_inst(int inst_code,
+	t_game *game,
+	t_car *car,
+	unsigned char *arena
+	)
 {
 	int		pos;
 	int		value1;
@@ -91,6 +102,8 @@ int	arithmetic_inst(int inst_code, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
+	if (game->flags.verbose)
+		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	pos = car->pos + 2;
@@ -112,7 +125,7 @@ int	arithmetic_inst(int inst_code, t_car *car, unsigned char *arena)
 ** stores the result into the register pointed to by the third argument.
 ** if the result of the operation is 0, changes carry to true.
 */
-int	bitwise_inst(int inst_code, t_car *car, unsigned char *arena)
+int	bitwise_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
 	int		value1;
@@ -121,6 +134,8 @@ int	bitwise_inst(int inst_code, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
+	if (game->flags.verbose)
+		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	pos = car->pos + 2;
