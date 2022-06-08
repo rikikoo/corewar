@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/02/13 11:37:51 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/06/03 23:35:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 /*
 ** returns 1 (true) if all arguments that should be of type T_REG have a value
 ** between 1 and REG_NUMBER, 0 (false) otherwise
-**
-** TODO: can the registry number be 1 (i.e. the player number registry)?
 */
 static int	validate_regs(t_inst instruct, unsigned char *arena, int pos)
 {
@@ -31,7 +29,7 @@ static int	validate_regs(t_inst instruct, unsigned char *arena, int pos)
 	while (i < MAX_ARGS_NUMBER)
 	{
 		reg = arena[pos % MEM_SIZE];
-		if (instruct.types[i] == T_REG && (reg < 2 || reg > REG_NUMBER))
+		if (instruct.types[i] == T_REG && (reg < 1 || reg > REG_NUMBER))
 			return (0);
 		pos += instruct.sizes[i];
 		i++;
@@ -99,6 +97,6 @@ t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos)
 		instruct.sizes[arg] = get_arg_size(inst_code, instruct.types[arg]);
 	instruct.is_valid = validate_args(instruct.inst_code, instruct.types);
 	if (instruct.is_valid)
-		instruct.is_valid = validate_regs(instruct, arena, pos + 1);
+		instruct.is_valid = validate_regs(instruct, arena, ++pos % MEM_SIZE);
 	return (instruct);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 17:41:26 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/05/10 20:01:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/06/04 13:35:08 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,12 @@ int	print_aff(t_car *car, unsigned char *arena)
 void	print_usage(void)
 {
 	ft_printf("Usage: \
-	\n./corewar [-dump N] [[-n nbr] <champion1.cor> <...>]\
+	\n./corewar [-dump N] [-s N] [-v N] [[-n N] <champion1.cor> <...>]\
 	\n\n************************************************************\
 	\n\n%4s: executes up to N cycles after which memory is dumped to STDOUT\
-	\n%4s: nbr [1...%i] assigns the following champion's player number\
-	\n%4s: WIP\
-	\n%4s: WIP\n\n", \
+	\n%4s: N [1...%i] assigns the following champion's player number\
+	\n%4s: dumps memory after every N cycles\
+	\n%4s: verbose level [1...3], prints various events during execution\n\n", \
 	"dump", "n", MAX_PLAYERS, "s", "v");
 	exit(-9);
 }
@@ -70,13 +70,13 @@ void	print_usage(void)
 **
 ** @errno: a negative int
 **	-1: "Error opening file"
-**	-2: "Error reading file" (either read() failed or too few bytes was read)
+**	-2: "Error reading file" (either read() failed or too few bytes were read)
 **	-3: "Unknown filetype header"
 **	-4: "Champion name too long"
 **	-5: "Champion weighs too much"
 **	-6: "Champion comment too long"
 **	-7: "Player number higher than champ_count"
-**	-8: "Out of heap memory"
+**	-8: "Out of memory"
 **
 ** @path: the path to the file that could not be opened
 ** @champ: pointer to the champ that caused the error

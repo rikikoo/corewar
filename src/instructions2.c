@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/30 20:55:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/06/07 23:24:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,22 +62,29 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 
 int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 {
-	int		pos;
-	int		reg_value;
-	int		value1;
-	int		value2;
-	t_inst	instruct;
+	int				dst_pos;
+	int				reg;
+	int				value1;
+	int				value2;
+	t_inst			instruct;
 
 	instruct = validate_instruction(11, arena, car->pos);
 	if (game->flags.verbose)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
-	reg_value = get_arg_value(instruct, arena, car, 1);
+	reg = arena[(car->pos + 2) % MEM_SIZE];
 	value1 = get_arg_value(instruct, arena, car, 2);
 	value2 = get_arg_value(instruct, arena, car, 3);
-	pos = (car->pos + value1 + value2) % IDX_MOD;
-	arena[pos % MEM_SIZE] = reg_value;
+	dst_pos = (value1 + value2) % IDX_MOD;
+	swap_endianness((unsigned char *)&car->registry[reg - 1], REG_SIZE);
+	ft_memcpy(&arena[(car->pos + dst_pos) % MEM_SIZE], \
+		(unsigned char *)&car->registry[reg - 1], REG_SIZE);
+
+	ft_printf("store %#x to %d\n", \
+	car->registry[arena[(car->pos + 2) % MEM_SIZE]], \
+		(car->pos + dst_pos) % MEM_SIZE);
+
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
 

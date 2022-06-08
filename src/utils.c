@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/02/13 10:56:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/06/07 23:24:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,27 @@ int	n_bytes_to_int(const unsigned char *arena, int pos, int n)
 		bits += 8;
 	}
 	return (nbr);
+}
+
+/*
+** reverses order of bytes in the array @bytes of size @len
+*/
+void	swap_endianness(unsigned char *bytes, int len)
+{
+	unsigned char	tmp;
+	int				i;
+    int             halfway;
+
+	i = 0;
+    halfway = len / 2;
+	while (len > halfway)
+	{
+		len--;
+		tmp = bytes[i];
+		bytes[i] = bytes[len];
+        bytes[len] = tmp;
+		i++;
+	}
 }
 
 /*
@@ -107,24 +128,22 @@ int	get_arg_size(int inst_code, int arg)
 		return (0);
 }
 
-int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int val)
+int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int arg)
 {
 	int	pos;
 	int	indirect_pos;
 
-	if (val == 1)
+	if (arg == 1)
 		pos = (car->pos + 2) % MEM_SIZE;
-	else if (val == 2)
+	else if (arg == 2)
 		pos = (car->pos + 2 + instruct.sizes[0]) % MEM_SIZE;
 	else
 		pos = (car->pos + 2 + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE;
-	if (instruct.types[val - 1] == T_REG)
-		return (car->registry[arena[pos] - 1]);
-	else if (instruct.types[val - 1] == T_DIR)
-		return ((int)n_bytes_to_int(arena, pos, instruct.sizes[val - 1]));
+	if (instruct.types[arg - 1] == T_DIR)
+		return ((int)n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]));
 	else
 	{
-		indirect_pos = n_bytes_to_int(arena, pos, instruct.sizes[val - 1]);
+		indirect_pos = n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]);
 		return (n_bytes_to_int(arena, indirect_pos % MEM_SIZE, DIR_SIZE));
 	}
 }

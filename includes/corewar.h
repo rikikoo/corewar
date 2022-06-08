@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/05/22 15:55:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/06/07 23:25:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,13 +159,13 @@ int		get_arg_count(int inst_code);
 int		get_arg_type(unsigned char byte, int arg);
 int		get_arg_size(int inst_code, int arg);
 int		get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, \
-		int val);
+		int arg);
 
 /*
 ** UTILS
 */
 void	dump_memory(const unsigned char *arena, int size);
-int		n_bytes_to_int(const unsigned char *bytes, int pos, int n);
+int		n_bytes_to_int(const unsigned char *arena, int pos, int n);
 void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(int car_id, t_champ champ);
@@ -175,5 +175,6 @@ void	print_verbose(t_car *car, t_inst instruct, unsigned char *arena, \
 
 
 void	print_n_bytes(unsigned char *arena, int pos, int n);
+void	swap_endianness(unsigned char *bytes, int len);
 
 #endif
