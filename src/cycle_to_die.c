@@ -6,39 +6,82 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/05/10 19:14:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/06 17:19:54 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
 /*
-** marks carriages whose cycles_since_live is greater than cycles_to_die as dead
-**
-** TODO: cycles_to_die reset value has to be tracked and updated separately
-** (unlike how it's done right now)
+** removes a car from the list of cars
 */
-void	collect_the_dead(t_game *game)
+static t_car	*remove_dead_car(t_game *game, int dead_car)
 {
+	t_car	*prev;
 	t_car	*car;
-	int		alive;
+	t_car	*next;
+
+	prev = NULL;
+	car = game->cars;
+	while (car)
+	{
+		next = car->next;
+		if (car->id == dead_car)
+		{
+			if (car->id == game->cars->id)
+				game->cars = next;
+			else
+			{
+				prev->next = next;
+				free(car);
+				car = NULL;
+			}
+			break ;
+		}
+		prev = car;
+		car = car->next;
+	}
+	return (next);
+}
+
+/*
+** marks carriages whose cycles_since_live is greater than cycle_to_die as dead
+** and updates cycle_to_die if necessary
+*/
+int	collect_the_dead(t_game *game)
+{
+	t_car		*car;
+	int			alive;
 
 	car = game->cars;
 	alive = 0;
+	game->checks++;
+	// debug
+	// ft_printf("Cycle: %d\tTo die: %d\tDelta: %d\n", \
+	// game->cycle, game->cycle_to_die, die_cycle_delta);
+	// debug end
 	while (car)
 	{
-		car->dead = car->cycles_since_live >= game->cycles_to_die || car->dead;
-		if (!car->dead)
+		//debug
+		// ft_printf("Car %d cycles since live: %d\n", \
+		// car->registry[0] * -1, car->cycles_since_live);
+		// debug end
+
+		if (car->cycles_since_live >= game->cycle_to_die)
+			car = remove_dead_car(game, car->id);
+		else
 			alive++;
-		car = car->next;
+		if (car)
+			car = car->next;
 	}
+	// ft_printf("exit car loop with %d alive\n", alive);
 	if (!alive)
+		return (game->last_live_report);
+	if (game->live_count >= NBR_LIVE || game->checks >= MAX_CHECKS)
 	{
-		game->winner = game->last_live_report;
-		return ;
+		game->cycle_to_die -= CYCLE_DELTA;
+		game->checks = 0;
 	}
-	if (game->checks >= NBR_LIVE)
-		game->cycles_to_die = CYCLE_TO_DIE - CYCLE_DELTA;
-	else
-		game->cycles_to_die = CYCLE_TO_DIE - 1;
+	game->live_count = 0;
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/06/07 23:24:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/07/23 17:03:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,6 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 	swap_endianness((unsigned char *)&car->registry[reg - 1], REG_SIZE);
 	ft_memcpy(&arena[(car->pos + dst_pos) % MEM_SIZE], \
 		(unsigned char *)&car->registry[reg - 1], REG_SIZE);
-
-	ft_printf("store %#x to %d\n", \
-	car->registry[arena[(car->pos + 2) % MEM_SIZE]], \
-		(car->pos + dst_pos) % MEM_SIZE);
-
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
 
@@ -103,7 +98,7 @@ int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 		car->id, car->registry[0] * -1, "lfork"[(inst_code == 12)], \
 		n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
 	first_car = game->cars;
-	car_new = new_car(first_car->id, new_pos % MEM_SIZE, car->registry[0] * -1);
+	car_new = new_car(game->latest_car_id, new_pos % MEM_SIZE, car->registry[0] * -1);
 	if (!car_new)
 		return (-1);
 	car_new->next = first_car;

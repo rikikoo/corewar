@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/05/22 15:55:23 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/06 17:23:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,22 +90,19 @@ static int	exec_cars(t_game *game,
 	car = game->cars;
 	while (car)
 	{
-		if (!car->dead)
+		car->cycles_since_live++;
+		if (car->current_opcode != arena[car->pos])
 		{
-			car->cycles_since_live++;
-			if (car->current_opcode != arena[car->pos])
-			{
-				car->current_opcode = arena[car->pos];
-				car->cycles_to_exec = get_wait_cycles(car->current_opcode);
-			}
-			car->cycles_to_exec -= (car->cycles_to_exec != 0);
-			if (!car->cycles_to_exec)
-			{
-				ret = execute_instruction(game, car, arena, champs) % MEM_SIZE;
-				if (ret < 0)
-					return (ret);
-				car->pos += ret;
-			}
+			car->current_opcode = arena[car->pos];
+			car->cycles_to_exec = get_wait_cycles(car->current_opcode);
+		}
+		car->cycles_to_exec -= (car->cycles_to_exec != 0);
+		if (!car->cycles_to_exec)
+		{
+			ret = execute_instruction(game, car, arena, champs);
+			if (ret < 0)
+				return (ret);
+			car->pos = (car->pos + ret) % MEM_SIZE;
 		}
 		car = car->next;
 	}
@@ -114,21 +111,22 @@ static int	exec_cars(t_game *game,
 
 int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 {
+	print_cars(game, champs);
+
 	while (1)
 	{
 		game->cycle++;
-		game->cycles_to_die--;
 		if (game->flags.verbose > 1)
 			ft_printf("Cycle: %d\n", game->cycle);
-		if (game->cycles_to_die <= 0)
-			collect_the_dead(game);
+		if (game->cycle % game->cycle_to_die == 0)
+			game->winner = collect_the_dead(game);
+		if (game->winner)
+			return (game->winner);
 		if (exec_cars(game, arena, champs, 0) != 0)
 			return (-8);
 		if (game->flags.dump && game->cycle == game->flags.dump)
 			return (0);
-		if (game->winner)
-			return (game->winner);
-		if (game->flags.split && game->flags.split % game->cycle == 0)
+		if (game->flags.split && (game->flags.split % game->cycle == 0))
 			dump_memory(arena, MEM_SIZE);
 	}
 }
