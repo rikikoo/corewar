@@ -6,11 +6,27 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/16 12:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/07/23 16:42:42 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 01:37:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct)
+{
+	int	i;
+
+	i = 0;
+	ft_printf("Argument coding byte: %#2x", arena[(car->pos + 1) % MEM_SIZE]);
+	ft_printf(" ( ");
+	while (instruct.types[i] && i < 4)
+	{
+		ft_printf("%d ", instruct.types[i]);
+		i++;
+	}
+	ft_printf(")");
+	ft_putchar('\n');
+}
 
 void	print_cars(t_game *game, t_champ *champs)
 {

@@ -2,9 +2,9 @@
 
 int	main()
 {
-    unsigned char map[4] = { 0x50, 0x66, 0x51, 0x65 };
+    char    *str;
 
-    printf("%u\n", (int)map); 
-    printf("%d\n", map);
+    str = "lfork";
+    printf("%s\n", ++str);
     return 0;
 }

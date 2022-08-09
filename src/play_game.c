@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/06 17:23:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 01:09:41 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,11 +111,15 @@ static int	exec_cars(t_game *game,
 
 int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 {
-	print_cars(game, champs);
-
 	while (1)
 	{
 		game->cycle++;
+
+		// debug
+		// if (game->cycle == 801)
+		// 	print_cars(game, champs);
+		// debug end
+
 		if (game->flags.verbose > 1)
 			ft_printf("Cycle: %d\n", game->cycle);
 		if (game->cycle % game->cycle_to_die == 0)

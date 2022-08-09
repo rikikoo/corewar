@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/06 18:11:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 01:16:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ t_car	*new_car(int last_id, int pos, int playernbr)
 	if (!car)
 		return (NULL);
 	car->id = last_id + 1;
-	car->pos = pos;
+	car->pos = pos % MEM_SIZE;
 	car->carry = 0;
 	car->cycles_since_live = 1;
 	car->cycles_to_exec = 1;
@@ -42,38 +42,7 @@ t_car	*new_car(int last_id, int pos, int playernbr)
 	return (car);
 }
 
-static void	introduce_champs(t_champ *champs, int champ_count)
-{
-	int	i;
-
-	ft_printf("Introducing contestants...\n");
-	i = 0;
-	while (i < champ_count)
-	{
-		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")!\n", \
-		champs[i].playernbr, champs[i].size, champs[i].name, champs[i].comment);
-		i++;
-	}
-}
-
-void	init_arena(t_champ *champs, int champ_count, unsigned char *arena)
-{
-	int				i;
-	int				pos;
-
-	i = 0;
-	pos = 0;
-	ft_bzero(arena, MEM_SIZE);
-	while (i < champ_count)
-	{
-		ft_memcpy(&arena[pos], champs[i].exec, champs[i].size);
-		pos += MEM_SIZE / champ_count;
-		i++;
-	}
-	introduce_champs(champs, champ_count);
-}
-
-t_game	init_game(t_flags flags, t_car *car, int latest_id)
+static t_game	init_game(t_flags flags, t_car *car, int latest_id)
 {
 	t_game	game;
 
@@ -84,10 +53,39 @@ t_game	init_game(t_flags flags, t_car *car, int latest_id)
 	game.winner = 0;
 	game.live_count = 0;
 	game.latest_car_id = latest_id;
-	game.last_live_report = flags.champ_count - 1;
+	game.last_live_report = flags.champ_count;
 	game.cars = car;
 	game.flags = flags;
 	return (game);
+}
+
+static t_car	*init_cars(t_flags flags, int player)
+{
+	t_car	*head;
+	t_car	*last;
+
+	last = new_car(0, ((MEM_SIZE / flags.champ_count) * (player - 1)), player);
+	head = last;
+	if (!head)
+		return (NULL);
+	while (++player <= flags.champ_count)
+	{
+		head = new_car(last->id, \
+		((MEM_SIZE / flags.champ_count) * (player - 1)), player);
+		if (!head)
+		{
+			while (last)
+			{
+				head = last;
+				last = last->next;
+				free(head);
+			}
+			return (NULL);
+		}
+		head->next = last;
+		last = head;
+	}
+	return (head);
 }
 
 /*
@@ -103,28 +101,20 @@ t_game	init_game(t_flags flags, t_car *car, int latest_id)
 int	start_game(t_flags flags, unsigned char *arena, t_champ *champs)
 {
 	t_car	*head;
-	t_car	*car;
 	t_game	game;
 	int		player;
 
-	player = flags.champ_count;
-	head = new_car(0, ((MEM_SIZE / flags.champ_count) * (player - 1)), player);
-	car = head;
-	while (--player > 0)
-	{
-		if (!car)
-			return (-8);
-		car->next = new_car(car->id, \
-		((MEM_SIZE / flags.champ_count) * (player - 1)), player);
-		car = car->next;
-	}
-	game = init_game(flags, head, car->id);
+	player = 1;
+	head = init_cars(flags, player);
+	if (!head)
+		return (-8);
+	game = init_game(flags, head, head->id);
 	player = start_cycles(arena, &game, champs);
 	while (game.cars != NULL)
 	{
-		car = game.cars;
+		head = game.cars;
 		game.cars = game.cars->next;
-		free(car);
+		free(head);
 	}
 	return (player);
 }

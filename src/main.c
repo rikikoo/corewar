@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/05/22 16:39:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 00:33:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,37 @@ void	dump_memory(const unsigned char *arena, int size)
 		i++;
 	}
 	ft_putchar('\n');
+}
+
+static void	introduce_champs(t_champ *champs, int champ_count)
+{
+	int	i;
+
+	ft_printf("Introducing contestants...\n");
+	i = 0;
+	while (i < champ_count)
+	{
+		ft_printf("* Player %d, weighing %d bytes, \"%s\" (\"%s\")!\n", \
+		champs[i].playernbr, champs[i].size, champs[i].name, champs[i].comment);
+		i++;
+	}
+}
+
+static void	init_arena(t_champ *champs, int champ_count, unsigned char *arena)
+{
+	int				i;
+	int				pos;
+
+	i = 0;
+	pos = 0;
+	ft_bzero(arena, MEM_SIZE);
+	while (i < champ_count)
+	{
+		ft_memcpy(&arena[pos], champs[i].exec, champs[i].size);
+		pos += MEM_SIZE / champ_count;
+		i++;
+	}
+	introduce_champs(champs, champ_count);
 }
 
 static t_flags	init_flags(void)

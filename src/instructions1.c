@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/06 18:07:55 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 01:06:55 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,11 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 	int	player;
 
 	player = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, DIR_SIZE);
-
-	ft_printf("Car of P%d: live instruction value: %X (%d)\n", \
-	car->registry[0] * -1, player, player);	// debug
-
-	if ((player > 0) && (player <= game->champ_count))
+	if (game->flags.verbose)
+		ft_printf("Process %d: live %d\n", car->id, player);
+	if ((player > 0) && (player <= game->flags.champ_count))
 	{
-		print_live(car->id, champs[player - 1]);
+		print_live(champs[player - 1]);
 		game->last_live_report = player;
 	}
 	car->cycles_since_live = 1;

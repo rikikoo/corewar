@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/07/23 17:02:50 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 01:38:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,9 @@ t_champ	read_cor(const char *filepath, t_flags *flags);
 void	sort_champs(t_champ *champs, int champ_count);
 
 /*
-** INITS & GAME LOOP
+** GAME MAIN LOOP
 */
-void	init_arena(t_champ *champs, int champ_count, unsigned char *arena);
 t_car	*new_car(int prev_id, int pos, int playernbr);
-t_game	init_game(t_flags flags, t_car *car, int latest_id);
 int		start_game(t_flags flags, unsigned char *arena, t_champ *champs);
 int		start_cycles(unsigned char *arena, t_game *game, \
 		t_champ *champs);
@@ -170,8 +168,9 @@ void	dump_memory(const unsigned char *arena, int size);
 int		n_bytes_to_int(const unsigned char *arena, int pos, int n);
 void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
-void	print_live(int car_id, t_champ champ);
+void	print_live(t_champ champ);
 void	print_cars(t_game *game, t_champ *champs);
+void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct);
 void	print_verbose(t_car *car, t_inst instruct, unsigned char *arena, \
 		int verb);
 

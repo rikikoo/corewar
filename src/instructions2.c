@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/07/23 17:03:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/10 01:08:14 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,7 @@ int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 	if (car->carry)
 	{
 		if (game->flags.verbose)
-			ft_printf("Process %d (of player number %d): %s %d\n", \
-			car->id, car->registry[0] * -1, "zjmp", \
+			ft_printf("Process %d: %s %d\n", car->id, "zjmp", \
 			n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
 		new_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
 		return (new_pos % IDX_MOD);
@@ -83,33 +82,43 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
 
-int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
+static int	add_forked_car(t_game *game, t_car *parent, int fork_pos)
 {
-	int		new_pos;
 	t_car	*car_new;
-	t_car	*first_car;
+	t_car	*old_first;
 	int		reg_i;
 
-	new_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
-	if (inst_code == 12)
-		new_pos = new_pos % IDX_MOD;
-	if (game->flags.verbose)
-		ft_printf("Process %d (of player number %d): %s %d\n", \
-		car->id, car->registry[0] * -1, "lfork"[(inst_code == 12)], \
-		n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
-	first_car = game->cars;
-	car_new = new_car(game->latest_car_id, new_pos % MEM_SIZE, car->registry[0] * -1);
+	old_first = game->cars;
+	car_new = new_car(game->latest_car_id, fork_pos, parent->registry[0] * -1);
 	if (!car_new)
 		return (-1);
-	car_new->next = first_car;
-	game->cars = car_new;
+	car_new->next = old_first;
 	reg_i = 1;
 	while (reg_i < REG_NUMBER)
 	{
-		car_new->registry[reg_i] = car->registry[reg_i];
+		car_new->registry[reg_i] = parent->registry[reg_i];
 		reg_i++;
 	}
-	car_new->carry = car->carry;
-	car_new->cycles_since_live = car->cycles_since_live;
+	car_new->carry = parent->carry;
+	car_new->cycles_since_live = parent->cycles_since_live;
+	game->cars = car_new;
+	game->latest_car_id = car_new->id;
+	return (0);
+}
+
+int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
+{
+	int		fork_pos;
+	char	*inst_name;
+
+	inst_name = "lfork";
+	inst_name = inst_name + (inst_code == 12);
+	fork_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
+	if (inst_code == 12)
+		fork_pos = fork_pos % IDX_MOD;
+	if (game->flags.verbose)
+		ft_printf("Process %d: %s %d\n", car->id, inst_name, fork_pos);
+	if (add_forked_car(game, car, car->pos + fork_pos) < 0)
+		return (-1);
 	return (IND_SIZE + 1);
 }

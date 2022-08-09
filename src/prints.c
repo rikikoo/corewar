@@ -6,19 +6,16 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 17:41:26 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/07/22 16:36:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/09 22:35:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-void	print_live(int car_id, t_champ champ)
+void	print_live(t_champ champ)
 {
 	ft_printf("A process shows that player %d (%s) is alive\n", \
-	car_id, \
-	champ.playernbr, \
-	champ.name \
-	);
+	champ.playernbr, champ.name);
 }
 
 /*
