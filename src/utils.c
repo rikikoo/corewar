@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/07 19:11:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/11 22:00:02 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ int	get_arg_size(int inst_code, int arg)
 int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int arg)
 {
 	int	pos;
-	int	indirect_pos;
 
 	if (arg == 1)
 		pos = (car->pos + 2) % MEM_SIZE;
@@ -140,7 +139,7 @@ int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int arg)
 	else
 		pos = (car->pos + 2 + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE;
 	if (instruct.types[arg - 1] == DIR_CODE)
-		return ((int)n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]));
+		return (n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]));
 	else if (instruct.types[arg - 1] == REG_CODE)
 	{
 		if (arena[pos] > 0 && arena[pos] <= REG_NUMBER)
@@ -148,8 +147,5 @@ int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int arg)
 		return (0);
 	}
 	else
-	{
-		indirect_pos = n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]);
-		return (n_bytes_to_int(arena, indirect_pos % MEM_SIZE, DIR_SIZE));
-	}
+		return (n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]));
 }

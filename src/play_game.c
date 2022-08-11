@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/10 01:09:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/12 01:17:12 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,18 +91,19 @@ static int	exec_cars(t_game *game,
 	while (car)
 	{
 		car->cycles_since_live++;
-		if (car->current_opcode != arena[car->pos])
+		if (car->cycles_to_exec < 0)
 		{
 			car->current_opcode = arena[car->pos];
 			car->cycles_to_exec = get_wait_cycles(car->current_opcode);
 		}
-		car->cycles_to_exec -= (car->cycles_to_exec != 0);
-		if (!car->cycles_to_exec)
+		car->cycles_to_exec -= (car->cycles_to_exec > 0);
+		if (car->cycles_to_exec == 0)
 		{
 			ret = execute_instruction(game, car, arena, champs);
 			if (ret < 0)
 				return (ret);
 			car->pos = (car->pos + ret) % MEM_SIZE;
+			car->cycles_to_exec--;
 		}
 		car = car->next;
 	}
@@ -116,8 +117,8 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 		game->cycle++;
 
 		// debug
-		// if (game->cycle == 801)
-		// 	print_cars(game, champs);
+		// if (game->cycle == 10 || game->cycle == 30)
+		// 	print_cars(game);
 		// debug end
 
 		if (game->flags.verbose > 1)

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/10 01:16:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/12 01:18:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_car	*new_car(int last_id, int pos, int playernbr)
 	car->pos = pos % MEM_SIZE;
 	car->carry = 0;
 	car->cycles_since_live = 1;
-	car->cycles_to_exec = 1;
+	car->cycles_to_exec = -1;
 	i = 0;
 	car->registry[i] = playernbr * -1;
 	while (++i < REG_NUMBER)

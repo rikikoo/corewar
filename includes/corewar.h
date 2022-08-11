@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/10 01:38:26 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/12 00:42:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,7 @@ int		n_bytes_to_int(const unsigned char *arena, int pos, int n);
 void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(t_champ champ);
-void	print_cars(t_game *game, t_champ *champs);
-void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct);
+void	print_cars(t_game *game);
 void	print_verbose(t_car *car, t_inst instruct, unsigned char *arena, \
 		int verb);
 

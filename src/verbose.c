@@ -6,11 +6,26 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/10 01:39:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/12 00:43:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+static void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct)
+{
+	int	i;
+
+	i = 0;
+	ft_printf(" (ACB: %#2x", arena[(car->pos + 1) % MEM_SIZE]);
+	ft_printf(" [ ");
+	while (instruct.types[i] && i < 4)
+	{
+		ft_printf("%d ", instruct.types[i]);
+		i++;
+	}
+	ft_printf("])\n");
+}
 
 static char	*get_inst_name(int inst_code)
 {
@@ -45,21 +60,22 @@ static void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena)
 
 	inst = instruct.inst_code;
 	arg_count = get_arg_count(inst);
+	ft_printf("Process %d: ", car->id);
 	if (arg_count == 1)
-		ft_printf("Process %d: %s %d\n", \
-		car->id, get_inst_name(inst), \
+		ft_printf("%s %d", get_inst_name(inst), \
 		n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
 	else if (arg_count == 2)
-		ft_printf("Process %d: %s %d %d\n", \
-		car->id, get_inst_name(inst), \
+		ft_printf("%s %d %d", get_inst_name(inst), \
 		get_arg_value(instruct, arena, car, 1), \
 		get_arg_value(instruct, arena, car, 2));
 	else
-		ft_printf("Process %d: %s %d %d %d\n", \
-		car->id, get_inst_name(inst), \
+		ft_printf("%s %d %d %d", get_inst_name(inst), \
 		get_arg_value(instruct, arena, car, 1), \
 		get_arg_value(instruct, arena, car, 2), \
 		get_arg_value(instruct, arena, car, 3));
+	if (instruct.inst_code != 1 && instruct.inst_code != 9 && \
+	instruct.inst_code != 13 && instruct.inst_code != 15)
+		print_arg_types(arena, car, instruct);
 }
 
 /*
@@ -74,14 +90,7 @@ void	print_verbose(t_car *car,
 		)
 {
 	if (verb == 1)
-	{
-		// debug start
-		// if (instruct.inst_code != 1 && instruct.inst_code != 9 && \
-		// instruct.inst_code != 13 && instruct.inst_code != 15)
-		// 	print_arg_types(arena, car, instruct);
-		// debug end
 		print_instruction(car, instruct, arena);
-	}
 	else
 		ft_printf("Process %d died\n", car->id);
 }
