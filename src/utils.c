@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/11 22:00:02 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/16 00:44:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,42 @@ int	get_arg_size(int inst_code, int arg)
 		return (0);
 }
 
-int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int arg)
+void	get_inst_operands(
+	t_inst instruct,
+	unsigned char *arena,
+	t_car *car,
+	int *vals)
+{
+	short	ind_pos;
+
+	if (!vals)
+		return ;
+	ind_pos = 0;
+	if (instruct.types[0] == IND_CODE)
+		ind_pos = get_ind_val(instruct, arena, car, 1) % IDX_MOD;
+	vals[0] = n_bytes_to_int(arena, (car->pos + ind_pos) % MEM_SIZE, DIR_SIZE);
+	ind_pos = 0;
+	if (instruct.types[1] == IND_CODE)
+		ind_pos = get_ind_val(instruct, arena, car, 2) % IDX_MOD;
+	vals[1] = n_bytes_to_int(arena, (car->pos + ind_pos) % MEM_SIZE, DIR_SIZE);
+}
+
+short	get_ind_val(t_inst instruct, unsigned char *arena, t_car *car, int arg)
+{
+	int		pos;
+	short	val;
+
+	if (arg == 1)
+		pos = (car->pos + 2) % MEM_SIZE;
+	else if (arg == 2)
+		pos = (car->pos + 2 + instruct.sizes[0]) % MEM_SIZE;
+	else
+		pos = (car->pos + 2 + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE;
+	val = (arena[pos] << 8) + arena[(pos + 1) % MEM_SIZE];
+	return (val);
+}
+
+int	get_arg_val(t_inst instruct, unsigned char *arena, t_car *car, int arg)
 {
 	int	pos;
 
@@ -147,5 +182,5 @@ int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int arg)
 		return (0);
 	}
 	else
-		return (n_bytes_to_int(arena, pos, instruct.sizes[arg - 1]));
+		return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/06/03 23:35:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:03:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	validate_args(int inst_code, int *t)
 		return ((t[0] == REG_CODE || t[0] == DIR_CODE || t[0] == IND_CODE) && \
 		(t[1] == REG_CODE || t[1] == DIR_CODE) && t[2] == REG_CODE);
 	else if (inst_code == 11)
-		return (t[0] == T_REG && (t[2] == REG_CODE || t[2] == DIR_CODE) && \
+		return (t[0] == REG_CODE && (t[2] == REG_CODE || t[2] == DIR_CODE) && \
 		(t[1] == REG_CODE || t[1] == DIR_CODE || t[1] == IND_CODE));
 	else if (inst_code == 13)
 		return ((t[0] == DIR_CODE || t[0] == IND_CODE) && t[1] == REG_CODE);

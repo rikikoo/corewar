@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/12 02:45:09 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/15 23:20:25 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	pos = car->pos + 2;
-	value1 = get_arg_value(instruct, arena, car, 1);
-	value2 = get_arg_value(instruct, arena, car, 2);
+	value1 = get_arg_val(instruct, arena, car, 1);
+	value2 = get_arg_val(instruct, arena, car, 2);
 	reg = arena[(pos + instruct.sizes[0]) % MEM_SIZE] - 1;
 	if (inst_code == 10)
 		car->registry[reg] = (value1 + value2) % IDX_MOD;
@@ -72,11 +72,11 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
-	reg_val = get_arg_value(instruct, arena, car, 1);
-	value1 = get_arg_value(instruct, arena, car, 2);
-	value2 = get_arg_value(instruct, arena, car, 3);
+	reg_val = get_arg_val(instruct, arena, car, 1);
+	value1 = get_arg_val(instruct, arena, car, 2);
+	value2 = get_arg_val(instruct, arena, car, 3);
 	dst_pos = (value1 + value2) % IDX_MOD;
-	swap_endianness((unsigned char *)&reg, REG_SIZE);
+	swap_endianness((unsigned char *)&reg_val, REG_SIZE);
 	ft_memcpy(&arena[(car->pos + dst_pos) % MEM_SIZE], \
 	(unsigned char *)&reg_val, REG_SIZE);
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);

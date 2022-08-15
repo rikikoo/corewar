@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/12 02:00:23 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/16 00:45:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
+	short	ind_pos;
 	int		value;
 	int		reg;
 	t_inst	instruct;
@@ -46,9 +47,15 @@ int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
 	pos = car->pos + 2;
-	value = get_arg_value(instruct, arena, car, 1);
-	if (inst_code == 2)
-		value = value % IDX_MOD;
+	if (instruct.types[0] == IND_CODE)
+	{
+		ind_pos = get_ind_val(instruct, arena, car, 1);
+		if (instruct.inst_code == 2)
+			ind_pos = ind_pos % IDX_MOD;
+		value = n_bytes_to_int(arena, car->pos + ind_pos, DIR_SIZE);
+	}
+	else
+		value = get_arg_val(instruct, arena, car, 1);
 	reg = arena[(pos + instruct.sizes[0]) % MEM_SIZE] - 1;
 	car->registry[reg] = value;
 	car->carry = (value == 0);
@@ -57,13 +64,11 @@ int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 
 /*
 ** performs a store operation (@inst_code == 3).
-**
-** TODO: is the T_IND value ok when it comes out of get_arg_value()?
 */
 int	store_inst(t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
-	int		ind_value;
+	short	ind_value;
 	int		reg_value;
 	t_inst	instruct;
 
@@ -73,12 +78,12 @@ int	store_inst(t_game *game, t_car *car, unsigned char *arena)
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
 	pos = car->pos + instruct.sizes[0] + 2;
-	reg_value = get_arg_value(instruct, arena, car, 1);
+	reg_value = get_arg_val(instruct, arena, car, 1);
 	if (instruct.types[1] == REG_CODE)
 		car->registry[arena[pos % MEM_SIZE] - 1] = reg_value;
 	else
 	{
-		ind_value = get_arg_value(instruct, arena, car, 2) % IDX_MOD;
+		ind_value = get_ind_val(instruct, arena, car, 2) % IDX_MOD;
 		swap_endianness((unsigned char *)&reg_value, REG_SIZE);
 		ft_memcpy(&arena[(car->pos + ind_value) % MEM_SIZE], \
 			(unsigned char *)&reg_value, REG_SIZE);
@@ -109,8 +114,8 @@ int	arithmetic_inst(int inst_code,
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	pos = car->pos + 2;
-	value1 = get_arg_value(instruct, arena, car, 1);
-	value2 = get_arg_value(instruct, arena, car, 2);
+	value1 = get_arg_val(instruct, arena, car, 1);
+	value2 = get_arg_val(instruct, arena, car, 2);
 	reg = arena[(pos + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE] - 1;
 	if (inst_code == 4)
 		car->registry[reg] = value1 + value2;
@@ -129,9 +134,8 @@ int	arithmetic_inst(int inst_code,
 */
 int	bitwise_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
-	int		pos;
-	int		value1;
-	int		value2;
+	int		reg_pos;
+	int		values[2];
 	int		reg;
 	t_inst	instruct;
 
@@ -140,18 +144,15 @@ int	bitwise_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
-	pos = car->pos + 2;
-	value1 = get_arg_value(instruct, arena, car, 1);
-	value2 = get_arg_value(instruct, arena, car, 2);
-	reg = arena[(pos + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE] - 1;
+	get_inst_operands(instruct, arena, car, values);
+	reg_pos = car->pos + 2 + instruct.sizes[0] + instruct.sizes[1];
+	reg = arena[reg_pos % MEM_SIZE] - 1;
 	if (inst_code == 6)
-		car->registry[reg] = value1 & value2;
+		car->registry[reg] = values[0] & values[1];
 	else if (inst_code == 7)
-		car->registry[reg] = value1 | value2;
+		car->registry[reg] = values[0] | values[1];
 	else if (inst_code == 8)
-		car->registry[reg] = value1 ^ value2;
-	else
-		return (1);
+		car->registry[reg] = values[0] ^ values[1];
 	car->carry = (car->registry[reg] == 0);
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
