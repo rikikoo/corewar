@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/16 00:45:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/18 21:05:46 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 		ind_pos = get_ind_val(instruct, arena, car, 1);
 		if (instruct.inst_code == 2)
 			ind_pos = ind_pos % IDX_MOD;
-		value = n_bytes_to_int(arena, car->pos + ind_pos, DIR_SIZE);
+		value = n_bytes_to_int(arena, car->pos + ind_pos , DIR_SIZE);
 	}
 	else
 		value = get_arg_val(instruct, arena, car, 1);

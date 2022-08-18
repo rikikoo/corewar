@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/15 23:20:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/18 23:12:52 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,22 @@
 */
 int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 {
-	int	new_pos;
+	short	new_pos;
 
-	if (car->carry)
+	new_pos = ((arena[(car->pos + 1) % MEM_SIZE] << 8) \
+	+ arena[(car->pos + 2) % MEM_SIZE]) % IDX_MOD;
+	if (game->flags.verbose)
 	{
-		if (game->flags.verbose)
-			ft_printf("Process %d: %s %d\n", car->id, "zjmp", \
-			n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE));
-		new_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
-		return (new_pos % IDX_MOD);
+		ft_printf("Process %d: %s %hd ", car->id, "zjmp", new_pos);
+		if (car->carry)
+			ft_printf("OK\n");
+		else
+			ft_printf("FAILED\n");
 	}
+	if (car->carry)
+		return (new_pos);
 	else
-		return (0);
+		return (1 + IND_SIZE);
 }
 
 int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
@@ -113,12 +117,13 @@ int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 
 	inst_name = "lfork";
 	inst_name = inst_name + (inst_code == 12);
-	fork_pos = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, IND_SIZE);
+	fork_pos = (arena[(car->pos + 1) % MEM_SIZE] << 8) \
+	+ arena[(car->pos + 2) % MEM_SIZE];
 	if (inst_code == 12)
 		fork_pos = fork_pos % IDX_MOD;
 	if (game->flags.verbose)
 		ft_printf("Process %d: %s %d\n", car->id, inst_name, fork_pos);
-	if (add_forked_car(game, car, car->pos + fork_pos) < 0)
+	if (add_forked_car(game, car, (car->pos + fork_pos) % MEM_SIZE) < 0)
 		return (-1);
 	return (IND_SIZE + 1);
 }
