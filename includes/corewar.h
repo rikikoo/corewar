@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/16 00:43:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/22 21:02:59 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ int		get_arg_count(int inst_code);
 int		get_arg_type(unsigned char byte, int arg);
 int		get_arg_size(int inst_code, int arg);
 int		get_arg_val(t_inst instruct, unsigned char *arena, t_car *car, int arg);
+int		get_reg_no(t_inst instruct, unsigned char *arena, int pos, int arg);
 short	get_ind_val(t_inst instruct, unsigned char *arena, t_car *car, int arg);
 void	get_inst_operands(t_inst instruct, unsigned char *arena, t_car *car, \
 		int *vals);

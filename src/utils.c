@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/16 00:44:40 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/22 22:15:11 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,24 +128,45 @@ int	get_arg_size(int inst_code, int arg)
 		return (0);
 }
 
+int	get_reg_no(t_inst instruct, unsigned char *arena, int pos, int arg)
+{
+	int	v;
+
+	if (arg == 1)
+		v = arena[(pos + 2) % MEM_SIZE];
+	else if (arg == 2)
+		v = arena[(pos + 2 + instruct.sizes[0]) % MEM_SIZE];
+	else if (arg == 3)
+		v = arena[(pos + 2 + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE];
+	else
+		v = 0;
+	return (v);
+}
+
+/*
+** stores the values of the first two instruction arguments (or last two if
+** inst_code == 11, i.e. sti) into @vals.
+** called by bitwise instructions (6, 7, 8) and ldi, sti, lldi (10, 11, 14).
+*/
 void	get_inst_operands(
 	t_inst instruct,
 	unsigned char *arena,
 	t_car *car,
 	int *vals)
 {
-	short	ind_pos;
+	int		arg_idx;
 
-	if (!vals)
-		return ;
-	ind_pos = 0;
-	if (instruct.types[0] == IND_CODE)
-		ind_pos = get_ind_val(instruct, arena, car, 1) % IDX_MOD;
-	vals[0] = n_bytes_to_int(arena, (car->pos + ind_pos) % MEM_SIZE, DIR_SIZE);
-	ind_pos = 0;
-	if (instruct.types[1] == IND_CODE)
-		ind_pos = get_ind_val(instruct, arena, car, 2) % IDX_MOD;
-	vals[1] = n_bytes_to_int(arena, (car->pos + ind_pos) % MEM_SIZE, DIR_SIZE);
+	arg_idx = 0 + (instruct.inst_code == 11);
+	if (instruct.types[arg_idx] != REG_CODE && \
+	instruct.sizes[arg_idx] == IND_SIZE)
+		vals[0] = get_ind_val(instruct, arena, car, arg_idx + 1) % IDX_MOD;
+	else
+		vals[0] = get_arg_val(instruct, arena, car, arg_idx + 1);
+	if (instruct.types[arg_idx + 1] != REG_CODE && \
+	instruct.sizes[arg_idx + 1] == IND_SIZE)
+		vals[1] = get_ind_val(instruct, arena, car, arg_idx + 2) % IDX_MOD;
+	else
+		vals[1] = get_arg_val(instruct, arena, car, arg_idx + 2);
 }
 
 short	get_ind_val(t_inst instruct, unsigned char *arena, t_car *car, int arg)

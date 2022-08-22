@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/18 23:12:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/22 23:34:38 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,16 @@
 /*
 ** moves @car to a new position on @arena if car->carry == true
 **
-** TODO: should the instruction be skipped if carry == 0, or not?
+** TODO: should the destination address be truncated by IDX_MOD?
 */
 int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 {
 	short	new_pos;
 
+	// new_pos = ((arena[(car->pos + 1) % MEM_SIZE] << 8) \
+	// + arena[(car->pos + 2) % MEM_SIZE]) % IDX_MOD;
 	new_pos = ((arena[(car->pos + 1) % MEM_SIZE] << 8) \
-	+ arena[(car->pos + 2) % MEM_SIZE]) % IDX_MOD;
+	+ arena[(car->pos + 2) % MEM_SIZE]);
 	if (game->flags.verbose)
 	{
 		ft_printf("Process %d: %s %hd ", car->id, "zjmp", new_pos);
@@ -40,8 +42,7 @@ int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
 	int		pos;
-	int		value1;
-	int		value2;
+	int		values[2];
 	int		reg;
 	t_inst	instruct;
 
@@ -51,13 +52,15 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	pos = car->pos + 2;
-	value1 = get_arg_val(instruct, arena, car, 1);
-	value2 = get_arg_val(instruct, arena, car, 2);
+	get_inst_operands(instruct, arena, car, values);
+	if (game->flags.verbose)
+		ft_printf("\tload from: %d + %d = %d\n", values[0] % IDX_MOD, \
+		values[1] % IDX_MOD, (values[0] + values[1]) % IDX_MOD);
 	reg = arena[(pos + instruct.sizes[0]) % MEM_SIZE] - 1;
 	if (inst_code == 10)
-		car->registry[reg] = (value1 + value2) % IDX_MOD;
+		car->registry[reg] = (values[0] + values[1]) % IDX_MOD;
 	else
-		car->registry[reg] = value1 + value2;
+		car->registry[reg] = values[0] + values[1];
 	if (inst_code == 14)
 		car->carry = (car->registry[reg] == 0);
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
@@ -65,10 +68,9 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 
 int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 {
-	int		dst_pos;
 	int		reg_val;
-	int		value1;
-	int		value2;
+	int		dst_pos;
+	int		values[2];
 	t_inst	instruct;
 
 	instruct = validate_instruction(11, arena, car->pos);
@@ -77,9 +79,11 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 	reg_val = get_arg_val(instruct, arena, car, 1);
-	value1 = get_arg_val(instruct, arena, car, 2);
-	value2 = get_arg_val(instruct, arena, car, 3);
-	dst_pos = (value1 + value2) % IDX_MOD;
+	get_inst_operands(instruct, arena, car, values);
+	dst_pos = (values[0] + values[1]) % IDX_MOD;
+	if (game->flags.verbose)
+		ft_printf("\tstore to: %d + %d = %d\n", \
+		values[0] % IDX_MOD, values[1] % IDX_MOD, dst_pos);
 	swap_endianness((unsigned char *)&reg_val, REG_SIZE);
 	ft_memcpy(&arena[(car->pos + dst_pos) % MEM_SIZE], \
 	(unsigned char *)&reg_val, REG_SIZE);

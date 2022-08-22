@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/18 21:03:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/22 20:54:31 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,18 @@ static void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena)
 	ft_printf("Process %d: %s ", car->id, get_inst_name(inst));
 	while (arg <= arg_count)
 	{
-		if (instruct.types[arg - 1] == IND_CODE && inst != 13)
+		if ((instruct.types[arg - 1] == IND_CODE && inst != 13) || \
+		(instruct.types[arg - 1] == DIR_CODE && \
+		instruct.sizes[arg - 1] == IND_SIZE))
 			ft_printf("%hd ", get_ind_val(instruct, arena, car, arg) % IDX_MOD);
 		else if (instruct.types[arg - 1] == IND_CODE && inst == 13)
 			ft_printf("%hd ", get_ind_val(instruct, arena, car, arg));
 		else
+		{
+			if (instruct.types[arg - 1] == REG_CODE)
+				ft_printf("r%d:", get_reg_no(instruct, arena, car->pos, arg));
 			ft_printf("%d ", get_arg_val(instruct, arena, car, arg));
+		}
 		arg++;
 	}
 	if (inst != 1 && inst != 9 && inst != 12 && inst != 15)
