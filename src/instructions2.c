@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:33:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 22:26:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	if ((game->flags.verbose & 2) == 2)
 		ft_printf("\tload from: %d + %d = %d\n", values[0] % IDX_MOD, \
 		values[1] % IDX_MOD, (values[0] + values[1]) % IDX_MOD);
-	reg = arena[(pos + instruct.sizes[0]) % MEM_SIZE] - 1;
+	reg = arena[(pos + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE] - 1;
 	if (inst_code == 10)
 		car->registry[reg] = (values[0] + values[1]) % IDX_MOD;
 	else
