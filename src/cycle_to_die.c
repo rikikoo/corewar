@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:19:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:20:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,17 +56,8 @@ int	collect_the_dead(t_game *game)
 	car = game->cars;
 	alive = 0;
 	game->checks++;
-	// debug
-	// ft_printf("Cycle: %d\tTo die: %d\tDelta: %d\n", \
-	// game->cycle, game->cycle_to_die, die_cycle_delta);
-	// debug end
 	while (car)
 	{
-		//debug
-		// ft_printf("Car %d cycles since live: %d\n", \
-		// car->registry[0] * -1, car->cycles_since_live);
-		// debug end
-
 		if (car->cycles_since_live >= game->cycle_to_die)
 			car = remove_dead_car(game, car->id);
 		else
@@ -74,7 +65,6 @@ int	collect_the_dead(t_game *game)
 		if (car)
 			car = car->next;
 	}
-	// ft_printf("exit car loop with %d alive\n", alive);
 	if (!alive)
 		return (game->last_live_report);
 	if (game->live_count >= NBR_LIVE || game->checks >= MAX_CHECKS)

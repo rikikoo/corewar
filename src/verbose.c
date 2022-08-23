@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:18:22 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:23:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct)
 {
 	int	i;
-	int inst;
+	int	inst;
 
 	inst = instruct.inst_code;
 	if (inst == 1 || inst == 9 || inst == 12 || inst == 15)

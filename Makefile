@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/05/10 19:15:59 by rkyttala         ###   ########.fr        #
+#    Updated: 2022/08/23 20:23:06 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ L = libft/
 
 SRC =	$(S)main.c \
 		$(S)utils.c \
+		$(S)utils2.c \
 		$(S)prints.c \
 		$(S)parse_main_args.c \
 		$(S)read_champ.c \
