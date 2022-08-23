@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/22 21:02:59 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:25:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,6 @@ void	print_live(t_champ champ);
 void	print_cars(t_game *game);
 void	print_verbose(t_car *car, t_inst instruct, unsigned char *arena, \
 		int verb);
-
 
 void	print_n_bytes(unsigned char *arena, int pos, int n);
 void	swap_endianness(unsigned char *bytes, int len);

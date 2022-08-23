@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:00:50 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:32:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 	int	player;
 
 	player = n_bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, DIR_SIZE);
-	if (game->flags.verbose > 1)
+	if ((game->flags.verbose & 2) == 2)
 		ft_printf("Process %d: live %d\n", car->id, player);
 	if ((player > 0) && (player <= game->flags.champ_count))
 	{
@@ -42,7 +42,7 @@ int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
-	if (game->flags.verbose > 1)
+	if ((game->flags.verbose & 2) == 2)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
@@ -73,7 +73,7 @@ int	store_inst(t_game *game, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(3, arena, car->pos);
-	if (game->flags.verbose > 1)
+	if ((game->flags.verbose & 2) == 2)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + 2);
@@ -109,7 +109,7 @@ int	arithmetic_inst(int inst_code,
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
-	if (game->flags.verbose > 1)
+	if ((game->flags.verbose & 2) == 2)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
@@ -140,7 +140,7 @@ int	bitwise_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	t_inst	instruct;
 
 	instruct = validate_instruction(inst_code, arena, car->pos);
-	if (game->flags.verbose > 1)
+	if ((game->flags.verbose & 2) == 2)
 		print_verbose(car, instruct, arena, 1);
 	if (!instruct.is_valid)
 		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
