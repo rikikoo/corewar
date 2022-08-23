@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/22 20:54:31 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:18:22 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 static void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct)
 {
 	int	i;
+	int inst;
 
+	inst = instruct.inst_code;
+	if (inst == 1 || inst == 9 || inst == 12 || inst == 15)
+		return ;
 	i = 0;
 	ft_printf("(ACB: %#2x", arena[(car->pos + 1) % MEM_SIZE]);
 	ft_printf(" [ ");
@@ -61,9 +65,9 @@ static void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena)
 
 	inst = instruct.inst_code;
 	arg_count = get_arg_count(inst);
-	arg = 1;
+	arg = 0;
 	ft_printf("Process %d: %s ", car->id, get_inst_name(inst));
-	while (arg <= arg_count)
+	while (++arg <= arg_count)
 	{
 		if ((instruct.types[arg - 1] == IND_CODE && inst != 13) || \
 		(instruct.types[arg - 1] == DIR_CODE && \
@@ -77,10 +81,8 @@ static void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena)
 				ft_printf("r%d:", get_reg_no(instruct, arena, car->pos, arg));
 			ft_printf("%d ", get_arg_val(instruct, arena, car, arg));
 		}
-		arg++;
 	}
-	if (inst != 1 && inst != 9 && inst != 12 && inst != 15)
-		print_arg_types(arena, car, instruct);
+	print_arg_types(arena, car, instruct);
 	ft_putchar('\n');
 }
 

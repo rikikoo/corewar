@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/12 01:17:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:00:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,13 +115,7 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 	while (1)
 	{
 		game->cycle++;
-
-		// debug
-		// if (game->cycle == 10 || game->cycle == 30)
-		// 	print_cars(game);
-		// debug end
-
-		if (game->flags.verbose > 1)
+		if (game->flags.verbose == 1)
 			ft_printf("Cycle: %d\n", game->cycle);
 		if (game->cycle % game->cycle_to_die == 0)
 			game->winner = collect_the_dead(game);

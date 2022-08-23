@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/22 22:15:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:05:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,16 +53,16 @@ void	swap_endianness(unsigned char *bytes, int len)
 {
 	unsigned char	tmp;
 	int				i;
-    int             halfway;
+	int				halfway;
 
 	i = 0;
-    halfway = len / 2;
+	halfway = len / 2;
 	while (len > halfway)
 	{
 		len--;
 		tmp = bytes[i];
 		bytes[i] = bytes[len];
-        bytes[len] = tmp;
+		bytes[len] = tmp;
 		i++;
 	}
 }

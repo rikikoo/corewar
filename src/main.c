@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/11 23:32:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/23 20:06:00 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	dump_memory(const unsigned char *arena, int size)
 	int	i;
 	int	j;
 	int	row_len;
-	int address;
+	int	address;
 
 	i = 0;
 	row_len = 32;
