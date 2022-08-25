@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:31:16 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/25 19:52:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ static int	exec_cars(t_game *game,
 		car->cycles_since_live++;
 		if (car->cycles_to_exec < 0)
 		{
+			ft_printf("car pos: %d\n", car->pos);
 			car->current_opcode = arena[car->pos];
 			car->cycles_to_exec = get_wait_cycles(car->current_opcode);
 		}
@@ -102,7 +103,7 @@ static int	exec_cars(t_game *game,
 			ret = execute_instruction(game, car, arena, champs);
 			if (ret < 0)
 				return (ret);
-			car->pos = (car->pos + ret) % MEM_SIZE;
+			car->pos = ft_abs(car->pos + ret) % MEM_SIZE;
 			car->cycles_to_exec--;
 		}
 		car = car->next;
