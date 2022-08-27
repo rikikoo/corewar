@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 22:26:58 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/27 21:08:27 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 	}
 	if (car->carry)
 	{
-		car->pos = car->pos + (new_pos % IDX_MOD);
+		car->pos = rel_pos(car->pos, (new_pos % IDX_MOD));
 		return (0);
 	}
 	else
@@ -40,29 +40,30 @@ int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 
 int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 {
-	int		pos;
 	int		values[2];
 	int		reg;
-	t_inst	instruct;
+	int		val;
+	t_inst	inst;
 
-	instruct = validate_instruction(inst_code, arena, car->pos);
+	inst = validate_instruction(inst_code, arena, car->pos);
 	if ((game->flags.verbose & 2) == 2)
-		print_verbose(car, instruct, arena, 1);
-	if (!instruct.is_valid)
-		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
-	pos = car->pos + 2;
-	get_inst_operands(instruct, arena, car, values);
+		print_verbose(car, inst, arena, 1);
+	if (!inst.is_valid)
+		return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);
+	get_inst_operands(inst, arena, car, values);
 	if ((game->flags.verbose & 2) == 2)
 		ft_printf("\tload from: %d + %d = %d\n", values[0] % IDX_MOD, \
 		values[1] % IDX_MOD, (values[0] + values[1]) % IDX_MOD);
-	reg = arena[(pos + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE] - 1;
+	reg = arena[car->pos + 2 + inst.sizes[0] + inst.sizes[1] % MEM_SIZE] - 1;
 	if (inst_code == 10)
-		car->registry[reg] = (values[0] + values[1]) % IDX_MOD;
+		val = rel_pos(car->pos, ((values[0] + values[1]) % IDX_MOD));
 	else
-		car->registry[reg] = values[0] + values[1];
+		val = rel_pos(car->pos, (values[0] + values[1]));
+	val = n_bytes_to_int(arena, val, DIR_SIZE);
+	car->registry[reg] = val;
 	if (inst_code == 14)
 		car->carry = (car->registry[reg] == 0);
-	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
+	return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);
 }
 
 int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
@@ -84,8 +85,8 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 		ft_printf("\tstore to: %d + %d = %d\n", \
 		values[0] % IDX_MOD, values[1] % IDX_MOD, dst_pos);
 	swap_endianness((unsigned char *)&reg_val, REG_SIZE);
-	ft_memcpy(&arena[(car->pos + dst_pos) % MEM_SIZE], \
-	(unsigned char *)&reg_val, REG_SIZE);
+	write_to_arena(arena, (unsigned char *)&reg_val, \
+		rel_pos(car->pos, dst_pos), REG_SIZE);
 	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
 }
 
@@ -126,7 +127,7 @@ int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 		fork_pos = fork_pos % IDX_MOD;
 	if ((game->flags.verbose & 2) == 2)
 		ft_printf("Process %d: %s %d\n", car->id, inst_name, fork_pos);
-	if (add_forked_car(game, car, (car->pos + fork_pos) % MEM_SIZE) < 0)
+	if (add_forked_car(game, car, rel_pos(car->pos, fork_pos)) < 0)
 		return (-1);
 	return (IND_SIZE + 1);
 }

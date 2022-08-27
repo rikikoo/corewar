@@ -6,11 +6,52 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/15 23:03:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/25 21:15:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+/*
+** returns the number of arguments an instruction has, based on @inst_code
+*/
+int	get_arg_count(int inst_code)
+{
+	if (inst_code == 1 || inst_code == 9 || inst_code == 12 || inst_code == 15)
+		return (1);
+	else if (inst_code == 2 || inst_code == 3 || inst_code == 13)
+		return (2);
+	else
+		return (3);
+}
+
+/*
+** returns either the first, second or third pair of bits of the 8-bit @byte.
+** @byte is the argument type code, while @arg is the argument's ordinal number.
+** in other words, returns always either 0, 1, 2 or 3, which represent
+** (respectively) NULL, T_REG, T_DIR or T_IND.
+**
+** example:
+** @arg == 3, @byte == 0b01011000
+**
+** byte >> 2
+**	=> 0b00010110	-- now the third bit-pair is shifted all the way to right
+** byte & 3 == 0b00010110 & 0b00000011
+**	=> 0b00000010 == 2 == T_DIR		-- ANDing the shifted byte with 3 (i.e. the
+**									-- two right-most bits of a byte) yields the
+**									-- value we were after
+*/
+int	get_arg_type(unsigned char byte, int arg)
+{
+	if (arg < 1 || arg > 3)
+		return (0);
+	if (arg == 1)
+		return ((byte >> 6) & 3);
+	else if (arg == 2)
+		return ((byte >> 4) & 3);
+	else
+		return ((byte >> 2) & 3);
+}
 
 /*
 ** returns 1 (true) if all arguments that should be of type T_REG have a value

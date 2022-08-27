@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/25 19:58:14 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/27 20:55:33 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ static int	exec_cars(t_game *game,
 			ret = execute_instruction(game, car, arena, champs);
 			if (ret < 0)
 				return (ret);
-			car->pos = ft_abs(car->pos + ret) % MEM_SIZE;
+			car->pos = rel_pos(car->pos, ret) % MEM_SIZE;
 			car->cycles_to_exec--;
 		}
 		car = car->next;

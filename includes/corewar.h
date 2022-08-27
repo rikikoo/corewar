@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:25:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/27 21:03:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,12 +169,16 @@ void	get_inst_operands(t_inst instruct, unsigned char *arena, t_car *car, \
 */
 void	dump_memory(const unsigned char *arena, int size);
 int		n_bytes_to_int(const unsigned char *arena, int pos, int n);
+int		rel_pos(int car_pos, int relative_pos);
+void	write_to_arena(unsigned char *arena, unsigned char *src, int start, \
+		int len);
 void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(t_champ champ);
 void	print_cars(t_game *game);
 void	print_verbose(t_car *car, t_inst instruct, unsigned char *arena, \
 		int verb);
+
 
 void	print_n_bytes(unsigned char *arena, int pos, int n);
 void	swap_endianness(unsigned char *bytes, int len);

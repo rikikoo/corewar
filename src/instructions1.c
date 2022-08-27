@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:32:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/27 21:09:58 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,8 @@ int	store_inst(t_game *game, t_car *car, unsigned char *arena)
 	{
 		ind_value = get_ind_val(instruct, arena, car, 2) % IDX_MOD;
 		swap_endianness((unsigned char *)&reg_value, REG_SIZE);
-		ft_memcpy(&arena[(car->pos + ind_value) % MEM_SIZE], \
-			(unsigned char *)&reg_value, REG_SIZE);
+		write_to_arena(arena, (unsigned char *)&reg_value, \
+			rel_pos(car->pos, ind_value), REG_SIZE);
 	}
 	return (instruct.sizes[0] + instruct.sizes[1] + 2);
 }
