@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:02:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:26:48 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,8 +178,6 @@ void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(t_champ champ);
 void	print_cars(t_game *game);
 void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena);
-
-
 void	print_n_bytes(unsigned char *arena, int pos, int n);
 void	swap_endianness(unsigned char *bytes, int len);
 

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:04:47 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:40:32 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	perform_check(t_game *game)
 	{
 		if (car->cycles_since_live >= game->cycle_to_die)
 		{
-			car = remove_dead_car(game, car->id);
 			ft_printf("Process %d died\n", car->id);
+			car = remove_dead_car(game, car->id);
 		}
 		else
 			alive++;
