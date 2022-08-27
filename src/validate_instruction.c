@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/25 21:15:10 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:21:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,22 @@ int	get_arg_type(unsigned char byte, int arg)
 ** returns 1 (true) if all arguments that should be of type T_REG have a value
 ** between 1 and REG_NUMBER, 0 (false) otherwise
 */
-static int	validate_regs(t_inst instruct, unsigned char *arena, int pos)
+static int	validate_regs(t_inst inst, unsigned char *arena, int pos)
 {
 	int	inst_code;
 	int	reg;
 	int	i;
 
-	inst_code = instruct.inst_code;
+	inst_code = inst.inst_code;
 	if (inst_code == 1 || inst_code == 9 || inst_code == 12 || inst_code == 15)
 		return (1);
 	i = 0;
 	while (i < MAX_ARGS_NUMBER)
 	{
 		reg = arena[pos % MEM_SIZE];
-		if (instruct.types[i] == T_REG && (reg < 1 || reg > REG_NUMBER))
+		if (inst.types[i] == T_REG && (reg < 1 || reg > REG_NUMBER))
 			return (0);
-		pos += instruct.sizes[i];
+		pos += inst.sizes[i];
 		i++;
 	}
 	return (1);
@@ -123,21 +123,21 @@ t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos)
 {
 	int		n_args;
 	int		arg;
-	t_inst	instruct;
+	t_inst	inst;
 
-	instruct.inst_code = inst_code;
+	inst.inst_code = inst_code;
 	n_args = get_arg_count(inst_code);
 	pos = (pos + 1) % MEM_SIZE;
-	ft_memset(instruct.types, 0, MAX_ARGS_NUMBER * sizeof(int));
+	ft_memset(inst.types, 0, MAX_ARGS_NUMBER * sizeof(int));
 	arg = 0;
 	while (++arg <= n_args)
-		instruct.types[arg - 1] = get_arg_type(arena[pos], arg);
-	ft_memset(instruct.sizes, 0, MAX_ARGS_NUMBER * sizeof(int));
+		inst.types[arg - 1] = get_arg_type(arena[pos], arg);
+	ft_memset(inst.sizes, 0, MAX_ARGS_NUMBER * sizeof(int));
 	arg = -1;
 	while (++arg < n_args)
-		instruct.sizes[arg] = get_arg_size(inst_code, instruct.types[arg]);
-	instruct.is_valid = validate_args(instruct.inst_code, instruct.types);
-	if (instruct.is_valid)
-		instruct.is_valid = validate_regs(instruct, arena, ++pos % MEM_SIZE);
-	return (instruct);
+		inst.sizes[arg] = get_arg_size(inst_code, inst.types[arg]);
+	inst.is_valid = validate_args(inst.inst_code, inst.types);
+	if (inst.is_valid)
+		inst.is_valid = validate_regs(inst, arena, ++pos % MEM_SIZE);
+	return (inst);
 }

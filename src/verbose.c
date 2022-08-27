@@ -6,26 +6,26 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:23:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:20:15 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-static void	print_arg_types(unsigned char *arena, t_car *car, t_inst instruct)
+static void	print_arg_types(unsigned char *arena, t_car *car, t_inst inst)
 {
 	int	i;
-	int	inst;
+	int	ic;
 
-	inst = instruct.inst_code;
-	if (inst == 1 || inst == 9 || inst == 12 || inst == 15)
+	ic = inst.inst_code;
+	if (ic == 1 || ic == 9 || ic == 12 || ic == 15)
 		return ;
 	i = 0;
 	ft_printf("(ACB: %#2x", arena[(car->pos + 1) % MEM_SIZE]);
 	ft_printf(" [ ");
-	while (instruct.types[i] && i < 4)
+	while (inst.types[i] && i < 4)
 	{
-		ft_printf("%d ", instruct.types[i]);
+		ft_printf("%d ", inst.types[i]);
 		i++;
 	}
 	ft_printf("])");
@@ -57,48 +57,30 @@ static char	*get_inst_name(int inst_code)
 		return ("lldi");
 }
 
-static void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena)
+void	print_instruction(t_car *car, t_inst inst, unsigned char *arena)
 {
-	int	inst;
+	int	ic;
 	int	arg_count;
 	int	arg;
 
-	inst = instruct.inst_code;
-	arg_count = get_arg_count(inst);
+	ic = inst.inst_code;
+	arg_count = get_arg_count(ic);
 	arg = 0;
-	ft_printf("Process %d: %s ", car->id, get_inst_name(inst));
+	ft_printf("Process %d: %s ", car->id, get_inst_name(ic));
 	while (++arg <= arg_count)
 	{
-		if ((instruct.types[arg - 1] == IND_CODE && inst != 13) || \
-		(instruct.types[arg - 1] == DIR_CODE && \
-		instruct.sizes[arg - 1] == IND_SIZE))
-			ft_printf("%hd ", get_ind_val(instruct, arena, car, arg) % IDX_MOD);
-		else if (instruct.types[arg - 1] == IND_CODE && inst == 13)
-			ft_printf("%hd ", get_ind_val(instruct, arena, car, arg));
+		if ((inst.types[arg - 1] == IND_CODE && ic != 13) || \
+		(inst.types[arg - 1] == DIR_CODE && inst.sizes[arg - 1] == IND_SIZE))
+			ft_printf("%hd ", get_ind_val(inst, arena, car, arg) % IDX_MOD);
+		else if (inst.types[arg - 1] == IND_CODE && ic == 13)
+			ft_printf("%hd ", get_ind_val(inst, arena, car, arg));
 		else
 		{
-			if (instruct.types[arg - 1] == REG_CODE)
-				ft_printf("r%d:", get_reg_no(instruct, arena, car->pos, arg));
-			ft_printf("%d ", get_arg_val(instruct, arena, car, arg));
+			if (inst.types[arg - 1] == REG_CODE)
+				ft_printf("r%d:", get_reg_no(inst, arena, car->pos, arg));
+			ft_printf("%d ", get_arg_val(inst, arena, car, arg));
 		}
 	}
-	print_arg_types(arena, car, instruct);
+	print_arg_types(arena, car, inst);
 	ft_putchar('\n');
-}
-
-/*
-** prints various events happening during the execution of the program.
-** @verb can be 1 or 2, indicating either an instruction execution attempt or
-** carriage death (respectively).
-*/
-void	print_verbose(t_car *car,
-		t_inst instruct,
-		unsigned char *arena,
-		int verb
-		)
-{
-	if (verb == 1)
-		print_instruction(car, instruct, arena);
-	else
-		ft_printf("Process %d died\n", car->id);
 }

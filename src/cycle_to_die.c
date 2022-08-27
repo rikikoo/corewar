@@ -6,11 +6,24 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/23 20:20:10 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:04:47 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
+
+static void	reduce_cycle_to_die(t_game *game)
+{
+	if (game->live_count >= NBR_LIVE || game->checks >= MAX_CHECKS)
+	{
+		game->cycle_to_die -= CYCLE_DELTA;
+		game->checks = 0;
+		ft_printf("\033[91mCycle to die is now %d\033[0m\n", \
+			game->cycle_to_die);
+	}
+	game->next_check += game->cycle_to_die;
+	game->live_count = 0;
+}
 
 /*
 ** removes a car from the list of cars
@@ -48,7 +61,7 @@ static t_car	*remove_dead_car(t_game *game, int dead_car)
 ** marks carriages whose cycles_since_live is greater than cycle_to_die as dead
 ** and updates cycle_to_die if necessary
 */
-int	collect_the_dead(t_game *game)
+int	perform_check(t_game *game)
 {
 	t_car		*car;
 	int			alive;
@@ -59,7 +72,10 @@ int	collect_the_dead(t_game *game)
 	while (car)
 	{
 		if (car->cycles_since_live >= game->cycle_to_die)
+		{
 			car = remove_dead_car(game, car->id);
+			ft_printf("Process %d died\n", car->id);
+		}
 		else
 			alive++;
 		if (car)
@@ -67,11 +83,6 @@ int	collect_the_dead(t_game *game)
 	}
 	if (!alive)
 		return (game->last_live_report);
-	if (game->live_count >= NBR_LIVE || game->checks >= MAX_CHECKS)
-	{
-		game->cycle_to_die -= CYCLE_DELTA;
-		game->checks = 0;
-	}
-	game->live_count = 0;
+	reduce_cycle_to_die(game);
 	return (0);
 }

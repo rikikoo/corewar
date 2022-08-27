@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/22 16:57:05 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/12 01:18:38 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/27 23:29:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ static t_game	init_game(t_flags flags, t_car *car, int latest_id)
 	game.cycle = 0;
 	game.lives = 0;
 	game.cycle_to_die = CYCLE_TO_DIE;
+	game.next_check = CYCLE_TO_DIE;
 	game.checks = 0;
 	game.winner = 0;
 	game.live_count = 0;

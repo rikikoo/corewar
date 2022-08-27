@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/27 21:03:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:02:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_game
 	int				cycle;
 	int				lives;
 	int				cycle_to_die;
+	int				next_check;
 	int				checks;
 	int				winner;
 	int				live_count;
@@ -127,7 +128,7 @@ t_car	*new_car(int prev_id, int pos, int playernbr);
 int		start_game(t_flags flags, unsigned char *arena, t_champ *champs);
 int		start_cycles(unsigned char *arena, t_game *game, \
 		t_champ *champs);
-int		collect_the_dead(t_game *game);
+int		perform_check(t_game *game);
 
 /*
 ** INSTRUCTIONS
@@ -176,8 +177,7 @@ void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(t_champ champ);
 void	print_cars(t_game *game);
-void	print_verbose(t_car *car, t_inst instruct, unsigned char *arena, \
-		int verb);
+void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena);
 
 
 void	print_n_bytes(unsigned char *arena, int pos, int n);

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/27 21:08:27 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 00:14:53 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 
 	inst = validate_instruction(inst_code, arena, car->pos);
 	if ((game->flags.verbose & 2) == 2)
-		print_verbose(car, inst, arena, 1);
+		print_instruction(car, inst, arena);
 	if (!inst.is_valid)
 		return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);
 	get_inst_operands(inst, arena, car, values);
@@ -71,15 +71,15 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 	int		reg_val;
 	int		dst_pos;
 	int		values[2];
-	t_inst	instruct;
+	t_inst	inst;
 
-	instruct = validate_instruction(11, arena, car->pos);
+	inst = validate_instruction(11, arena, car->pos);
 	if ((game->flags.verbose & 2) == 2)
-		print_verbose(car, instruct, arena, 1);
-	if (!instruct.is_valid)
-		return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
-	reg_val = get_arg_val(instruct, arena, car, 1);
-	get_inst_operands(instruct, arena, car, values);
+		print_instruction(car, inst, arena);
+	if (!inst.is_valid)
+		return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);
+	reg_val = get_arg_val(inst, arena, car, 1);
+	get_inst_operands(inst, arena, car, values);
 	dst_pos = (values[0] + values[1]) % IDX_MOD;
 	if ((game->flags.verbose & 2) == 2)
 		ft_printf("\tstore to: %d + %d = %d\n", \
@@ -87,7 +87,7 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 	swap_endianness((unsigned char *)&reg_val, REG_SIZE);
 	write_to_arena(arena, (unsigned char *)&reg_val, \
 		rel_pos(car->pos, dst_pos), REG_SIZE);
-	return (instruct.sizes[0] + instruct.sizes[1] + instruct.sizes[2] + 2);
+	return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);
 }
 
 static int	add_forked_car(t_game *game, t_car *parent, int fork_pos)
