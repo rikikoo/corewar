@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:15:20 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:55:48 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ typedef struct s_flags
 	int	dump;
 	int	split;
 	int	verbose;
+	int	row_len;
 	int	champ_count;
 	int	used_nbrs[MAX_PLAYERS];
 	int	playernbr;
@@ -98,7 +99,7 @@ typedef struct s_car
 	int				id;
 	int				pos;
 	int				carry;
-	int				cycles_since_live;
+	int				last_live;
 	int				cycles_to_exec;
 	int				registry[REG_NUMBER];
 	unsigned char	current_opcode;
@@ -176,6 +177,6 @@ void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(t_champ champ);
 void	print_cars(t_game *game);
 void	print_instruction(t_car *car, t_inst inst, unsigned char *arena);
-void	dump_memory(const unsigned char *arena, int size);
+void	dump_memory(const unsigned char *arena, int row_len);
 
 #endif

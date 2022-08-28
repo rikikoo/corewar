@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:19:36 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:48:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ static t_car	*remove_dead_car(t_game *game, int dead_car)
 }
 
 /*
-** removes carriages whose cycles_since_live is greater than cycle_to_die
+** removes carriages whose last_live is greater than cycle_to_die
 ** and updates cycle_to_die if necessary. returns the winning player's number if
 ** all carriages are dead, which ends the game.
 */
@@ -73,11 +73,11 @@ int	perform_check(t_game *game)
 	game->checks++;
 	while (car)
 	{
-		if (car->cycles_since_live >= game->cycle_to_die || \
-		game->cycle_to_die <= 0)
+		if (car->last_live >= game->cycle_to_die || game->cycle_to_die <= 0)
 		{
-			ft_printf("Process %d died (last live: %d >= CTD: %d)\n", \
-			car->id, car->cycles_since_live, game->cycle_to_die);
+			if ((game->flags.verbose & 8) == 8)
+				ft_printf("Process %d died (last live: %d >= CTD: %d)\n", \
+				car->id, car->last_live, game->cycle_to_die);
 			car = remove_dead_car(game, car->id);
 		}
 		else

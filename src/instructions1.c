@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 16:33:03 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:47:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,11 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 	player = ft_abs(player);
 	if ((player > 0) && (player <= game->flags.champ_count))
 	{
-		print_live(champs[player - 1]);
+		if ((game->flags.verbose & 8) == 8)
+			print_live(champs[player - 1]);
 		game->last_live_report = player;
 	}
-	car->cycles_since_live = 0;
+	car->last_live = 0;
 	game->live_count++;
 	return (DIR_SIZE + 1);
 }

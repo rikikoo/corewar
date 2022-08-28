@@ -23,7 +23,7 @@ void	print_cars(t_game *game)
 		ft_printf("%-23s: %d\n%-23s: (index %d)\n%-23s: %d\n", \
 		"Car ID", car->id, "Position", car->pos, "Carry", car->carry);
 		ft_printf("%-23s: %d\n%-23s: %d\n%-23s: %d\n%-23s\n", \
-		"Cycles since live", car->cycles_since_live, "Current opcode", \
+		"Cycles since live", car->last_live, "Current opcode", \
 		car->current_opcode, "Cycles until execution", car->cycles_to_exec, \
 		"Registry");
 		i = -1;

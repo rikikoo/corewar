@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 15:51:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:47:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ static int	add_forked_car(t_game *game, t_car *parent, int fork_pos)
 		reg_i++;
 	}
 	car_new->carry = parent->carry;
-	car_new->cycles_since_live = parent->cycles_since_live;
+	car_new->last_live = parent->last_live;
 	game->cars = car_new;
 	game->latest_car_id = car_new->id;
 	return (0);

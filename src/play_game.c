@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:19:29 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 18:35:45 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	get_wait_cycles(int opcode)
 
 /*
 ** for each carriage:
-**	1. increase cycles_since_live
+**	1. increase last_live
 **	2. if standing on a new opcode, update opcode and cycles_to_exec
 **	3. decrease wait cycle timer (cycles_to_exec)
 **	4. if wait cycle has ended, execute instruction and move carriage forward
@@ -90,7 +90,7 @@ static int	exec_cars(t_game *game,
 	car = game->cars;
 	while (car)
 	{
-		car->cycles_since_live++;
+		car->last_live++;
 		if (car->cycles_to_exec < 0)
 		{
 			car->current_opcode = arena[car->pos];
@@ -114,6 +114,17 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 {
 	while (1)
 	{
+
+		// if (game->cycle == 10000)
+		// {
+		// 	while (game->cars)
+		// 	{
+		// 		ft_printf("size of car %d = %d\n", game->cars->id, (int) sizeof(*(game->cars)));
+		// 		game->cars = game->cars->next;
+		// 	}
+		// 	exit(0);
+		// }
+
 		game->cycle++;
 		if ((game->flags.verbose & 1) == 1)
 			ft_printf("Cycle: %d\n", game->cycle);

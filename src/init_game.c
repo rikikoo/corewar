@@ -31,7 +31,7 @@ t_car	*new_car(int last_id, int pos, int playernbr)
 	car->id = last_id + 1;
 	car->pos = pos % MEM_SIZE;
 	car->carry = 0;
-	car->cycles_since_live = 1;
+	car->last_live = 1;
 	car->cycles_to_exec = -1;
 	i = 0;
 	car->registry[i] = playernbr * -1;

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 11:58:37 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 18:17:10 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,28 +17,25 @@
 ** program was launched with the -dump flag
 **
 ** @arena: pointer to the start of the arena
-** @size: amount of bytes to print out
+** @row_len: amount of bytes to print per line (default = 32)
 */
-void	dump_memory(const unsigned char *arena, int size)
+void	dump_memory(const unsigned char *arena, int row_len)
 {
 	int	i;
 	int	j;
-	int	row_len;
 	int	address;
 
 	i = 0;
-	row_len = 32;	// row_len according to subject
-	row_len = 64;	// delete this row once program works as intended
 	j = row_len - 1;
 	address = 0;
 	ft_printf("0x0000 :");
-	while (i < size)
+	while (i < MEM_SIZE)
 	{
 		if (arena[i] != 0)
 			ft_printf(" \033[92m%02x\033[0m", arena[i]);
 		else
 			ft_printf(" %02x", arena[i]);
-		if (i == j && i != (size - 1))
+		if (i == j && i != (MEM_SIZE - 1))
 		{
 			address += row_len;
 			ft_printf("\n%#06x :", address);
@@ -94,6 +91,7 @@ static t_flags	init_flags(void)
 	flags.dump = 0;
 	flags.split = 0;
 	flags.verbose = 0;
+	flags.row_len = 32;
 	flags.champ_count = 0;
 	flags.playernbr = -1;
 	return (flags);
@@ -119,7 +117,7 @@ int	main(int argc, char **argv)
 		ft_printf("Player %d (%s) has won!\n", winner, champs[winner - 1].name);
 	else if (winner < 0)
 		print_error(winner, NULL, NULL);
-	if (winner == 0 || (winner > 0 && (flags.verbose & 8) == 8))
-		dump_memory(arena, MEM_SIZE);
+	if (winner == 0 || (winner > 0 && (flags.verbose & 16) == 16))
+		dump_memory(arena, flags.row_len);
 	return (0);
 }
