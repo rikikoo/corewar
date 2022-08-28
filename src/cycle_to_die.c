@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:48:05 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 19:28:05 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,9 @@ static t_car	*remove_dead_car(t_game *game, int dead_car)
 			if (car->id == game->cars->id)
 				game->cars = next;
 			else
-			{
 				prev->next = next;
-				free(car);
-				car = NULL;
-			}
+			free(car);
+			car = NULL;
 			break ;
 		}
 		prev = car;
