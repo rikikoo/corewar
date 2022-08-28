@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 18:35:45 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 18:38:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,17 +114,6 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 {
 	while (1)
 	{
-
-		// if (game->cycle == 10000)
-		// {
-		// 	while (game->cars)
-		// 	{
-		// 		ft_printf("size of car %d = %d\n", game->cars->id, (int) sizeof(*(game->cars)));
-		// 		game->cars = game->cars->next;
-		// 	}
-		// 	exit(0);
-		// }
-
 		game->cycle++;
 		if ((game->flags.verbose & 1) == 1)
 			ft_printf("Cycle: %d\n", game->cycle);
