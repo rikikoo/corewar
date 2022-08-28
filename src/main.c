@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:04:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 11:58:37 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	main(int argc, char **argv)
 		ft_printf("Player %d (%s) has won!\n", winner, champs[winner - 1].name);
 	else if (winner < 0)
 		print_error(winner, NULL, NULL);
-	else
+	if (winner == 0 || (winner > 0 && (flags.verbose & 8) == 8))
 		dump_memory(arena, MEM_SIZE);
 	return (0);
 }

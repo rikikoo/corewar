@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:30:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:21:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 15:48:26 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ int	get_arg_count(int inst_code)
 }
 
 /*
-** returns either the first, second or third pair of bits of the 8-bit @byte.
+** returns either the first, second or third pair of bits of the 8-bit @byte,
+** starting from the left-most pair.
 ** @byte is the argument type code, while @arg is the argument's ordinal number.
 ** in other words, returns always either 0, 1, 2 or 3, which represent
 ** (respectively) NULL, T_REG, T_DIR or T_IND.

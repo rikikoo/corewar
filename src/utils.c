@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 10:57:32 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 12:09:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 /*
 ** returns @n contiguous bytes converted to an int, if 0 < n <= sizeof(int)
 */
-int	n_bytes_to_int(const unsigned char *arena, int pos, int n)
+int	bytes_to_int(const unsigned char *arena, int pos, int n)
 {
 	int	nbr;
 	int	bits;

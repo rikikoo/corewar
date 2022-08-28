@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 11:05:30 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 12:09:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void	get_inst_operands(t_inst inst, unsigned char *arena, t_car *car, \
 /*
 ** UTILS
 */
-int		n_bytes_to_int(const unsigned char *arena, int pos, int n);
+int		bytes_to_int(const unsigned char *arena, int pos, int n);
 int		rel_pos(int car_pos, int relative_pos);
 void	swap_endianness(unsigned char *bytes, int len);
 void	write_to_arena(unsigned char *arena, unsigned char *src, int start, \

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:14:53 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 15:51:25 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	t_inst	inst;
 
 	inst = validate_instruction(inst_code, arena, car->pos);
-	if ((game->flags.verbose & 2) == 2)
+	if (((game->flags.verbose & 6) == 2 && inst.is_valid) || \
+	(!inst.is_valid && (game->flags.verbose & 4) == 4))
 		print_instruction(car, inst, arena);
 	if (!inst.is_valid)
 		return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);
@@ -59,7 +60,7 @@ int	ind_load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 		val = rel_pos(car->pos, ((values[0] + values[1]) % IDX_MOD));
 	else
 		val = rel_pos(car->pos, (values[0] + values[1]));
-	val = n_bytes_to_int(arena, val, DIR_SIZE);
+	val = bytes_to_int(arena, val, DIR_SIZE);
 	car->registry[reg] = val;
 	if (inst_code == 14)
 		car->carry = (car->registry[reg] == 0);
@@ -74,7 +75,8 @@ int	ind_store_inst(t_game *game, t_car *car, unsigned char *arena)
 	t_inst	inst;
 
 	inst = validate_instruction(11, arena, car->pos);
-	if ((game->flags.verbose & 2) == 2)
+	if (((game->flags.verbose & 6) == 2 && inst.is_valid) || \
+	(!inst.is_valid && (game->flags.verbose & 4) == 4))
 		print_instruction(car, inst, arena);
 	if (!inst.is_valid)
 		return (inst.sizes[0] + inst.sizes[1] + inst.sizes[2] + 2);

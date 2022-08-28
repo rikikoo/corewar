@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 20:21:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:23:12 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 12:09:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ int	get_arg_val(t_inst inst, unsigned char *arena, t_car *car, int arg)
 	else
 		pos = (car->pos + 2 + inst.sizes[0] + inst.sizes[1]) % MEM_SIZE;
 	if (inst.types[arg - 1] == DIR_CODE)
-		return (n_bytes_to_int(arena, pos, inst.sizes[arg - 1]));
+		return (bytes_to_int(arena, pos, inst.sizes[arg - 1]));
 	else if (inst.types[arg - 1] == REG_CODE)
 	{
 		if (arena[pos] > 0 && arena[pos] <= REG_NUMBER)

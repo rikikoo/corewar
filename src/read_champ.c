@@ -77,9 +77,9 @@ t_champ	read_cor(const char *filepath, t_flags *flags)
 	close(fd);
 	if (ret < PROG_NAME_LENGTH + COMMENT_LENGTH + 16)
 		print_error(-2, filepath, NULL);
-	champ.magic = n_bytes_to_int(buf, 0, 4);
+	champ.magic = bytes_to_int(buf, 0, 4);
 	ft_memcpy(champ.name, &buf[4], PROG_NAME_LENGTH);
-	champ.size = n_bytes_to_int(buf, PROG_NAME_LENGTH + 8, 4);
+	champ.size = bytes_to_int(buf, PROG_NAME_LENGTH + 8, 4);
 	ft_memcpy(champ.comment, &buf[PROG_NAME_LENGTH + 12], COMMENT_LENGTH);
 	ft_memcpy(champ.exec, &buf[PROG_NAME_LENGTH + COMMENT_LENGTH + 16], \
 	champ.size);
