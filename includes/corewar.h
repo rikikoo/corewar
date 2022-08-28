@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:26:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 11:05:30 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ typedef struct s_car
 	int				pos;
 	int				carry;
 	int				cycles_since_live;
-	int				dead;
 	int				cycles_to_exec;
 	int				registry[REG_NUMBER];
 	unsigned char	current_opcode;
@@ -159,26 +158,25 @@ t_inst	validate_instruction(int inst_code, unsigned char *arena, int pos);
 int		get_arg_count(int inst_code);
 int		get_arg_type(unsigned char byte, int arg);
 int		get_arg_size(int inst_code, int arg);
-int		get_arg_val(t_inst instruct, unsigned char *arena, t_car *car, int arg);
-int		get_reg_no(t_inst instruct, unsigned char *arena, int pos, int arg);
-short	get_ind_val(t_inst instruct, unsigned char *arena, t_car *car, int arg);
-void	get_inst_operands(t_inst instruct, unsigned char *arena, t_car *car, \
+int		get_arg_val(t_inst inst, unsigned char *arena, t_car *car, int arg);
+int		get_reg_no(t_inst inst, unsigned char *arena, int pos, int arg);
+short	get_ind_val(t_inst inst, unsigned char *arena, t_car *car, int arg);
+void	get_inst_operands(t_inst inst, unsigned char *arena, t_car *car, \
 		int *vals);
 
 /*
 ** UTILS
 */
-void	dump_memory(const unsigned char *arena, int size);
 int		n_bytes_to_int(const unsigned char *arena, int pos, int n);
 int		rel_pos(int car_pos, int relative_pos);
+void	swap_endianness(unsigned char *bytes, int len);
 void	write_to_arena(unsigned char *arena, unsigned char *src, int start, \
 		int len);
 void	print_usage(void);
 void	print_error(int errno, const char *path, t_champ *champ);
 void	print_live(t_champ champ);
 void	print_cars(t_game *game);
-void	print_instruction(t_car *car, t_inst instruct, unsigned char *arena);
-void	print_n_bytes(unsigned char *arena, int pos, int n);
-void	swap_endianness(unsigned char *bytes, int len);
+void	print_instruction(t_car *car, t_inst inst, unsigned char *arena);
+void	dump_memory(const unsigned char *arena, int size);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:40:32 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 11:05:19 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,9 @@ static void	reduce_cycle_to_die(t_game *game)
 	{
 		game->cycle_to_die -= CYCLE_DELTA;
 		game->checks = 0;
-		ft_printf("\033[91mCycle to die is now %d\033[0m\n", \
-			game->cycle_to_die);
+		if ((game->flags.verbose & 1) == 1)
+			ft_printf("\033[91mCycle to die is now %d\033[0m\n", \
+				game->cycle_to_die);
 	}
 	game->next_check += game->cycle_to_die;
 	game->live_count = 0;
@@ -58,8 +59,9 @@ static t_car	*remove_dead_car(t_game *game, int dead_car)
 }
 
 /*
-** marks carriages whose cycles_since_live is greater than cycle_to_die as dead
-** and updates cycle_to_die if necessary
+** removes carriages whose cycles_since_live is greater than cycle_to_die
+** and updates cycle_to_die if necessary. returns the winning player's number if
+** all carriages are dead, which ends the game.
 */
 int	perform_check(t_game *game)
 {

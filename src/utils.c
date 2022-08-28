@@ -6,25 +6,11 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/27 21:20:43 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 10:57:32 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
-
-void	print_n_bytes(unsigned char *arena, int pos, int n)
-{
-	int	i;
-
-	i = 0;
-	while (i < n)
-	{
-		ft_printf("%02x ", arena[pos % MEM_SIZE]);
-		pos++;
-		i++;
-	}
-	ft_putchar('\n');
-}
 
 /*
 ** returns @n contiguous bytes converted to an int, if 0 < n <= sizeof(int)
@@ -83,6 +69,10 @@ int	rel_pos(int car_pos, int relative_pos)
 	return (new_pos);
 }
 
+/*
+** copies @len bytes from @src into @arena, while truncating each step forward
+** with mod MEM_SIZE to make sure the @arena buffer isn't overflown
+*/
 void	write_to_arena(unsigned char *arena,
 		unsigned char *src,
 		int start,
