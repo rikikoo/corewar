@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 11:14:19 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 17:19:29 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 			ft_printf("Cycle: %d\n", game->cycle);
 		if (exec_cars(game, arena, champs, 0) != 0)
 			return (-8);
-		if (game->cycle == game->next_check)
+		if (game->cycle == game->next_check || game->cycle_to_die <= 0)
 			game->winner = perform_check(game);
 		if (game->winner)
 			return (game->winner);
