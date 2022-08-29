@@ -3,14 +3,14 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+         #
+#    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/05/05 16:03:04 by vhallama         ###   ########.fr        #
+#    Updated: 2022/08/29 19:07:04 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-S = src/
+S = src/corewar/
 O = obj/
 I = includes/
 L = libft/
@@ -61,12 +61,12 @@ ASM_OBJ = $(ASM_SRC:.c=.o)
 
 .PHONY: all clean fclean re
 
-all: $(NAME)
+all: $(NAME) $(ASM)
 
 $(ASM):
 	$(CCOMP) $(CCFLAGS) -c $(addprefix src/asm/, $(ASM_SRC)) -I $(INC) -I $(LIBINC)
 	$(CCOMP) $(CCFLAGS) -o $(ASM) $(ASM_OBJ) $(LIB)
-	
+
 $O:
 	@mkdir -p $@
 

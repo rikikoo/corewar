@@ -30,6 +30,7 @@ u_int32_t	find_label_pos(t_statement **head, char *match)
 		search = search->next;
 	}
 	error_exit(ft_strjoin(ft_strjoin("Error: label '", match), "' not found"));
+    return (0);
 }
 
 u_int16_t	u_int16_to_big_endian(u_int16_t n)
