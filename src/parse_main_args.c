@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_args.c                                       :+:      :+:    :+:   */
+/*   parse_main_args.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/01 16:47:57 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 18:31:40 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ static void	store_flag(char **argv, int *count, t_flags *flags)
 		flags->verbose = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-n"))
 		flags->playernbr = get_player_number(argv[++(*count)], flags);
+	else if (ft_strequ(argv[*count], "-l"))
+		flags->row_len = flags->row_len + (32 * (flags->row_len == 32));
 	else
 		print_usage();
 }
@@ -67,8 +69,8 @@ static void	store_flag(char **argv, int *count, t_flags *flags)
 ** 		-vn 4		-- not allowed
 **		-n4			-- not allowed
 **
-** @ac: total number of program arguments + 1
-** @av: vector of the program's arguments
+** @ac: program argument count
+** @av: program argument vector
 ** @flags: pointer to a t_flags struct
 ** @champs: pointer to an array of t_champs
 */

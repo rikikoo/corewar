@@ -17,14 +17,18 @@ L = libft/
 
 SRC =	$(S)main.c \
 		$(S)utils.c \
+		$(S)utils2.c \
 		$(S)prints.c \
 		$(S)parse_main_args.c \
 		$(S)read_champ.c \
 		$(S)init_game.c \
 		$(S)play_game.c \
+		$(S)cycle_to_die.c \
 		$(S)validate_instruction.c \
 		$(S)instructions1.c \
-		$(S)instructions2.c
+		$(S)instructions2.c \
+		$(S)verbose.c \
+		$(S)debug.c
 
 OBJ = $(SRC:$S%=$O%.o)
 INC = $(I)
@@ -72,8 +76,8 @@ $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
 $(NAME): $(OBJ)
-#	@make -C $(L)
-#	@make -C $(L) clean
+	@make -C $(L)
+	@make -C $(L) clean
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:

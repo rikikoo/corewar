@@ -6,111 +6,85 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/11 16:17:42 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 11:33:41 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 12:09:18 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
 /*
-** returns @n contiguous bytes converted to an int, if 0 < n <= 4.
+** returns @n contiguous bytes converted to an int, if 0 < n <= sizeof(int)
 */
-int	n_bytes_to_int(const unsigned char *bytes, int n)
+int	bytes_to_int(const unsigned char *arena, int pos, int n)
 {
 	int	nbr;
 	int	bits;
 
-	if (!bytes || n <= 0 || n > (int) sizeof(int))
+	if (!arena || n <= 0 || n > (int) sizeof(int))
 		return (0);
 	nbr = 0;
 	bits = 0;
 	while (--n >= 0)
 	{
-		nbr += bytes[n % MEM_SIZE] << bits;
+		nbr += arena[(pos + n) % MEM_SIZE] << bits;
 		bits += 8;
 	}
 	return (nbr);
 }
 
 /*
-** returns the number of arguments an instruction has, based on @inst_code
+** reverses order of bytes in the array @bytes of size @len
 */
-int	get_arg_count(int inst_code)
+void	swap_endianness(unsigned char *bytes, int len)
 {
-	if (inst_code == 1 || inst_code == 9 || inst_code == 12 || inst_code == 15)
-		return (1);
-	else if (inst_code == 2 || inst_code == 3 || inst_code == 13)
-		return (2);
-	else
-		return (3);
-}
+	unsigned char	tmp;
+	int				i;
+	int				halfway;
 
-/*
-** returns either the first, second or third pair of bits of the 8-bit @byte.
-** @byte is the argument type code, while @arg is the argument's ordinal number.
-** in other words, returns always either 0, 1, 2 or 3, which represent
-** (respectively) NULL, T_REG, T_DIR or T_IND.
-**
-** example:
-** @arg == 3, @byte == 0b01011000
-**
-** byte >> 2
-**	=> 0b00010110	-- now the third bit-pair is shifted all the way to right
-** byte & 3 == 0b00010110 & 0b00000011
-**	=> 0b00000010 == 2 == T_DIR		-- ANDing the shifted byte with 3 (i.e. the
-**									-- two right-most bits of a byte) yields the
-**									-- value we were after
-*/
-int	get_arg_type(unsigned char byte, int arg)
-{
-	if (arg < 1 || arg > 3)
-		return (0);
-	if (arg == 1)
-		return ((byte >> 6) & 3);
-	else if (arg == 2)
-		return ((byte >> 4) & 3);
-	else
-		return ((byte >> 2) & 3);
-}
-
-/*
-** returns the size of an argument in bytes. T_DIR size depends on @inst_code.
-*/
-int	get_arg_size(int inst_code, int arg)
-{
-	if (arg == REG_CODE)
-		return (T_REG);
-	else if (arg == IND_CODE)
-		return (IND_SIZE);
-	else if (arg == DIR_CODE)
+	i = 0;
+	halfway = len / 2;
+	while (len > halfway)
 	{
-		if ((inst_code >= 10 && inst_code <= 12) || inst_code >= 14)
-			return (IND_SIZE);
-		else
-			return (DIR_SIZE);
+		len--;
+		tmp = bytes[i];
+		bytes[i] = bytes[len];
+		bytes[len] = tmp;
+		i++;
 	}
-	else
-		return (0);
 }
 
-int	get_arg_value(t_inst instruct, unsigned char *arena, t_car *car, int val)
+/*
+** returns a new position of a carriage, where @relative_pos is the amount of
+** steps forward or backward from @car_pos. Makes sure the new position is
+** inside the arena.
+*/
+int	rel_pos(int car_pos, int relative_pos)
 {
-	int	pos;
-	int	indirect_pos;
+	int	new_pos;
 
-	if (val == 1)
-		pos = (car->pos + 2) % MEM_SIZE;
-	else if (val == 2)
-		pos = (car->pos + 2 + instruct.sizes[0]) % MEM_SIZE;
-	else
-		pos = (car->pos + 2 + instruct.sizes[0] + instruct.sizes[1]) % MEM_SIZE;
-	if (instruct.types[val - 1] == T_REG)
-		return (car->registry[arena[pos] - 1]);
-	else if (instruct.types[val - 1] == T_DIR)
-		return ((int)n_bytes_to_int(&arena[pos], instruct.sizes[val - 1]));
-	else
+	new_pos = car_pos + relative_pos;
+	new_pos %= MEM_SIZE;
+	if (new_pos < 0)
+		new_pos = MEM_SIZE + new_pos;
+	return (new_pos);
+}
+
+/*
+** copies @len bytes from @src into @arena, while truncating each step forward
+** with mod MEM_SIZE to make sure the @arena buffer isn't overflown
+*/
+void	write_to_arena(unsigned char *arena,
+		unsigned char *src,
+		int start,
+		int len
+		)
+{
+	int	i;
+
+	i = 0;
+	while (i < len)
 	{
-		indirect_pos = n_bytes_to_int(&arena[pos], instruct.sizes[val - 1]);
-		return (n_bytes_to_int(&arena[indirect_pos % MEM_SIZE], DIR_SIZE));
+		arena[(start + i) % MEM_SIZE] = src[i];
+		i++;
 	}
 }

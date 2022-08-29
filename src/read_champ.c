@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/15 18:45:06 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/01/30 21:03:21 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,12 @@ static int	validate_champ(t_champ champ)
 
 /*
 ** reads MEM_SIZE bytes from the .cor file to a stack buffer and copies
-** chunks of predetermined length to a champ struct.
-** returns the filled champ upon successful reading and parsing.
+** chunks of predefined length to a champ struct.
+** returns the initialized champion upon successful reading and parsing.
 ** calls print_error() if data isn't valid.
 **
-** @filepath: path to the .cor file
-** @flags: pointer to a t_flags struct
-**
-** TODO: safety for every memcpy
+** @filepath: relative path to the .cor file
+** @flags: flags struct, that contains e.g. the playernumber of the champ
 */
 t_champ	read_cor(const char *filepath, t_flags *flags)
 {
@@ -77,11 +75,11 @@ t_champ	read_cor(const char *filepath, t_flags *flags)
 		print_error(-1, filepath, NULL);
 	ret = read(fd, &buf, MEM_SIZE);
 	close(fd);
-	if (ret == -1)
+	if (ret < PROG_NAME_LENGTH + COMMENT_LENGTH + 16)
 		print_error(-2, filepath, NULL);
-	champ.magic = n_bytes_to_int(buf, 4);
+	champ.magic = bytes_to_int(buf, 0, 4);
 	ft_memcpy(champ.name, &buf[4], PROG_NAME_LENGTH);
-	champ.size = n_bytes_to_int(&buf[PROG_NAME_LENGTH + 8], 4);
+	champ.size = bytes_to_int(buf, PROG_NAME_LENGTH + 8, 4);
 	ft_memcpy(champ.comment, &buf[PROG_NAME_LENGTH + 12], COMMENT_LENGTH);
 	ft_memcpy(champ.exec, &buf[PROG_NAME_LENGTH + COMMENT_LENGTH + 16], \
 	champ.size);

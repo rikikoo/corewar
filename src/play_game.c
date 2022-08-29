@@ -6,47 +6,17 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2021/11/16 11:32:09 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/28 18:38:56 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
 
-/*
-** marks carriages whose cycles_since_live is greater than cycles_to_die as dead
-*/
-static void	collect_the_dead(t_game *game)
-{
-	t_car	*car;
-	t_car	*prev;
-	int		alive;
-
-	car = game->cars;
-	prev = NULL;
-	alive = 0;
-	while (car)
-	{
-		car->dead = car->cycles_since_live >= game->cycles_to_die || car->dead;
-		if (!car->dead)
-			alive++;
-		car = car->next;
-	}
-	if (!alive)
-	{
-		game->winner = game->last_live_report;
-		return ;
-	}
-	if (game->checks >= NBR_LIVE)
-		game->cycles_to_die = CYCLE_TO_DIE - CYCLE_DELTA;
-	else
-		game->cycles_to_die = CYCLE_TO_DIE - 1;
-}
-
-static int	execute_instruction(\
-	t_game *game, \
-	t_car *car, \
-	unsigned char *arena, \
-	t_champ *champs \
+static int	execute_instruction(
+	t_game *game,
+	t_car *car,
+	unsigned char *arena,
+	t_champ *champs
 	)
 {
 	int	inst;
@@ -55,21 +25,21 @@ static int	execute_instruction(\
 	if (inst == 1)
 		return (stay_alive(game, car, arena, champs));
 	else if (inst == 2 || inst == 13)
-		return (load_inst(inst, car, arena));
+		return (load_inst(inst, game, car, arena));
 	else if (inst == 3)
-		return (store_inst(car, arena));
+		return (store_inst(game, car, arena));
 	else if (inst == 4 || inst == 5)
-		return (arithmetic_inst(inst, car, arena));
+		return (arithmetic_inst(inst, game, car, arena));
 	else if (inst == 6 || inst == 7 || inst == 8)
-		return (bitwise_inst(inst, car, arena));
+		return (bitwise_inst(inst, game, car, arena));
 	else if (inst == 9)
-		return (jump_inst(car, arena));
+		return (jump_inst(game, car, arena));
 	else if (inst == 10 || inst == 14)
-		return (ind_load_inst(inst, car, arena));
+		return (ind_load_inst(inst, game, car, arena));
 	else if (inst == 11)
-		return (ind_store_inst(car, arena));
+		return (ind_store_inst(game, car, arena));
 	else if (inst == 12 || inst == 15)
-		return (fork_inst(inst, car, arena, game));
+		return (fork_inst(inst, game, car, arena));
 	else if (inst == 16)
 		return (print_aff(car, arena));
 	else
@@ -77,7 +47,7 @@ static int	execute_instruction(\
 }
 
 /*
-** Is there a cleaner way to achieve the following other than switch/case?
+** Is there a cleaner way to achieve the following besides switch...case?
 */
 static int	get_wait_cycles(int opcode)
 {
@@ -105,54 +75,57 @@ static int	get_wait_cycles(int opcode)
 
 /*
 ** for each carriage:
-**	1. increase cycles_since_live
+**	1. increase last_live
 **	2. if standing on a new opcode, update opcode and cycles_to_exec
 **	3. decrease wait cycle timer (cycles_to_exec)
 **	4. if wait cycle has ended, execute instruction and move carriage forward
 */
-static void	exec_cars(t_game *game, unsigned char *arena, t_champ *champs)
+static int	exec_cars(t_game *game,
+	unsigned char *arena,
+	t_champ *champs,
+	int ret)
 {
 	t_car	*car;
 
 	car = game->cars;
 	while (car)
 	{
-		if (!car->dead)
+		car->last_live++;
+		if (car->cycles_to_exec < 0)
 		{
-			car->cycles_since_live++;
-			if (car->current_opcode != arena[car->pos])
-			{
-				car->current_opcode = arena[car->pos];
-				car->cycles_to_exec = get_wait_cycles(car->current_opcode);
-			}
-			car->cycles_to_exec -= (car->cycles_to_exec != 0);
-			if (!car->cycles_to_exec)
-			{
-				car->pos += execute_instruction(game, car, arena, champs) \
-				% MEM_SIZE;
-			}
+			car->current_opcode = arena[car->pos];
+			car->cycles_to_exec = get_wait_cycles(car->current_opcode);
+		}
+		car->cycles_to_exec -= (car->cycles_to_exec > 0);
+		if (car->cycles_to_exec == 0)
+		{
+			ret = execute_instruction(game, car, arena, champs);
+			if (ret < 0)
+				return (ret);
+			car->pos = rel_pos(car->pos, ret) % MEM_SIZE;
+			car->cycles_to_exec--;
 		}
 		car = car->next;
 	}
+	return (0);
 }
 
-int	start_cycles(\
-	t_flags flags, \
-	unsigned char *arena, \
-	t_game *game, \
-	t_champ *champs \
-	)
+int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 {
 	while (1)
 	{
-		if (game->cycles_to_die <= 0)
-			collect_the_dead(game);
-		exec_cars(game, arena, champs);
-		if (flags.dump && game->cycle >= flags.dump)
-			return (0);
+		game->cycle++;
+		if ((game->flags.verbose & 1) == 1)
+			ft_printf("Cycle: %d\n", game->cycle);
+		if (exec_cars(game, arena, champs, 0) != 0)
+			return (-8);
+		if (game->cycle == game->next_check || game->cycle_to_die <= 0)
+			game->winner = perform_check(game);
 		if (game->winner)
 			return (game->winner);
-		game->cycle++;
-		game->cycles_to_die--;
+		if (game->flags.dump && game->cycle == game->flags.dump)
+			return (0);
+		if (game->flags.split && (game->flags.split % game->cycle == 0))
+			dump_memory(arena, MEM_SIZE);
 	}
 }
