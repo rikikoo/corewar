@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/30 21:54:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/30 22:35:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,9 @@ static t_car	*remove_dead_car(t_game *game, t_car *car, t_car *prev)
 ** cycle_to_die if necessary. returns the winning player's number if all
 ** carriages are dead, which ends the game.
 */
-int	perform_check(t_game *game, t_car *prev, int alive)
+int	perform_check(t_game *game, t_car *prev, t_car *next, int alive)
 {
 	t_car	*car;
-	t_car	*next;
 
 	car = game->cars;
 	while (car)
