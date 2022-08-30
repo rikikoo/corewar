@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 18:38:56 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/30 21:53:44 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,9 +74,9 @@ static int	get_wait_cycles(int opcode)
 }
 
 /*
-** for each carriage:
+** for each carriage that is alive:
 **	1. increase last_live
-**	2. if standing on a new opcode, update opcode and cycles_to_exec
+**	2. get new opcode if previous op execution was completed
 **	3. decrease wait cycle timer (cycles_to_exec)
 **	4. if wait cycle has ended, execute instruction and move carriage forward
 */
@@ -120,7 +120,7 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 		if (exec_cars(game, arena, champs, 0) != 0)
 			return (-8);
 		if (game->cycle == game->next_check || game->cycle_to_die <= 0)
-			game->winner = perform_check(game);
+			game->winner = perform_check(game, NULL, 0);
 		if (game->winner)
 			return (game->winner);
 		if (game->flags.dump && game->cycle == game->flags.dump)

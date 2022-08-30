@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 18:54:12 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 22:10:39 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/30 21:54:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static void	reduce_cycle_to_die(t_game *game)
 {
+	game->checks++;
 	if (game->live_count >= NBR_LIVE || game->checks >= MAX_CHECKS)
 	{
 		game->cycle_to_die -= CYCLE_DELTA;
@@ -29,31 +30,17 @@ static void	reduce_cycle_to_die(t_game *game)
 /*
 ** removes a car from the list of cars
 */
-static t_car	*remove_dead_car(t_game *game, int dead_car)
+static t_car	*remove_dead_car(t_game *game, t_car *car, t_car *prev)
 {
-	t_car	*prev;
-	t_car	*car;
 	t_car	*next;
 
-	prev = NULL;
-	car = game->cars;
-	while (car)
-	{
-		next = car->next;
-		if (car->id == dead_car)
-		{
-			if (car->id == game->cars->id)
-				game->cars = next;
-			else
-				prev->next = next;
-			free(car);
-			car = NULL;
-			break ;
-		}
-		prev = car;
-		car = car->next;
-	}
-	return (next);
+	next = car->next;
+	if (car->id == game->cars->id || prev == NULL)
+		game->cars = next;
+	else
+		prev->next = next;
+	free(car);
+	return (prev);
 }
 
 /*
@@ -61,28 +48,28 @@ static t_car	*remove_dead_car(t_game *game, int dead_car)
 ** cycle_to_die if necessary. returns the winning player's number if all
 ** carriages are dead, which ends the game.
 */
-int	perform_check(t_game *game)
+int	perform_check(t_game *game, t_car *prev, int alive)
 {
-	t_car		*car;
-	int			alive;
+	t_car	*car;
+	t_car	*next;
 
 	car = game->cars;
-	alive = 0;
-	game->checks++;
 	while (car)
 	{
+		next = car->next;
 		if (car->last_live >= game->cycle_to_die || game->cycle_to_die <= 0)
 		{
 			if ((game->flags.verbose & 8) == 8)
 				ft_printf("Process %d died (last live: %d >= CTD: %d)\n", \
 				car->id, car->last_live, game->cycle_to_die);
-			car = remove_dead_car(game, car->id);
+			prev = remove_dead_car(game, car, prev);
 		}
 		else
 		{
 			alive++;
-			car = car->next;
+			prev = car;
 		}
+		car = next;
 	}
 	reduce_cycle_to_die(game);
 	if (!alive)

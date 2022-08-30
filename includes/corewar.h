@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:55:48 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/30 21:54:04 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,7 @@ void	sort_champs(t_champ *champs, int champ_count);
 t_car	*new_car(int prev_id, int pos, int playernbr);
 int		start_game(t_flags flags, unsigned char *arena, t_champ *champs);
 int		start_cycles(unsigned char *arena, t_game *game, t_champ *champs);
-int		perform_check(t_game *game);
+int		perform_check(t_game *game, t_car *prev, int alive);
 
 /*
 ** INSTRUCTIONS

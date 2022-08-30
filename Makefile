@@ -6,7 +6,7 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/08/30 19:45:54 by rkyttala         ###   ########.fr        #
+#    Updated: 2022/08/30 21:21:26 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -76,10 +76,11 @@ $(AO):
 $(ASM_OBJ): | $(AO)
 
 $(ASM_OBJ): $(AO)%.o: $(AS)%
-	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
+	@$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
-$(ASM): $(LIB) $(ASM_OBJ)
-	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
+$(ASM): $(LIB) asmmess $(ASM_OBJ)
+	$(CCOMP) $(CFLAGS) $(ASM_OBJ) $(LIB) -o $@ -I $(INC) -I $(LIBINC)
+	@echo "$(GRN)asm compiled successfully$(EOC)"
 
 $O:
 	@mkdir -p $@
@@ -87,10 +88,17 @@ $O:
 $(OBJ): | $O
 
 $(OBJ): $O%.o: $S%
-	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
+	@$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
-$(CORE): $(LIB) $(OBJ)
-	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
+$(CORE): $(LIB) coremess $(OBJ)
+	$(CCOMP) $(CFLAGS) $(OBJ) $(LIB) -o $@ -I $(INC) -I $(LIBINC)
+	@echo "$(GRN)corewar compiled successfully$(EOC)"
+
+coremess:
+	@echo "$(GRN)Compiling corewar$(EOC)"
+
+asmmess:
+	@echo "$(GRN)Compiling asm$(EOC)"
 
 debug:
 	gcc -g -fsanitize=address src/corewar/*.c libft/libft.a -I $(INC) -I $(LIBINC)
@@ -102,3 +110,6 @@ fclean: clean
 	rm -f $(CORE) $(ASM)
 
 re: fclean all
+
+GRN = \033[0;32m
+EOC = \033[0m
