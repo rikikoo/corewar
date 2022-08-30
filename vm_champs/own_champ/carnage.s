@@ -1,4 +1,7 @@
 .name		"Carnage"
 .comment	"this is freedom!"
 
-	st r1, 
+mark:
+	ld r16, :loopdidoop
+	
+loopdidoop:

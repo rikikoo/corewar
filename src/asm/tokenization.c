@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 16:27:02 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/08/30 19:39:09 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ static void	get_args(t_data *data, t_statement *cur, char *s, int i)
 static void	get_op(t_data *data, t_statement *cur, char *s)
 {
 	size_t	start;
-	char	*op;
 
 	if (!ft_isalpha(s[data->col]))
 		parser_error_exit("invalid operation name", data->row, data->col + 1);

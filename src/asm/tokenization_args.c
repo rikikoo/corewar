@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:18:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 15:00:15 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/08/30 19:42:28 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	validate_arg_end(t_data *data, char *s)
 		parser_error_exit("invalid argument", data->row, data->col + 1);
 }
 
-static char	*get_label(t_data *data, t_statement *cur, char *s, int t_dir)
+static char	*get_label(t_data *data, char *s, int t_dir)
 {
 	size_t	start;
 	char	*ret;
@@ -52,7 +52,7 @@ void	get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 
 	validate_arg_type(data, cur, arg_num, T_IND);
 	if (s[data->col] == LABEL_CHAR)
-		cur->arg[arg_num] = get_label(data, cur, s, 0);
+		cur->arg[arg_num] = get_label(data, s, 0);
 	else
 	{
 		start = data->col;
@@ -77,7 +77,7 @@ void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 	data->col++;
 	skip_whitespace(s, &data->col);
 	if (s[data->col] == LABEL_CHAR)
-		cur->arg[arg_num] = get_label(data, cur, s, 1);
+		cur->arg[arg_num] = get_label(data, s, 1);
 	else
 	{
 		skip_whitespace(s, &data->col);

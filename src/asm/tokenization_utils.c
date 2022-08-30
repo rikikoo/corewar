@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:53:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 16:26:13 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/08/30 19:40:34 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int arg_type)
 
 void	save_label(char *label, t_statement *cur, int cur_size)
 {
-	size_t	i;
 	t_label	*tmp;
 
 	append_labels(&cur->label);

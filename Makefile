@@ -6,14 +6,14 @@
 #    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/08/29 19:07:04 by rkyttala         ###   ########.fr        #
+#    Updated: 2022/08/30 19:45:54 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 S = src/corewar/
-O = obj/
-I = includes/
-L = libft/
+O = corewar_obj/
+
+CORE = corewar
 
 SRC =	$(S)main.c \
 		$(S)utils.c \
@@ -31,41 +31,55 @@ SRC =	$(S)main.c \
 		$(S)debug.c
 
 OBJ = $(SRC:$S%=$O%.o)
+
+AS = src/asm/
+AO = asm_obj/
+
+ASM = asm
+ASM_SRC =	$(AS)asm.c \
+			$(AS)utils.c \
+			$(AS)assemble.c \
+			$(AS)init.c \
+			$(AS)cleanup.c \
+			$(AS)read_file.c \
+			$(AS)read_utils.c \
+			$(AS)read_validation.c \
+			$(AS)tokenization.c \
+			$(AS)tokenization_utils.c \
+			$(AS)tokenization_args.c \
+			$(AS)write_file.c \
+			$(AS)write_header.c \
+			$(AS)write_utils.c \
+			$(AS)write_exec_code.c
+
+ASM_OBJ = $(ASM_SRC:$(AS)%=$(AO)%.o)
+
+I = includes/
 INC = $(I)
+L = libft/
 LIB = $(L)libft.a
 LIBINC = $(L)$(I)
 
 CCOMP = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-NAME = corewar
-
-ASM = asm
-ASM_SRC =	asm.c \
-			utils.c \
-			assemble.c \
-			init.c \
-			cleanup.c \
-			read_file.c \
-			read_utils.c \
-			read_validation.c \
-			tokenization.c \
-			tokenization_utils.c \
-			tokenization_args.c \
-			write_file.c \
-			write_header.c \
-			write_utils.c \
-			write_exec_code.c
-
-ASM_OBJ = $(ASM_SRC:.c=.o)
-
 .PHONY: all clean fclean re
 
-all: $(NAME) $(ASM)
+all: $(CORE) $(ASM)
 
-$(ASM):
-	$(CCOMP) $(CCFLAGS) -c $(addprefix src/asm/, $(ASM_SRC)) -I $(INC) -I $(LIBINC)
-	$(CCOMP) $(CCFLAGS) -o $(ASM) $(ASM_OBJ) $(LIB)
+$(LIB):
+	@make -C $(L)
+
+$(AO):
+	@mkdir -p $@
+
+$(ASM_OBJ): | $(AO)
+
+$(ASM_OBJ): $(AO)%.o: $(AS)%
+	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
+
+$(ASM): $(LIB) $(ASM_OBJ)
+	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 $O:
 	@mkdir -p $@
@@ -75,20 +89,16 @@ $(OBJ): | $O
 $(OBJ): $O%.o: $S%
 	$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
-$(NAME): $(OBJ)
-	@make -C $(L)
-	@make -C $(L) clean
+$(CORE): $(LIB) $(OBJ)
 	$(CCOMP) $(CFLAGS) $^ $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 
 debug:
-	gcc -g -fsanitize=address src/*.c libft/libft.a -I $(INC) -I $(LIBINC)
+	gcc -g -fsanitize=address src/corewar/*.c libft/libft.a -I $(INC) -I $(LIBINC)
 
 clean:
-	rm -rf $(O) $(ASM_OBJ)
-	rm -rf a.out*
+	rm -rf $(O) $(AO)
 
 fclean: clean
-	rm -f $(NAME) $(ASM)
-	rm -f a.out
+	rm -f $(CORE) $(ASM)
 
 re: fclean all
