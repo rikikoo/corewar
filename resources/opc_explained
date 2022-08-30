@@ -1,12 +1,12 @@
 
 {"live", 1, {T_DIR}, 1, 10, "alive", 0, 0}
    |     |     |     |   |     |     |  |
-   |     |     |     |   |     |     |  has reduced T_DIR size (4B --> 2B)?
-   |     |     |     |   |     |     has ACB (argument coding byte)?
-   |     |     |     |   |     description
-   |     |     |     |   wait cycles
-   |     |     |     statement code
-   |     |     argument types (separated by |)
-   |     number of arguments
-   statement name
+   |     |     |     |   |     |     |  └ has reduced T_DIR size (4B --> 2B)?
+   |     |     |     |   |     |     └ has ACB (argument coding byte)?
+   |     |     |     |   |     └ description
+   |     |     |     |   └ wait cycles
+   |     |     |     └ statement code
+   |     |     └ argument types (separated by |)
+   |     └ number of arguments
+   └ statement name
 
