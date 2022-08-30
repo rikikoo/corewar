@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:47:09 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/31 01:43:25 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 
 	player = bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, DIR_SIZE);
 	if ((game->flags.verbose & 2) == 2)
-		ft_printf("Process %d: live %d\n", car->id, player);
+		ft_printf("Process %d : live %d\n", car->id, player);
 	player = ft_abs(player);
 	if ((player > 0) && (player <= game->flags.champ_count))
 	{
@@ -53,7 +53,7 @@ int	load_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 		ind_pos = get_ind_val(inst, arena, car, 1);
 		if (inst.inst_code == 2)
 			ind_pos = ind_pos % IDX_MOD;
-		value = bytes_to_int(arena, car->pos + ind_pos, DIR_SIZE);
+		value = bytes_to_int(arena, rel_pos(car->pos, ind_pos), DIR_SIZE);
 	}
 	else
 		value = get_arg_val(inst, arena, car, 1);

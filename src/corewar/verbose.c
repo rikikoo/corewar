@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 00:20:15 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/31 00:05:17 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	print_instruction(t_car *car, t_inst inst, unsigned char *arena)
 	ic = inst.inst_code;
 	arg_count = get_arg_count(ic);
 	arg = 0;
-	ft_printf("Process %d: %s ", car->id, get_inst_name(ic));
+	ft_printf("Process %d : %s ", car->id, get_inst_name(ic));
 	while (++arg <= arg_count)
 	{
 		if ((inst.types[arg - 1] == IND_CODE && ic != 13) || \

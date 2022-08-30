@@ -6,7 +6,7 @@
 /*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/28 15:57:32 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 17:47:09 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/31 00:05:48 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	jump_inst(t_game *game, t_car *car, unsigned char *arena)
 	arena[(car->pos + 2) % MEM_SIZE]);
 	if ((game->flags.verbose & 2) == 2)
 	{
-		ft_printf("Process %d: %s %hd ", car->id, "zjmp", new_pos);
+		ft_printf("Process %d : %s %hd ", car->id, "zjmp", new_pos);
 		if (car->carry)
 			ft_printf("OK\n");
 		else
@@ -128,7 +128,7 @@ int	fork_inst(int inst_code, t_game *game, t_car *car, unsigned char *arena)
 	if (inst_code == 12)
 		fork_pos = fork_pos % IDX_MOD;
 	if ((game->flags.verbose & 2) == 2)
-		ft_printf("Process %d: %s %d\n", car->id, inst_name, fork_pos);
+		ft_printf("Process %d : %s %d\n", car->id, inst_name, fork_pos);
 	if (add_forked_car(game, car, rel_pos(car->pos, fork_pos)) < 0)
 		return (-1);
 	return (IND_SIZE + 1);
