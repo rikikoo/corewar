@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/04 17:11:40 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/05 14:14:19 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/08/30 19:49:07 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,6 @@ void	analyze_size_and_labels(t_data *data, t_statement *st)
 		data->champ_size += get_operation_bytesize(st);
 		st = st->next;
 	}
-	if (data->champ_size > CHAMP_MAX_SIZE) // DOES ASM CARE?
+	if (data->champ_size > CHAMP_MAX_SIZE)
 		error_exit("Error: champion exec code size too large");
 }
