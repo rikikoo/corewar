@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+         #
+#    By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/08/30 21:21:26 by rkyttala         ###   ########.fr        #
+#    Updated: 2022/08/31 19:44:47 by rkyttala         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -78,7 +78,8 @@ $(ASM_OBJ): | $(AO)
 $(ASM_OBJ): $(AO)%.o: $(AS)%
 	@$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
-$(ASM): $(LIB) asmmess $(ASM_OBJ)
+$(ASM): $(LIB) $(ASM_OBJ)
+	@echo "$(GRN)Compiling asm$(EOC)"
 	$(CCOMP) $(CFLAGS) $(ASM_OBJ) $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 	@echo "$(GRN)asm compiled successfully$(EOC)"
 
@@ -90,15 +91,11 @@ $(OBJ): | $O
 $(OBJ): $O%.o: $S%
 	@$(CCOMP) $(CFLAGS) -c $< -o $@ -I $(INC) -I $(LIBINC)
 
-$(CORE): $(LIB) coremess $(OBJ)
+$(CORE): $(LIB) $(OBJ)
+	@echo "$(GRN)Compiling corewar$(EOC)"
 	$(CCOMP) $(CFLAGS) $(OBJ) $(LIB) -o $@ -I $(INC) -I $(LIBINC)
 	@echo "$(GRN)corewar compiled successfully$(EOC)"
 
-coremess:
-	@echo "$(GRN)Compiling corewar$(EOC)"
-
-asmmess:
-	@echo "$(GRN)Compiling asm$(EOC)"
 
 debug:
 	gcc -g -fsanitize=address src/corewar/*.c libft/libft.a -I $(INC) -I $(LIBINC)

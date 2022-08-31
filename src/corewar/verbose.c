@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   verbose.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/18 18:41:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/31 00:05:17 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/08/31 23:08:08 by rkyttala         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,23 +57,38 @@ static char	*get_inst_name(int inst_code)
 		return ("lldi");
 }
 
+static void	ind_print(
+			unsigned char *arena,
+			t_inst inst,
+			t_car *car,
+			int arg
+			)
+{
+	int		d;
+	short	hd;
+
+	hd = get_ind_val(inst, arena, car, arg);
+	d = bytes_to_int(arena, rel_pos(car->pos, hd), DIR_SIZE);
+	if (inst.inst_code == 2)
+		ft_printf("%d ", d);
+	else if (inst.inst_code == 13)
+		ft_printf("%hd ", hd);
+	else
+		ft_printf("%hd ", hd % IDX_MOD);
+}
+
 void	print_instruction(t_car *car, t_inst inst, unsigned char *arena)
 {
-	int	ic;
-	int	arg_count;
-	int	arg;
+	int		arg_count;
+	int		arg;
 
-	ic = inst.inst_code;
-	arg_count = get_arg_count(ic);
+	arg_count = get_arg_count(inst.inst_code);
 	arg = 0;
-	ft_printf("Process %d : %s ", car->id, get_inst_name(ic));
+	ft_printf("Process %d : %s ", car->id, get_inst_name(inst.inst_code));
 	while (++arg <= arg_count)
 	{
-		if ((inst.types[arg - 1] == IND_CODE && ic != 13) || \
-		(inst.types[arg - 1] == DIR_CODE && inst.sizes[arg - 1] == IND_SIZE))
-			ft_printf("%hd ", get_ind_val(inst, arena, car, arg) % IDX_MOD);
-		else if (inst.types[arg - 1] == IND_CODE && ic == 13)
-			ft_printf("%hd ", get_ind_val(inst, arena, car, arg));
+		if (inst.sizes[arg - 1] == IND_SIZE)
+			ind_print(arena, inst, car, arg);
 		else
 		{
 			if (inst.types[arg - 1] == REG_CODE)

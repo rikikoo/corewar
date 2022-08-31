@@ -7,12 +7,16 @@ g_latest_cycle = {}
 def sti_comp(a, b):
 	a_expr = a.split(' to')[1].split()
 	b_expr = b.split(':')[1].split()
-	return a_expr[0] == b_expr[0] and a_expr[2] == b_expr[2] and a_expr[4] == b_expr[4]
+	return int(a_expr[0].lstrip('-')) % 512 == int(b_expr[0].lstrip('-')) \
+		and int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-')) \
+		and int(a_expr[4].lstrip('-')) % 512 == int(b_expr[4].lstrip('-'))
 
 def ldi_comp(a, b):
 	a_expr = a.split('from')[1].split()
 	b_expr = b.split(':')[1].split()
-	return a_expr[0] == b_expr[0] and a_expr[2] == b_expr[2] and a_expr[4] == b_expr[4]
+	return int(a_expr[0].lstrip('-')) % 512 == int(b_expr[0].lstrip('-')) \
+		and int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-')) \
+		and int(a_expr[4].lstrip('-')) % 512 == int(b_expr[4].lstrip('-'))
 
 def op_compare(a, b):
 	if a[0] == "live":
@@ -76,20 +80,24 @@ def op_compare(a, b):
 			return False
 		if a[1] not in b[1]:
 			return False
-		if a[2].lstrip('-').isdigit() and a[2] != b[2]:
+		if a[2].lstrip('-').isdigit() and a[2] not in b[2]:
 			return False
 		else:
 			if a[2] not in b[2]:
 				return False
-		if a[3].lstrip('-').isdigit() and a[3] != b[3]:
+		if a[3].lstrip('-').isdigit() and a[3] not in b[3]:
 			return False
 		else:
 			if a[3] not in b[3]:
 				return False
 
 	if "fork" in a[0]:
-		if a[0] != b[0] or a[1] != b[1]:
+		if a[0] != b[0]:
 			return False
+		if a[0] == "fork":
+			return int(a[1].lstrip('-')) % 512 == int(b[1].lstrip('-'))
+		else:
+			return a[1] == b[1]
 
 	return True
 
@@ -102,6 +110,7 @@ def compare(a, b):
 		g_latest_cycle['test latest cycle'] = b_n
 		if a_n != b_n:
 			return False
+		return True
 
 	elif a[0] == 'P':
 		if "Process" in b:
@@ -117,8 +126,8 @@ def compare(a, b):
 			return False
 		return op_compare(a_elems[3:], b_elems[3:])
 
-	elif "to die" in a and a != b:
-		return False
+	elif "to die" in a:
+		return a in b
 
 	elif "store to" in a:
 		return sti_comp(a, b)
@@ -129,13 +138,16 @@ def compare(a, b):
 	elif "has won" in a:
 		if "has won" not in b:
 			return False
-		if a.split()[1] != b.split()[1]:
+		if a.split()[1][0] != b.split()[1]:
 			return False
+		return True
 
-	return True
+	return False
 
 
 def parse_outputs(orig, test):
+	a = orig
+	b = test
 	for i, line in enumerate(orig):
 		if "It is" in line:
 			a = orig[i:]
@@ -156,7 +168,9 @@ def parse_outputs(orig, test):
 			print(f">>> {a[i]}")
 			print("----------")
 			print(f"<<< {b[i]}")
-			break
+			ans = input("\n\nContinue? (y/n) ")
+			if ans != 'y':
+				break
 		i += 1
 
 
@@ -188,11 +202,12 @@ def main():
 	if len(orig) != len(test):
 		print("Line counts of outputs do not match!")
 		ans = input("continue anyway? (y/n) ")
-		if ans.lower() != 'y' or ans != '\n':
+		if ans.lower() != 'y':
+			print("quitting")
 			quit()
 
 	parse_outputs(orig, test)
-	print("\nTest completed")
+	print("\nTest completed. If there was no output before this, 'sall good man!")
 
 
 if __name__ == "__main__":

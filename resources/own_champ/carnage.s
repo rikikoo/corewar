@@ -2,6 +2,10 @@
 .comment	"this is freedom!"
 
 mark:
-	ld r16, :loopdidoop
-	
-loopdidoop:
+	live %510
+	ld %-11, r2
+	sti r1, %0, r2
+	and %0, %0, r3
+
+live:
+	zjmp %:mark
