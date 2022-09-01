@@ -22,7 +22,7 @@ def op_compare(a, b):
 	if a[0] == "live":
 		return b[0] == "live" and a[1] == b[1]
 
-	if "ld" in a[0]:
+	if a[0] == "ld" or a[0] == "lld":
 		if a[0] != b[0]:
 			return False
 		return a[1] == b[1] and a[2] in b[2]
@@ -63,12 +63,12 @@ def op_compare(a, b):
 	if "ldi" in a[0]:
 		if "ldi" not in b[0]:
 			return False
-		if a[1].lstrip('-').isdigit() and a[1] != b[1]:
+		if a[1].lstrip('-').isdigit() and a[1] not in b[1]:
 			return False
 		else:
 			if a[1] not in b[1]:
 				return False
-		if a[2].lstrip('-').isdigit() and a[2] != b[2]:
+		if a[2].lstrip('-').isdigit() and a[2] not in b[2]:
 			return False
 		else:
 			if a[2] not in b[2]:
