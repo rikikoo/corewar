@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 19:35:33 by vhallama          #+#    #+#             */
-/*   Updated: 2022/08/30 19:49:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/14 23:30:09 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ u_int32_t	find_label_pos(t_statement **head, char *match)
 {
 	t_statement	*search;
 	t_label		*lab;
+	char		*err;
 
 	search = *head;
 	while (search != NULL)
@@ -29,8 +30,9 @@ u_int32_t	find_label_pos(t_statement **head, char *match)
 		}
 		search = search->next;
 	}
-	error_exit(ft_strjoin(ft_strjoin("Error: label '", match), "' not found"));
-	return (0);
+	err = ft_strjoin("Error: label '", match);
+	error_exit(ft_strjoin(err, "' not found"));
+	exit(1);
 }
 
 u_int16_t	u_int16_to_big_endian(u_int16_t n)
