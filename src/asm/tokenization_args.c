@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:18:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/08/30 19:42:28 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/17 15:47:00 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ static char	*get_label(t_data *data, char *s, int t_dir)
 	data->col++;
 	skip_whitespace(s, &data->col);
 	start = data->col;
+	if (!is_label_char(s[data->col]))
+	{
+		parser_error_exit("empty label", data->row, data->col + 1);
+	}
 	while (is_label_char(s[data->col]))
 		data->col++;
 	if (t_dir)
