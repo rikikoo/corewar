@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/06 13:21:57 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/09/17 13:46:06 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,9 @@ void		get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 int			is_label_char(char s);
 void		save_label(char *label, t_statement *cur, int cur_size);
 void		assign_op_specs(t_data *data, t_statement *st);
+
+// validation
+void		validate_labels(t_statement *list);
 
 // write functions
 void		write_file(t_data *data, t_statement *st);

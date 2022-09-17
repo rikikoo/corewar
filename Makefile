@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rkyttala <rkyttala@student.42.fr>          +#+  +:+       +#+         #
+#    By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/08/31 19:44:47 by rkyttala         ###   ########.fr        #
+#    Updated: 2022/09/17 13:55:30 by vhallama         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -50,7 +50,8 @@ ASM_SRC =	$(AS)asm.c \
 			$(AS)write_file.c \
 			$(AS)write_header.c \
 			$(AS)write_utils.c \
-			$(AS)write_exec_code.c
+			$(AS)write_exec_code.c \
+			$(AS)validate_labels.c
 
 ASM_OBJ = $(ASM_SRC:$(AS)%=$(AO)%.o)
 

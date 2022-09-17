@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 14:44:08 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/06 13:25:38 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/09/17 15:22:19 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	write_arguments(t_statement **head, t_statement *st, int fd)
 	u_int8_t	val;
 
 	i = 0;
-	while (st->argtypes[i])
+	while (i < 3 && st->argtypes[i])
 	{
 		if (st->argtypes[i] == T_REG)
 		{
@@ -86,7 +86,7 @@ void	write_argument_type_code(t_statement *st, int fd)
 
 	i = 0;
 	code = 0;
-	while (st->argtypes[i])
+	while (i < 3 && st->argtypes[i])
 	{
 		if (st->argtypes[i] == T_IND)
 			code = code | 0b11 << (6 - 2 * i);
