@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_main_args.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 18:31:40 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/18 16:28:49 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ void	parse_args(int ac, char **av, t_flags *flags, t_champ *champs)
 			else
 				print_usage();
 		}
-		else if (playernbr < MAX_PLAYERS)
+		else if (playernbr < MAX_PLAYERS && ft_strlen(av[count]) > 4 && \
+		ft_strequ(&av[count][ft_strlen(av[count]) - 4], ".cor"))
 		{
 			champs[playernbr] = read_cor(av[count], flags);
 			playernbr++;

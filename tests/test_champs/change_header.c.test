@@ -1,0 +1,36 @@
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+int main()
+{
+    int fd;
+    int ret;
+    char    buf[2567];
+
+    fd = open("ex.cor", O_RDWR);
+    if (fd < 0)
+    {
+        printf("couldn't open file: %d\n", fd);
+        return -1;
+    }
+    ret = read(fd, &buf, 2567);
+    if (ret <= 0)
+    {
+        printf("couldn't read file: %d", ret);
+        return -1;
+    }
+    printf("read %d bytes\n", ret);
+    for (int i = 0; i < 4; i++) {
+        buf[i] = 'a' + i;
+    }
+    fd = open("noheader.cor", O_WRONLY | O_CREAT, 0664);
+    if (fd < 0)
+    {
+        printf("couldn't open file: %d\n", fd);
+        return -1;
+    }
+    ret = write(fd, buf, ret);
+    printf("%d bytes written\n", ret);
+    return (ret > 0 && close(fd) >= 0);
+}

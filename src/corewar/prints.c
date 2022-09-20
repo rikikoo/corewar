@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   prints.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 17:41:26 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 18:22:32 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/18 17:23:08 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,20 +92,23 @@ void	print_error(int errno, const char *path, t_champ *champ)
 	else if (errno == -2)
 		ft_printf("ERROR: failed to read file: %s\n", path);
 	else if (errno == -3)
-		ft_printf("ERROR: Unknown filetype header in file \"%s\": %p\n", \
+		ft_printf("ERROR: Unknown filetype header in file \"%s\": %#x\n", \
 		path, champ->magic);
 	else if (errno == -4)
-		ft_printf("ERROR: Champion name '%s' too long: %d > %d\n", \
-		champ->name, ft_strlen(champ->name), PROG_NAME_LENGTH);
-	else if (errno == -5)
 		ft_printf("ERROR: Champion '%s' weighs too much: %d > %d\n", \
 		champ->name, champ->size, CHAMP_MAX_SIZE);
+	else if (errno == -5)
+		ft_printf(\
+		"ERROR: Champion '%s' reported size (%d) doesn't equal actual size\n", \
+		champ->name, champ->size);
 	else if (errno == -6)
-		ft_printf("ERROR: Champion comment '%s' too long: %d > %d\n", \
-		champ->comment, ft_strlen(champ->comment), COMMENT_LENGTH);
+		ft_printf("ERROR: Champion name too long: '%s' > %dB\n", \
+		champ->name, PROG_NAME_LENGTH);
 	else if (errno == -7)
-		ft_printf("ERROR: Invalid player number given for '%s':\n%s\n", \
-		champ->name, "Number can't be greater than champion count");
+		ft_printf("ERROR: Champion comment too long: '%s' > %dB\n", \
+		champ->comment, COMMENT_LENGTH);
+	else if (errno == -8)
+		ft_printf("ERROR: Invalid player number given for '%s'\n", champ->name);
 	else
 		ft_printf("ERROR: OOM\n");
 	exit(errno);

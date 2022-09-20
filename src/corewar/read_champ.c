@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_champ.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/01/30 21:03:21 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/18 17:03:12 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	sort_champs(t_champ *champs, int champ_count)
 		if (champs[p].playernbr != -1)
 		{
 			if (champs[p].playernbr > champ_count)
-				print_error(-7, NULL, &champs[p]);
+				print_error(-8, NULL, &champs[p]);
 			if (champs[p].playernbr - 1 != p)
 			{
 				tmp = champs[champs[p].playernbr - 1];
@@ -41,16 +41,18 @@ void	sort_champs(t_champ *champs, int champ_count)
 	}
 }
 
-static int	validate_champ(t_champ champ)
+static int	validate_champ(unsigned char *buf, t_champ champ, int len)
 {
 	if (champ.magic != COREWAR_EXEC_MAGIC)
 		return (-3);
-	if (ft_strlen(champ.name) > PROG_NAME_LENGTH)
-		return (-4);
 	if (champ.size > CHAMP_MAX_SIZE)
+		return (-4);
+	if (champ.size != (len - (PROG_NAME_LENGTH + COMMENT_LENGTH + 16)))
 		return (-5);
-	if (ft_strlen(champ.comment) > COMMENT_LENGTH)
+	if (bytes_to_int(buf, PROG_NAME_LENGTH + 4, 4) != 0)
 		return (-6);
+	if (bytes_to_int(buf, PROG_NAME_LENGTH + COMMENT_LENGTH + 8, 4) != 0)
+		return (-7);
 	return (0);
 }
 
@@ -78,15 +80,15 @@ t_champ	read_cor(const char *filepath, t_flags *flags)
 	if (ret < PROG_NAME_LENGTH + COMMENT_LENGTH + 16)
 		print_error(-2, filepath, NULL);
 	champ.magic = bytes_to_int(buf, 0, 4);
-	ft_memcpy(champ.name, &buf[4], PROG_NAME_LENGTH);
+	ft_memcpy(champ.name, &buf[4], PROG_NAME_LENGTH + 1);
 	champ.size = bytes_to_int(buf, PROG_NAME_LENGTH + 8, 4);
-	ft_memcpy(champ.comment, &buf[PROG_NAME_LENGTH + 12], COMMENT_LENGTH);
+	ft_memcpy(champ.comment, &buf[PROG_NAME_LENGTH + 12], COMMENT_LENGTH + 1);
+	ret = validate_champ(buf, champ, ret);
+	if (ret < 0)
+		print_error(ret, filepath, &champ);
 	ft_memcpy(champ.exec, &buf[PROG_NAME_LENGTH + COMMENT_LENGTH + 16], \
 	champ.size);
 	champ.playernbr = flags->playernbr;
 	flags->champ_count++;
-	ret = validate_champ(champ);
-	if (ret < 0)
-		print_error(ret, filepath, &champ);
 	return (champ);
 }
