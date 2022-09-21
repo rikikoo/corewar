@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   read_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: vhallama <vhallama@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/25 15:39:46 by vhallama          #+#    #+#             */
-/*   Updated: 2022/05/04 15:49:16 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/09/21 19:42:18 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ static char	*validate_command_start(t_data *data, char *s, char *cmd)
 {
 	if (ft_strncmp(s + data->col, cmd, ft_strlen(cmd)))
 		return (ft_strjoin("invalid formatting of ", cmd));
-	if (ft_strlen(data->comment))
+	if ((data->has_name && ft_strequ(cmd, NAME_CMD_STRING)) || \
+		(data->has_comment && ft_strequ(cmd, COMMENT_CMD_STRING)))
 		return (ft_strjoin("multiple commands of type ", cmd));
 	data->col += ft_strlen(cmd);
 	skip_whitespace(s, &data->col);
