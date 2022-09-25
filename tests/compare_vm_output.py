@@ -11,16 +11,14 @@ g_latest_cycle = {}
 def sti_comp(a, b):
 	a_expr = a.split(' to')[1].split()
 	b_expr = b.split(':')[1].split()
-	return int(a_expr[0].lstrip('-')) % 512 == int(b_expr[0].lstrip('-')) \
-		and int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-')) \
+	return int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-')) \
 		and int(a_expr[4].lstrip('-')) % 512 == int(b_expr[4].lstrip('-'))
 
 def ldi_comp(a, b):
 	a_expr = a.split('from')[1].split()
 	b_expr = b.split(':')[1].split()
 	return int(a_expr[0].lstrip('-')) % 512 == int(b_expr[0].lstrip('-')) \
-		and int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-')) \
-		and int(a_expr[4].lstrip('-')) % 512 == int(b_expr[4].lstrip('-'))
+		and int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-'))
 
 def op_compare(a, b):
 	if a[0] == "live":
@@ -34,7 +32,7 @@ def op_compare(a, b):
 	if a[0] == "st":
 		if b[0] != "st":
 			return False
-		return a[1] in b[1] and a[2] == b[2]
+		return a[1] in b[1] and int(a[2].lstrip('-')) % 512 == int(b[2].lstrip('-'))
 
 	if a[0] == "add":
 		if b[0] != "add":
@@ -67,13 +65,23 @@ def op_compare(a, b):
 	if "ldi" in a[0]:
 		if "ldi" not in b[0]:
 			return False
-		if a[1].lstrip('-').isdigit() and a[1] not in b[1]:
-			return False
+		if a[1].lstrip('-').isdigit():
+			tmp = b[1].split(':')
+			if len(tmp) == 2:
+				tmp[1] = str(int(tmp[1].lstrip('-')) % 512)
+				b[1] = ':'.join(tmp)
+			if str(int(a[1].lstrip('-')) % 512) not in b[1]:
+				return False
 		else:
 			if a[1] not in b[1]:
 				return False
-		if a[2].lstrip('-').isdigit() and a[2] not in b[2]:
-			return False
+		if a[2].lstrip('-').isdigit():
+			tmp = b[2].split(':')
+			if len(tmp) == 2:
+				tmp[1] = str(int(tmp[1].lstrip('-')) % 512)
+				b[2] = ':'.join(tmp)
+			if str(int(a[2].lstrip('-')) % 512) not in b[2]:
+				return False
 		else:
 			if a[2] not in b[2]:
 				return False
@@ -84,13 +92,23 @@ def op_compare(a, b):
 			return False
 		if a[1] not in b[1]:
 			return False
-		if a[2].lstrip('-').isdigit() and a[2] not in b[2]:
-			return False
+		if a[2].lstrip('-').isdigit():
+			tmp = b[2].split(':')
+			if len(tmp) == 2:
+				tmp[1] = str(int(tmp[1].lstrip('-')) % 512)
+				b[2] = ':'.join(tmp)
+			if str(int(a[2].lstrip('-')) % 512) not in b[2]:
+				return False
 		else:
 			if a[2] not in b[2]:
 				return False
-		if a[3].lstrip('-').isdigit() and a[3] not in b[3]:
-			return False
+		if a[3].lstrip('-').isdigit():
+			tmp = b[3].split(':')
+			if len(tmp) == 2:
+				tmp[1] = str(int(tmp[1].lstrip('-')) % 512)
+				b[3] = ':'.join(tmp)
+			if str(int(a[3].lstrip('-')) % 512) not in b[3]:
+				return False
 		else:
 			if a[3] not in b[3]:
 				return False
@@ -178,7 +196,7 @@ def parse_outputs(orig, test):
 			print("----------")
 			print(f"<<< {b[i]}")
 			ans = input("\n\nContinue? (y/n) ")
-			if ans != 'y':
+			if ans == 'n':
 				break
 		i += 1
 	return ret
@@ -249,11 +267,6 @@ def run_corewars():
 
 
 def main():
-	if len(sys.argv) > 1:
-		print(f"usage: {sys.argv[0]}\n")
-		print("Define the folder where the champions are when prompted and choose the champs")
-		quit()
-
 	orig_out, test_out = run_corewars()
 	orig = orig_out.split('\n')
 	test = test_out.split('\n')

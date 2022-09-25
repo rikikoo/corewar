@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   instructions1.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/31 11:35:39 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/31 01:43:25 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/25 13:00:35 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,9 @@ int	stay_alive(t_game *game, t_car *car, unsigned char *arena, t_champ *champs)
 	player = bytes_to_int(arena, (car->pos + 1) % MEM_SIZE, DIR_SIZE);
 	if ((game->flags.verbose & 2) == 2)
 		ft_printf("Process %d : live %d\n", car->id, player);
-	player = ft_abs(player);
-	if ((player > 0) && (player <= game->flags.champ_count))
+	if ((player < 0) && (player * -1 <= game->flags.champ_count))
 	{
+		player = ft_abs(player);
 		if ((game->flags.verbose & 8) == 8)
 			print_live(champs[player - 1]);
 		game->last_live_report = player;
