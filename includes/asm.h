@@ -6,7 +6,7 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/23 13:46:38 by vhallama          #+#    #+#             */
-/*   Updated: 2022/09/17 13:46:06 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/09/25 18:01:17 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,7 @@ void		null_comment(char *s);
 
 // tokenization
 void		tokenize_line(t_data *data, t_statement *cur, char *s);
-void		validate_arg_type(t_data *data, t_statement *cur, int arg_num,
-				int arg_type);
+
 void		get_t_reg_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 void		get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 void		get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s);
@@ -83,6 +82,12 @@ void		get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s);
 int			is_label_char(char s);
 void		save_label(char *label, t_statement *cur, int cur_size);
 void		assign_op_specs(t_data *data, t_statement *st);
+
+// tokenization validation
+void		validate_arg_amount(t_data *data, t_statement *cur);
+void		validate_arg_type(t_data *data, t_statement *cur, int arg_num,
+				int arg_type);
+void		validate_arg_end(t_data *data, char *s);
 
 // validation
 void		validate_labels(t_statement *list);

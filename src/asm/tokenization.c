@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenization.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vhallama <vhallama@student.42.fr>          +#+  +:+       +#+        */
+/*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 14:44:11 by vhallama          #+#    #+#             */
-/*   Updated: 2022/09/21 20:25:40 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/09/25 18:01:07 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ static u_int32_t	get_operation_bytesize(t_statement *st)
 // saving the arguments into statement struct
 static void	get_args(t_data *data, t_statement *cur, char *s, int i)
 {
-	if (!s[data->col])
-		parser_error_exit("missing argument", data->row, data->col + 1);
+	if (s[data->col] == SEPARATOR_CHAR || !s[data->col])
+		parser_error_exit("empty argument", data->row, data->col);
 	while (s[data->col])
 	{
 		if (s[data->col] == 'r')
@@ -143,6 +143,7 @@ void	tokenize_line(t_data *data, t_statement *cur, char *s)
 		return ;
 	get_op(data, cur, s);
 	get_args(data, cur, s, 0);
+	validate_arg_amount(data, cur);
 	cur->pos = data->champ_size;
 	data->champ_size += get_operation_bytesize(cur);
 }

@@ -6,18 +6,11 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 17:18:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/09/17 15:47:00 by vhallama         ###   ########.fr       */
+/*   Updated: 2022/09/25 18:14:44 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
-
-static void	validate_arg_end(t_data *data, char *s)
-{
-	skip_whitespace(s, &data->col);
-	if (s[data->col] != '\0' && s[data->col] != SEPARATOR_CHAR)
-		parser_error_exit("invalid argument", data->row, data->col + 1);
-}
 
 static char	*get_label(t_data *data, char *s, int t_dir)
 {
@@ -62,6 +55,9 @@ void	get_t_ind_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 		start = data->col;
 		if (s[data->col] == '-')
 			data->col++;
+		if (!ft_isdigit(s[data->col]))
+			parser_error_exit("invalid indirect argument", data->row,
+				data->col + 1);
 		while (ft_isdigit(s[data->col]))
 			data->col++;
 		cur->arg[arg_num] = ft_strsub(s, start, data->col - start);
@@ -84,10 +80,12 @@ void	get_t_dir_arg(t_data *data, t_statement *cur, int arg_num, char *s)
 		cur->arg[arg_num] = get_label(data, s, 1);
 	else
 	{
-		skip_whitespace(s, &data->col);
 		start = data->col;
 		if (s[data->col] == '-')
 			data->col++;
+		if (!ft_isdigit(s[data->col]))
+			parser_error_exit("invalid direct argument", data->row,
+				data->col + 1);
 		while (ft_isdigit(s[data->col]))
 			data->col++;
 		cur->arg[arg_num] = ft_strsub(s, start - 1, data->col - start + 1);

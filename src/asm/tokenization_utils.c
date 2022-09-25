@@ -6,23 +6,13 @@
 /*   By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:53:32 by vhallama          #+#    #+#             */
-/*   Updated: 2022/08/30 19:40:34 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/25 17:54:03 by vhallama         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "asm.h"
 #include "op.h"
 #include "oplist.h"
-
-// validates that the statement's operation accepts certain type of
-// argument at certain argument number
-void	validate_arg_type(t_data *data, t_statement *cur, int arg_num,
-int arg_type)
-{
-	if ((int)g_oplist[cur->op_code - 1].arg_type[arg_num] != \
-	(int)(g_oplist[cur->op_code - 1].arg_type[arg_num] | arg_type))
-		parser_error_exit("invalid argument type", data->row, data->col + 1);
-}
 
 void	save_label(char *label, t_statement *cur, int cur_size)
 {
