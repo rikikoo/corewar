@@ -17,7 +17,7 @@ This time though, the school intentionally has made the subject nearly incompreh
 There are clues and some useful info which help, but most of the work in the completion of this project is getting your head around the inner workings of the two provided binaries, through reverse engineering. 
 
 
-The students are provided with the executables (`resources/asm` and `resources/corewar`), a header file (`resources/op.h`) and a source file (`resources/op.c`).
+The students build the project based on the provided executables (`resources/asm` and `resources/corewar`), header file (`resources/op.h`), source file (`resources/op.c`) and the aforementioned subject(s) (`resources/corewar.en.pdf` and `resources/resources_corewar.en.pdf`).
 
 ## asm
 `asm` is an assembler. It takes a single `.s` file as an argument and produces a `.cor` file to the same directory the `.s` file was in.
@@ -31,7 +31,73 @@ It places the champions inside its virtual memory (often referred to as the _are
 
 During execution, after a certain amount of _cycles_, it is checked that each **Program Counter** or **PC** (which point to a memory address in the virtual memory, i.e. the current instruction) has executed at least one `live` instruction. If no `live` instructions were executed by a PC, that PC "dies". If a PC executes a `live` instruction and its argument value corresponds to a champion/player number, that player is marked as the last one to be alive.
 
-The amount of cycles when this kind of check is done is reduced depending on various conditions (explained later). Once this `CYCLE_TO_DIE` goes to zero or below, checks for alive PCs are carried out every cycle. The game ends after all PCs have died. The last player that was reported to be alive wins.
+
+The amount of cycles when this kind of check is done is reduced depending on various conditions (explained later). Once this `CYCLE_TO_DIE` goes to zero or below, checks for alive PCs are carried out every cycle. The game ends after all PCs have died and `CYCLE_TO_DIE` is equal to or less than 0. The last player that was reported to be alive wins.
+
+## byte code structure
+A champion `.cor` file has the following bytes, in order, which are all defined in `op.h`:
+1. `0x00ea83f3`, a magic header, as defined by `COREWAR_EXEC_MAGIC`. Occupies the first 4 bytes.
+2. The next `PROG_NAME_LENGTH` bytes are reserved for the champion name. The remaining bytes after the name in these 128 B are padded with zeros.
+3. Four zero-bytes as a separator.
+4. Size of the actual champion code, which can't exceed `CHAMP_MAX_SIZE` (682 B). The size info is recorded on 4 B.
+5. The next `COMMENT_LENGTH` bytes are the "comment" of the champion. Again, bytes in these 2048 B after the comment text are zero-bytes.
+6. Four zero-bytes as a separator.
+7. The code of the champion, i.e. the statements, their _argument coding bytes_ and arguments, in the order that they were written in the corresponding `.s` file, encoded as described in the following section.
+
+## statements
+The below table is a summary. It does not contain all the information that is related to each statement and the procedures going on in the VM.
+
+| name | encoding byte (hex) | no. of arguments | description |
+| ---- | ------------- | ---------------- | ----------- |
+| `live` | `01` | 1 | keeps a process alive and marks the player whose number is in the 1st agrument (as a negative value) as being alive |
+| `ld` | `02` | 2 | load: writes the 1st arg's value into the register given in the 2nd arg |
+| `st` | `03` | 2 | store: writes the value inside the register given in the 1st arg into the address given in the 2nd arg |
+| `add` | `04` | 3 | add: performs addition to the 1st and 2nd arg values and writes the result into the register given as the 3rd arg |
+| `sub` | `05` | 3 | subtract: exactly the same as `add`, but performs subtraction |
+| `and` | `06` | 3 | logical AND: same as above, but performs AND operation |
+| `or` | `07` | 3 | logical OR: same as above, but performs OR operation |
+| `xor` | `08` | 3 | logical XOR: same as above, but performs XOR operation |
+| `zjmp` | `09` | 1 | zero jump: updates address/position of a PC to current address + 1st arg value, if `carry == 0` |
+| `ldi` | `0a` | 3 | load from index: defines address where to read value from by adding the first two args together and writing the value rread at that address into the register given as 3rd arg |
+| `sti` | `0b` | 3 | store to index: 1st arg is the register we get the value from and 2nd and 3rd args form the address we will write the value to |
+| `fork` | `0c` | 1 | fork: clones the PC into the address given as the 1st arg |
+| `lld` | `0d` | 2 | long load: same as `ld`, except if the _argument type_ is of type **indirect** (`T_IND`), the address we read the value from can be read from a farther address than what `ld` allows |
+| `lldi` | `0e` | 3 | long load from index: same as `ldi`, but with the logic described above, in `lld`'s description |
+| `lfork` | `0f` | 1 | long fork: same as `fork` but can clone the PC farther away than `fork` |
+| `aff` | `10` | 1 | attempts to convert the value inside the register given as the 1 st argument to `char` and print it during execution |
+
+
+The statements have different kinds of attributes associated with them. The `op.c` has these attributes listed per statement. Only thing is, there's no mention in the file that would explain which value corresponds to which attribute. After figuring it out, these turn out to be their meaning:
+```
+{"live", 1, {T_DIR}, 1, 10, "alive", 0, 0}
+   |     |     |     |   |     |     |  |
+   |     |     |     |   |     |     |  └ has reduced T_DIR size (4B --> 2B)?
+   |     |     |     |   |     |     └ has ACB (argument coding byte)?
+   |     |     |     |   |     └ description
+   |     |     |     |   └ wait cycles
+   |     |     |     └ statement code
+   |     |     └ argument types (separated by |)
+   |     └ number of arguments
+   └ statement name
+```
+
+## virtual machine
+The VM has "internal" memory of `MEM_SIZE` bytes (4096), which represents the "arena" where all the champions' code is placed in.
+
+The champions are placed evenly on the arena and one PC is placed on the first byte of each champ's code. The PCs, one at a time, start reading the bytes they are on and executing them if they're valid. Once every PC has tried to execute or indeed executed the instruction they are currently on, a cycle ends and the next one begins.
+
+Each statement/instruction has a different waiting time associated with them. A PC doesn't execute the instruction until the wait time has ended.
+
+If the instruction a PC is on is valid and the wait time has ended, the instruction is executed, no matter which champion's code it is. After performing the statement, the PC jumps to the next statement.
+If the instruction is invalid, the statement is skipped completely.
+
+There is a so-called "cycle to die" check performed periodically. The check interval is initially `CYCLE_TO_DIE` cycles (1536). During this check, all PCs that haven't performed a `live` statement are removed from the game.
+In order for the game to end at some point, there are built-in conditions when the `CYCLE_TO_DIE` is reduced. This reduction happens during a check if...
+- the number of `live` statements is equal to or greater than `NBR_LIVE` (21) or
+- no reduction has been done in the last `MAX_CHECKS` (10) checks.
+The amount that is subtracted from `CYCLE_TO_DIE` is defined to be `CYCLE_DELTA` (50). The game ends after all PCs are dead and `CYCLE_TO_DIE` is below 0.
+
+
 
 ## usage
 Installation:
