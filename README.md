@@ -35,11 +35,11 @@ During execution, after a certain amount of _cycles_, it is checked that each **
 The amount of cycles when this kind of check is done is reduced depending on various conditions (explained later). Once this `CYCLE_TO_DIE` goes to zero or below, checks for alive PCs are carried out every cycle. The game ends after all PCs have died. The last player that was reported to be alive wins.
 
 ## byte code structure
-A champion `.cor` file has the following bytes, in order, which are all defined in `op.h`:
+A champion `.cor` file has the following bytes, in order, which are all defined in `op.h`. The first 6 items can be considered as header data.
 1. `0x00ea83f3`, a magic header, as defined by `COREWAR_EXEC_MAGIC`. Occupies the first 4 bytes.
 2. The next `PROG_NAME_LENGTH` bytes are reserved for the champion name. The remaining bytes after the name in these 128 B are padded with zeros.
 3. Four zero-bytes as a separator.
-4. Size of the actual champion code, which can't exceed `CHAMP_MAX_SIZE` (682 B). The size info is recorded on 4 B.
+4. Size of the champion code, which can't exceed `CHAMP_MAX_SIZE` (682 B). The size info is recorded on 4 B.
 5. The next `COMMENT_LENGTH` bytes are the "comment" of the champion. Again, bytes in these 2048 B after the comment text are zero-bytes.
 6. Four zero-bytes as a separator.
 7. The code of the champion, i.e. the statements, their _argument coding bytes_ and arguments, in the order that they were written in the corresponding `.s` file, encoded as described in the following section.
