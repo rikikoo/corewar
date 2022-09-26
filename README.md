@@ -95,7 +95,8 @@ There is a so-called "cycle to die" check performed periodically. The check inte
 In order for the game to end at some point, there are built-in conditions when the `CYCLE_TO_DIE` is reduced. This reduction happens during a check if...
 - the number of `live` statements is equal to or greater than `NBR_LIVE` (21) or
 - no reduction has been done in the last `MAX_CHECKS` (10) checks.
-The amount that is subtracted from `CYCLE_TO_DIE` is defined to be `CYCLE_DELTA` (50). The game ends after all PCs are dead.
+
+The amount that is subtracted from `CYCLE_TO_DIE` is defined to be `CYCLE_DELTA` (50). Once `CYCLE_TO_DIE` <= 0, a check is performed on every cycle. The game ends after all PCs are dead.
 
 
 
