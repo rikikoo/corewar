@@ -32,7 +32,7 @@ It places the champions inside its virtual memory (often referred to as the _are
 During execution, after a certain amount of _cycles_, it is checked that each **Program Counter** or **PC** (which point to a memory address in the virtual memory, i.e. the current instruction) has executed at least one `live` instruction. If no `live` instructions were executed by a PC, that PC "dies". If a PC executes a `live` instruction and its argument value corresponds to a champion/player number, that player is marked as the last one to be alive.
 
 
-The amount of cycles when this kind of check is done is reduced depending on various conditions (explained later). Once this `CYCLE_TO_DIE` goes to zero or below, checks for alive PCs are carried out every cycle. The game ends after all PCs have died and `CYCLE_TO_DIE` is equal to or less than 0. The last player that was reported to be alive wins.
+The amount of cycles when this kind of check is done is reduced depending on various conditions (explained later). Once this `CYCLE_TO_DIE` goes to zero or below, checks for alive PCs are carried out every cycle. The game ends after all PCs have died. The last player that was reported to be alive wins.
 
 ## byte code structure
 A champion `.cor` file has the following bytes, in order, which are all defined in `op.h`:
@@ -50,20 +50,20 @@ The below table is a summary. It does not contain all the information that is re
 | name | encoding byte (hex) | no. of arguments | description |
 | ---- | ------------- | ---------------- | ----------- |
 | `live` | `01` | 1 | keeps a process alive and marks the player whose number is in the 1st agrument (as a negative value) as being alive |
-| `ld` | `02` | 2 | load: writes the 1st arg's value into the register given in the 2nd arg |
-| `st` | `03` | 2 | store: writes the value inside the register given in the 1st arg into the address given in the 2nd arg |
-| `add` | `04` | 3 | add: performs addition to the 1st and 2nd arg values and writes the result into the register given as the 3rd arg |
-| `sub` | `05` | 3 | subtract: exactly the same as `add`, but performs subtraction |
-| `and` | `06` | 3 | logical AND: same as above, but performs AND operation |
-| `or` | `07` | 3 | logical OR: same as above, but performs OR operation |
-| `xor` | `08` | 3 | logical XOR: same as above, but performs XOR operation |
-| `zjmp` | `09` | 1 | zero jump: updates address/position of a PC to current address + 1st arg value, if `carry == 0` |
-| `ldi` | `0a` | 3 | load from index: defines address where to read value from by adding the first two args together and writing the value rread at that address into the register given as 3rd arg |
-| `sti` | `0b` | 3 | store to index: 1st arg is the register we get the value from and 2nd and 3rd args form the address we will write the value to |
-| `fork` | `0c` | 1 | fork: clones the PC into the address given as the 1st arg |
-| `lld` | `0d` | 2 | long load: same as `ld`, except if the _argument type_ is of type **indirect** (`T_IND`), the address we read the value from can be read from a farther address than what `ld` allows |
-| `lldi` | `0e` | 3 | long load from index: same as `ldi`, but with the logic described above, in `lld`'s description |
-| `lfork` | `0f` | 1 | long fork: same as `fork` but can clone the PC farther away than `fork` |
+| `ld` | `02` | 2 | **load**: writes the 1st arg's value into the register given in the 2nd arg |
+| `st` | `03` | 2 | **store**: writes the value inside the register given in the 1st arg into the address given in the 2nd arg |
+| `add` | `04` | 3 | **add**: performs addition to the 1st and 2nd arg values and writes the result into the register given as the 3rd arg |
+| `sub` | `05` | 3 | **subtract**: exactly the same as `add`, but performs subtraction |
+| `and` | `06` | 3 | **logical AND**: same as above, but performs AND operation |
+| `or` | `07` | 3 | **logical OR**: same as above, but performs OR operation |
+| `xor` | `08` | 3 | **logical XOR**: same as above, but performs XOR operation |
+| `zjmp` | `09` | 1 | **zero jump**: updates address/position of a PC to current address + 1st arg value, if `carry == 0` |
+| `ldi` | `0a` | 3 | **load from index**: defines address where to read value from by adding the first two args together and writing the value read at that address into the register given as 3rd arg |
+| `sti` | `0b` | 3 | **store to index**: 1st arg is the register we get the value from and 2nd and 3rd args form the address we will write the value to |
+| `fork` | `0c` | 1 | **fork**: clones the PC into the address given as the 1st arg |
+| `lld` | `0d` | 2 | **long load**: same as `ld`, except if the _argument type_ is of type **indirect** (`T_IND`), the address we read the value from can be read from a farther address than what `ld` allows |
+| `lldi` | `0e` | 3 | **long load from index**: same as `ldi`, but with the logic described above, in `lld`'s description |
+| `lfork` | `0f` | 1 | **long fork**: same as `fork` but can clone the PC farther away than `fork` |
 | `aff` | `10` | 1 | attempts to convert the value inside the register given as the 1 st argument to `char` and print it during execution |
 
 
@@ -95,7 +95,7 @@ There is a so-called "cycle to die" check performed periodically. The check inte
 In order for the game to end at some point, there are built-in conditions when the `CYCLE_TO_DIE` is reduced. This reduction happens during a check if...
 - the number of `live` statements is equal to or greater than `NBR_LIVE` (21) or
 - no reduction has been done in the last `MAX_CHECKS` (10) checks.
-The amount that is subtracted from `CYCLE_TO_DIE` is defined to be `CYCLE_DELTA` (50). The game ends after all PCs are dead and `CYCLE_TO_DIE` is below 0.
+The amount that is subtracted from `CYCLE_TO_DIE` is defined to be `CYCLE_DELTA` (50). The game ends after all PCs are dead.
 
 
 
