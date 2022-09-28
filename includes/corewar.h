@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   corewar.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/30 22:32:11 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/27 22:22:18 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ typedef struct s_inst
 */
 void	parse_args(int ac, char **av, t_flags *flags, t_champ *champs);
 t_champ	read_cor(const char *filepath, t_flags *flags);
-void	sort_champs(t_champ *champs, int champ_count);
+void	sort_champs(t_champ *champs, t_flags *flags);
 
 /*
 ** GAME MAIN LOOP

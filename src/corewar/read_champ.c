@@ -6,40 +6,11 @@
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:33:29 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/09/18 17:03:12 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2022/09/27 11:43:02 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "corewar.h"
-
-/*
-** sorts champions according to -n flags given in the program arguments
-**
-** @champs: array of champions
-** @champ_count: the total number of champions
-*/
-void	sort_champs(t_champ *champs, int champ_count)
-{
-	int		p;
-	t_champ	tmp;
-
-	p = champ_count;
-	while (--p >= 0)
-	{
-		if (champs[p].playernbr != -1)
-		{
-			if (champs[p].playernbr > champ_count)
-				print_error(-8, NULL, &champs[p]);
-			if (champs[p].playernbr - 1 != p)
-			{
-				tmp = champs[champs[p].playernbr - 1];
-				champs[champs[p].playernbr - 1] = champs[p];
-				champs[p] = tmp;
-			}
-		}
-		champs[p].playernbr = p + 1;
-	}
-}
 
 static int	validate_champ(unsigned char *buf, t_champ champ, int len)
 {

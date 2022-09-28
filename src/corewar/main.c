@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 18:17:10 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/09/27 22:22:05 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int	main(int argc, char **argv)
 	parse_args(argc, argv, &flags, champs);
 	if (flags.champ_count == 0)
 		print_usage();
-	sort_champs(champs, flags.champ_count);
+	sort_champs(champs, &flags);
 	init_arena(champs, flags.champ_count, arena);
 	winner = start_game(flags, arena, champs);
 	if (winner > 0)

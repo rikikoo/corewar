@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: vhallama <vhallama@student.hive.fi>        +#+  +:+       +#+         #
+#    By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/12 15:30:07 by rkyttala          #+#    #+#              #
-#    Updated: 2022/09/17 13:55:30 by vhallama         ###   ########.fr        #
+#    Updated: 2022/09/27 12:13:59 by rikikyttala      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ SRC =	$(S)main.c \
 		$(S)prints.c \
 		$(S)parse_main_args.c \
 		$(S)read_champ.c \
+		$(S)sort_champs.c \
 		$(S)init_game.c \
 		$(S)play_game.c \
 		$(S)cycle_to_die.c \
@@ -47,6 +48,7 @@ ASM_SRC =	$(AS)asm.c \
 			$(AS)tokenization.c \
 			$(AS)tokenization_utils.c \
 			$(AS)tokenization_args.c \
+			$(AS)tokenization_validation.c \
 			$(AS)write_file.c \
 			$(AS)write_header.c \
 			$(AS)write_utils.c \
