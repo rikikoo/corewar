@@ -9,12 +9,16 @@ import subprocess as sp
 g_latest_cycle = {}
 
 def sti_comp(a, b):
+	if "store to" not in b:
+		return False
 	a_expr = a.split(' to')[1].split()
 	b_expr = b.split(':')[1].split()
 	return int(a_expr[2].lstrip('-')) % 512 == int(b_expr[2].lstrip('-')) \
 		and int(a_expr[4].lstrip('-')) % 512 == int(b_expr[4].lstrip('-'))
 
 def ldi_comp(a, b):
+	if "load from" not in b:
+		return False
 	a_expr = a.split('from')[1].split()
 	b_expr = b.split(':')[1].split()
 	return int(a_expr[0].lstrip('-')) % 512 == int(b_expr[0].lstrip('-')) \
