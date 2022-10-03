@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/23 20:21:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/28 12:09:18 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/10/03 10:26:23 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,12 @@ void	get_inst_operands(t_inst inst,
 	arg_idx = 0 + (inst.inst_code == 11);
 	if (inst.types[arg_idx] != REG_CODE && \
 	inst.sizes[arg_idx] == IND_SIZE)
-		vals[0] = get_ind_val(inst, arena, car, arg_idx + 1) % IDX_MOD;
+		vals[0] = get_ind_val(inst, arena, car, arg_idx + 1);
 	else
 		vals[0] = get_arg_val(inst, arena, car, arg_idx + 1);
 	if (inst.types[arg_idx + 1] != REG_CODE && \
 	inst.sizes[arg_idx + 1] == IND_SIZE)
-		vals[1] = get_ind_val(inst, arena, car, arg_idx + 2) % IDX_MOD;
+		vals[1] = get_ind_val(inst, arena, car, arg_idx + 2);
 	else
 		vals[1] = get_arg_val(inst, arena, car, arg_idx + 2);
 }

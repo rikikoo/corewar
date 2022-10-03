@@ -36,7 +36,12 @@ def op_compare(a, b):
 	if a[0] == "st":
 		if b[0] != "st":
 			return False
-		return a[1] in b[1] and int(a[2].lstrip('-')) % 512 == int(b[2].lstrip('-'))
+		val = b[2].lstrip('-')
+		reg = ''
+		if not b[2].lstrip('-').isnumeric():
+			reg = b[2].split(':')[0][1:]
+		return a[1] in b[1] and \
+			(str(int(a[2].lstrip('-')) % 512) == val or a[2] == reg)
 
 	if a[0] == "add":
 		if b[0] != "add":
