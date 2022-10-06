@@ -6,7 +6,7 @@
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:55:18 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/09/27 22:22:18 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2022/10/06 22:52:31 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,6 @@
 typedef struct s_flags
 {
 	int	dump;
-	int	split;
 	int	verbose;
 	int	row_len;
 	int	champ_count;

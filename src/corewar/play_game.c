@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   play_game.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rkyttala <rkyttala@student.hive.fi>        +#+  +:+       +#+        */
+/*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/30 09:53:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/08/30 22:35:52 by rkyttala         ###   ########.fr       */
+/*   Updated: 2022/10/06 22:51:45 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,5 @@ int	start_cycles(unsigned char *arena, t_game *game, t_champ *champs)
 			return (game->winner);
 		if (game->flags.dump && game->cycle == game->flags.dump)
 			return (0);
-		if (game->flags.split && (game->flags.split % game->cycle == 0))
-			dump_memory(arena, MEM_SIZE);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 16:09:28 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/09/27 22:22:05 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2022/10/06 22:52:10 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,6 @@ static t_flags	init_flags(void)
 		i++;
 	}
 	flags.dump = 0;
-	flags.split = 0;
 	flags.verbose = 0;
 	flags.row_len = 32;
 	flags.champ_count = 0;

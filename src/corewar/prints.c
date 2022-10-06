@@ -6,7 +6,7 @@
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 17:41:26 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/09/18 17:23:08 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2022/10/06 22:55:34 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,10 @@ int	print_aff(t_car *car, unsigned char *arena)
 void	print_usage(void)
 {
 	ft_printf("Usage: \
-	\n./corewar [-dump N] [-s N] [-l] [-v N] [-n N] <champion1.cor> <...>\
+	\n./corewar [-dump N] [-l] [-v N] [-n N] <champion1.cor> <...>\
 	\n\n************************************************************\
 	\n\n%4s: executes up to N cycles after which memory is dumped to STDOUT\
-	\n%4s: dumps memory after every N cycles and continues exeution\
-	\n%4s: changes row length of -dump and -s from 32 to 64 bytes per row\
+	\n%4s: changes row length of -dump from 32 to 64 bytes per row\
 	\n%4s: verbose level, add together Ns below for combined verbosity\
 	\n\t1: print cycles and CYCLE_TO_DIE reductions\
 	\n\t2: print valid executed instructions\
@@ -64,7 +63,7 @@ void	print_usage(void)
 	\n\t16: dump memory after the game has ended successfully\
 	\n\t31: full verbosity\
 	\n%4s: N [1...%i] assigns the following champion's player number\n\n", \
-	"dump", "s", "l", "v", "n", MAX_PLAYERS);
+	"dump", "l", "v", "n", MAX_PLAYERS);
 	exit(-9);
 }
 

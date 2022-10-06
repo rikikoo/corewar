@@ -6,7 +6,7 @@
 /*   By: rikikyttala <rikikyttala@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/21 22:27:54 by rkyttala          #+#    #+#             */
-/*   Updated: 2022/09/18 16:28:49 by rikikyttala      ###   ########.fr       */
+/*   Updated: 2022/10/06 23:01:13 by rikikyttala      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ static void	store_flag(char **argv, int *count, t_flags *flags)
 {
 	if (ft_strequ(argv[*count], "-dump"))
 		flags->dump = get_flag_cycles(argv[++(*count)]);
-	else if (ft_strequ(argv[*count], "-s"))
-		flags->split = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-v"))
 		flags->verbose = get_flag_cycles(argv[++(*count)]);
 	else if (ft_strequ(argv[*count], "-n"))
